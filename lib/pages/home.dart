@@ -53,6 +53,13 @@ class _HomePageState extends State<HomePage> {
   TextFormField _tffAmpThirdWireField = TextFormField();
 
   _HomePageState() {
+    _tecInitialTemp.text = _initialValue.toString();
+    _tecSetTemp.text = _initialValue.toString();
+    _tecVolume.text = _initialValue.toString();
+    _tecAmpFirstWire.text = _initialValue.toString();
+    _tecAmpSecondWire.text = _initialValue.toString();
+    _tecAmpThirdWire.text = _initialValue.toString();
+
     _tffAmpFirstWireField = TextFormField(
       autocorrect: false,
       controller: _tecAmpFirstWire,
@@ -69,6 +76,14 @@ class _HomePageState extends State<HomePage> {
       maxLength: 8,
       onChanged: (value) {
         setState(() {
+          if (_tecAmpFirstWire.value.text.isEmpty) {
+            _tecAmpFirstWire.text = _initialValue.toString();
+            _tecAmpFirstWire.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _tecAmpFirstWire.value.text.length,
+            );
+          }
+
           if (double.tryParse(value) == null) {
             _calculator.ampFirstWire = _initialValue;
           } else {
@@ -92,7 +107,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         _tecAmpFirstWire.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _tecAmpFirstWire.toString().length,
+          extentOffset: _tecAmpFirstWire.value.text.length,
         );
       },
       style: const TextStyle(fontSize: 20),
@@ -137,6 +152,14 @@ class _HomePageState extends State<HomePage> {
         maxLength: 8,
         onChanged: (value) {
           setState(() {
+            if (_tecAmpSecondWire.text.isEmpty) {
+              _tecAmpSecondWire.text = _initialValue.toString();
+              _tecAmpSecondWire.selection = TextSelection(
+                baseOffset: 0,
+                extentOffset: _tecAmpSecondWire.value.text.length,
+              );
+            }
+
             if (double.tryParse(value) == null) {
               _calculator.ampSecondWire = _initialValue;
             } else {
@@ -154,7 +177,7 @@ class _HomePageState extends State<HomePage> {
         onTap: () {
           _tecAmpSecondWire.selection = TextSelection(
             baseOffset: 0,
-            extentOffset: _tecAmpSecondWire.toString().length,
+            extentOffset: _tecAmpSecondWire.value.text.length,
           );
         },
         style: const TextStyle(fontSize: 20),
@@ -183,6 +206,14 @@ class _HomePageState extends State<HomePage> {
       maxLength: 8,
       onChanged: (value) {
         setState(() {
+          if (_tecAmpSecondWire.text.isEmpty) {
+            _tecAmpSecondWire.text = _initialValue.toString();
+            _tecAmpSecondWire.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _tecAmpSecondWire.value.text.length,
+            );
+          }
+
           if (double.tryParse(value) == null) {
             _calculator.ampSecondWire = _initialValue;
           } else {
@@ -200,7 +231,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         _tecAmpSecondWire.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _tecAmpSecondWire.toString().length,
+          extentOffset: _tecAmpSecondWire.value.text.length,
         );
       },
       style: const TextStyle(fontSize: 20),
@@ -232,6 +263,14 @@ class _HomePageState extends State<HomePage> {
         maxLength: 8,
         onChanged: (value) {
           setState(() {
+            if (_tecAmpThirdWire.text.isEmpty) {
+              _tecAmpThirdWire.text = _initialValue.toString();
+              _tecAmpThirdWire.selection = TextSelection(
+                baseOffset: 0,
+                extentOffset: _tecAmpThirdWire.value.text.length,
+              );
+            }
+
             if (double.tryParse(value) == null) {
               _calculator.ampThirdWire = _initialValue;
             } else {
@@ -249,7 +288,7 @@ class _HomePageState extends State<HomePage> {
         onTap: () {
           _tecAmpThirdWire.selection = TextSelection(
             baseOffset: 0,
-            extentOffset: _tecAmpThirdWire.toString().length,
+            extentOffset: _tecAmpThirdWire.value.text.length,
           );
         },
         style: const TextStyle(fontSize: 20),
@@ -278,6 +317,14 @@ class _HomePageState extends State<HomePage> {
       maxLength: 8,
       onChanged: (value) {
         setState(() {
+          if (_tecAmpThirdWire.text.isEmpty) {
+            _tecAmpThirdWire.text = _initialValue.toString();
+            _tecAmpThirdWire.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _tecAmpThirdWire.value.text.length,
+            );
+          }
+
           if (double.tryParse(value) == null) {
             _calculator.ampThirdWire = _initialValue;
           } else {
@@ -295,7 +342,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         _tecAmpThirdWire.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _tecAmpThirdWire.toString().length,
+          extentOffset: _tecAmpThirdWire.value.text.length,
         );
       },
       style: const TextStyle(fontSize: 20),
@@ -333,12 +380,12 @@ class _HomePageState extends State<HomePage> {
     _calculator.ampSecondWire = 0.0;
     _calculator.ampThirdWire = 0.0;
 
-    _tecInitialTemp.clear();
-    _tecSetTemp.clear();
-    _tecVolume.clear();
-    _tecAmpFirstWire.clear();
-    _tecAmpSecondWire.clear();
-    _tecAmpThirdWire.clear();
+    _tecInitialTemp.text = _initialValue.toString();
+    _tecSetTemp.text = _initialValue.toString();
+    _tecVolume.text = _initialValue.toString();
+    _tecAmpFirstWire.text = _initialValue.toString();
+    _tecAmpSecondWire.text = _initialValue.toString();
+    _tecAmpThirdWire.text = _initialValue.toString();
 
     return calculator;
   }
@@ -409,6 +456,16 @@ class _HomePageState extends State<HomePage> {
                             maxLength: 12,
                             onChanged: (value) {
                               setState(() {
+                                if (_tecInitialTemp.text.isEmpty) {
+                                  _tecInitialTemp.text =
+                                      _initialValue.toString();
+                                  _tecInitialTemp.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset:
+                                        _tecInitialTemp.value.text.length,
+                                  );
+                                }
+
                                 if (double.tryParse(value) == null) {
                                   _calculator.initialTemp = _initialValue;
                                 } else {
@@ -421,7 +478,7 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {
                               _tecInitialTemp.selection = TextSelection(
                                 baseOffset: 0,
-                                extentOffset: _tecInitialTemp.toString().length,
+                                extentOffset: _tecInitialTemp.value.text.length,
                               );
                             },
                             textAlign: TextAlign.center,
@@ -446,6 +503,14 @@ class _HomePageState extends State<HomePage> {
                             maxLength: 8,
                             onChanged: (value) {
                               setState(() {
+                                if (_tecSetTemp.text.isEmpty) {
+                                  _tecSetTemp.text = _initialValue.toString();
+                                  _tecSetTemp.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset: _tecSetTemp.value.text.length,
+                                  );
+                                }
+
                                 if (double.tryParse(value) == null) {
                                   _calculator.setTemp = _initialValue;
                                 } else {
@@ -458,7 +523,7 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {
                               _tecSetTemp.selection = TextSelection(
                                 baseOffset: 0,
-                                extentOffset: _tecSetTemp.toString().length,
+                                extentOffset: _tecSetTemp.value.text.length,
                               );
                             },
                             style: const TextStyle(fontSize: 20),
@@ -484,6 +549,14 @@ class _HomePageState extends State<HomePage> {
                             maxLength: 8,
                             onChanged: (value) {
                               setState(() {
+                                if (_tecVolume.text.isEmpty) {
+                                  _tecVolume.text = _initialValue.toString();
+                                  _tecVolume.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset: _tecVolume.value.text.length,
+                                  );
+                                }
+
                                 if (double.tryParse(value) == null) {
                                   _calculator.volume = _initialValue;
                                 } else {
@@ -496,7 +569,7 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {
                               _tecVolume.selection = TextSelection(
                                 baseOffset: 0,
-                                extentOffset: _tecVolume.toString().length,
+                                extentOffset: _tecVolume.value.text.length,
                               );
                             },
                             style: const TextStyle(fontSize: 20),
