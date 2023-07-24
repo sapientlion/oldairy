@@ -5,14 +5,18 @@ import 'package:oldairy/classes/calculator.dart';
 class Oldairy extends StatelessWidget {
   const Oldairy({super.key});
 
+  final String _appTitle = 'Oldairy';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pocadia',
+      title: _appTitle,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const HomePage(title: 'Pocadia'),
+      home: HomePage(
+        title: _appTitle,
+      ),
     );
   }
 }
@@ -27,7 +31,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _dropdownValue = 0;
   final double _initialValue = 0.0;
   final Calculator _calculator = Calculator();
   final List<int> _voltages = <int>[
@@ -36,14 +39,22 @@ class _HomePageState extends State<HomePage> {
     380,
     400
   ]; // Use ISO-approved voltages.
+  final TextEditingController _tecInitialTemp = TextEditingController();
+  final TextEditingController _tecSetTemp = TextEditingController();
+  final TextEditingController _tecVolume = TextEditingController();
+  final TextEditingController _tecAmpFirstWire = TextEditingController();
+  final TextEditingController _tecAmpSecondWire = TextEditingController();
+  final TextEditingController _tecAmpThirdWire = TextEditingController();
 
-  TextFormField _tecAmpFirstWireField = TextFormField();
-  TextFormField _tecAmpSecondWireField = TextFormField();
-  TextFormField _tecAmpThirdWireField = TextFormField();
+  int _dropdownValue = 0;
+  TextFormField _tffAmpFirstWireField = TextFormField();
+  TextFormField _tffAmpSecondWireField = TextFormField();
+  TextFormField _tffAmpThirdWireField = TextFormField();
 
   _HomePageState() {
-    _tecAmpFirstWireField = TextFormField(
+    _tffAmpFirstWireField = TextFormField(
       autocorrect: false,
+      controller: _tecAmpFirstWire,
       decoration: const InputDecoration(
         counterStyle: TextStyle(height: double.minPositive),
         counterText: '',
@@ -75,13 +86,25 @@ class _HomePageState extends State<HomePage> {
     switchPhaseFields(_voltages.first);
   }
 
+  @override
+  void dispose() {
+    _tecInitialTemp.dispose();
+    _tecSetTemp.dispose();
+    _tecVolume.dispose();
+    _tecAmpFirstWire.dispose();
+    _tecAmpSecondWire.dispose();
+    _tecAmpThirdWire.dispose();
+    super.dispose();
+  }
+
   //
   // Three-phase electric power: switch state of the second wire field.
   //
   void switchSecondWireField(int voltage) {
     if (voltage == 220 || voltage == 230) {
-      _tecAmpSecondWireField = TextFormField(
+      _tffAmpSecondWireField = TextFormField(
         autocorrect: false,
+        controller: _tecAmpSecondWire,
         decoration: const InputDecoration(
           counterStyle: TextStyle(height: double.minPositive),
           counterText: '',
@@ -115,8 +138,9 @@ class _HomePageState extends State<HomePage> {
     //
     // Execute the following when using 380/440 volts.
     //
-    _tecAmpSecondWireField = TextFormField(
+    _tffAmpSecondWireField = TextFormField(
       autocorrect: false,
+      controller: _tecAmpSecondWire,
       decoration: const InputDecoration(
         counterStyle: TextStyle(height: double.minPositive),
         counterText: '',
@@ -151,8 +175,9 @@ class _HomePageState extends State<HomePage> {
   //
   void switchThirdWireField(int voltage) {
     if (voltage == 220 || voltage == 230) {
-      _tecAmpThirdWireField = TextFormField(
+      _tffAmpThirdWireField = TextFormField(
         autocorrect: false,
+        controller: _tecAmpThirdWire,
         decoration: const InputDecoration(
           counterStyle: TextStyle(height: double.minPositive),
           counterText: '',
@@ -186,8 +211,9 @@ class _HomePageState extends State<HomePage> {
     //
     // Execute the following when using 380/400 volts.
     //
-    _tecAmpThirdWireField = TextFormField(
+    _tffAmpThirdWireField = TextFormField(
       autocorrect: false,
+      controller: _tecAmpThirdWire,
       decoration: const InputDecoration(
         counterStyle: TextStyle(height: double.minPositive),
         counterText: '',
@@ -234,6 +260,27 @@ class _HomePageState extends State<HomePage> {
     return;
   }
 
+  //
+  // Purge all fields from data.
+  //
+  Calculator purge(Calculator calculator) {
+    _calculator.initialTemp = 0.0;
+    _calculator.setTemp = 0.0;
+    _calculator.volume = 0.0;
+    _calculator.ampFirstWire = 0.0;
+    _calculator.ampSecondWire = 0.0;
+    _calculator.ampThirdWire = 0.0;
+
+    _tecInitialTemp.clear();
+    _tecSetTemp.clear();
+    _tecVolume.clear();
+    _tecAmpFirstWire.clear();
+    _tecAmpSecondWire.clear();
+    _tecAmpThirdWire.clear();
+
+    return calculator;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +304,19 @@ class _HomePageState extends State<HomePage> {
                     // Add an empty space between the form and the text output.
                     //
                     const Padding(
-                      padding: EdgeInsets.all(32),
+                      padding: EdgeInsets.all(24),
+                    ),
+                    FloatingActionButton.extended(
+                      onPressed: () {
+                        purge(_calculator);
+                      },
+                      label: const Text('Clear All'),
+                    ),
+                    //
+                    // Add an empty space between the form and the text output.
+                    //
+                    const Padding(
+                      padding: EdgeInsets.all(24),
                     ),
                     Wrap(
                       alignment: WrapAlignment.center,
@@ -268,6 +327,7 @@ class _HomePageState extends State<HomePage> {
                           width: 128,
                           child: TextFormField(
                             autocorrect: false,
+                            controller: _tecInitialTemp,
                             //
                             // Get rid of the counter; do the same thing for
                             // the other fields as well.
@@ -303,6 +363,7 @@ class _HomePageState extends State<HomePage> {
                           width: 128,
                           child: TextFormField(
                             autocorrect: false,
+                            controller: _tecSetTemp,
                             decoration: const InputDecoration(
                               counterStyle:
                                   TextStyle(height: double.minPositive),
@@ -334,6 +395,7 @@ class _HomePageState extends State<HomePage> {
                           width: 128,
                           child: TextFormField(
                             autocorrect: false,
+                            controller: _tecVolume,
                             decoration: const InputDecoration(
                               counterStyle:
                                   TextStyle(height: double.minPositive),
@@ -398,15 +460,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(
                           width: 128,
-                          child: _tecAmpFirstWireField,
+                          child: _tffAmpFirstWireField,
                         ),
                         SizedBox(
                           width: 128,
-                          child: _tecAmpSecondWireField,
+                          child: _tffAmpSecondWireField,
                         ),
                         SizedBox(
                           width: 128,
-                          child: _tecAmpThirdWireField,
+                          child: _tffAmpThirdWireField,
                         ),
                       ],
                     ),
