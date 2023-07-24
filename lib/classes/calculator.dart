@@ -1,7 +1,9 @@
 import 'dart:math';
 
 class Calculator {
+  final int _amperageLimit = 125;
   final double _constant = 0.6;
+
   double _coolingTime = 0.0;
 
   double initialTemp = 0.0;
@@ -59,12 +61,24 @@ class Calculator {
     //
     // Same thing can happen here.
     //
-    if (ampFirstWire <= 0) {
-      _coolingTime = 0.0;
+    if (ampFirstWire > _amperageLimit) {
+      return _coolingTime = 0.0;
     }
 
     if (voltage == 220 || voltage == 230) {
+      if (ampFirstWire <= 0) {
+        return _coolingTime = 0.0;
+      }
+
       _coolingTime /= ampFirstWire;
+    }
+
+    if (ampSecondWire > _amperageLimit) {
+      return _coolingTime = 0.0;
+    }
+
+    if (ampThirdWire > _amperageLimit) {
+      return _coolingTime;
     }
 
     //
@@ -72,7 +86,13 @@ class Calculator {
     //
     if (voltage == 380 || voltage == 400) {
       ampFirstWire += ampSecondWire + ampThirdWire;
-      _coolingTime = _coolingTime / (ampFirstWire / sqrt(3));
+      ampFirstWire = ampFirstWire / sqrt(3);
+
+      if (ampFirstWire <= 0) {
+        return _coolingTime = 0.0;
+      }
+
+      _coolingTime = _coolingTime / ampFirstWire;
     }
 
     String coolingTimeRound = _coolingTime.toStringAsFixed(2);

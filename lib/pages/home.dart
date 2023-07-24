@@ -31,6 +31,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final int _amperageLimit = 125;
   final double _initialValue = 0.0;
   final Calculator _calculator = Calculator();
   final List<int> _voltages = <int>[
@@ -72,6 +73,17 @@ class _HomePageState extends State<HomePage> {
             _calculator.ampFirstWire = _initialValue;
           } else {
             _calculator.ampFirstWire = double.parse(value);
+          }
+
+          if (_calculator.ampFirstWire > _amperageLimit) {
+            //
+            // Set member value to pre-defined amperage limit.
+            //
+            _calculator.ampFirstWire = _amperageLimit.toDouble();
+            //
+            // Assign a new value to the input field.
+            //
+            _tecAmpFirstWire.text = _calculator.ampFirstWire.toString();
           }
 
           _calculator.calculate();
@@ -120,9 +132,14 @@ class _HomePageState extends State<HomePage> {
         onChanged: (value) {
           setState(() {
             if (double.tryParse(value) == null) {
-              _calculator.ampFirstWire = _initialValue;
+              _calculator.ampSecondWire = _initialValue;
             } else {
-              _calculator.ampFirstWire = double.parse(value);
+              _calculator.ampSecondWire = double.parse(value);
+            }
+
+            if (_calculator.ampSecondWire > _amperageLimit) {
+              _calculator.ampSecondWire = _amperageLimit.toDouble();
+              _tecAmpSecondWire.text = _calculator.ampSecondWire.toString();
             }
 
             _calculator.calculate();
@@ -155,9 +172,14 @@ class _HomePageState extends State<HomePage> {
       onChanged: (value) {
         setState(() {
           if (double.tryParse(value) == null) {
-            _calculator.ampFirstWire = _initialValue;
+            _calculator.ampSecondWire = _initialValue;
           } else {
-            _calculator.ampFirstWire = double.parse(value);
+            _calculator.ampSecondWire = double.parse(value);
+          }
+
+          if (_calculator.ampSecondWire > _amperageLimit) {
+            _calculator.ampSecondWire = _amperageLimit.toDouble();
+            _tecAmpSecondWire.text = _calculator.ampSecondWire.toString();
           }
 
           _calculator.calculate();
@@ -193,9 +215,14 @@ class _HomePageState extends State<HomePage> {
         onChanged: (value) {
           setState(() {
             if (double.tryParse(value) == null) {
-              _calculator.ampFirstWire = _initialValue;
+              _calculator.ampThirdWire = _initialValue;
             } else {
-              _calculator.ampFirstWire = double.parse(value);
+              _calculator.ampThirdWire = double.parse(value);
+            }
+
+            if (_calculator.ampThirdWire > _amperageLimit) {
+              _calculator.ampThirdWire = _amperageLimit.toDouble();
+              _tecAmpThirdWire.text = _calculator.ampThirdWire.toString();
             }
 
             _calculator.calculate();
@@ -228,9 +255,14 @@ class _HomePageState extends State<HomePage> {
       onChanged: (value) {
         setState(() {
           if (double.tryParse(value) == null) {
-            _calculator.ampFirstWire = _initialValue;
+            _calculator.ampThirdWire = _initialValue;
           } else {
-            _calculator.ampFirstWire = double.parse(value);
+            _calculator.ampThirdWire = double.parse(value);
+          }
+
+          if (_calculator.ampThirdWire > _amperageLimit) {
+            _calculator.ampThirdWire = _amperageLimit.toDouble();
+            _tecAmpThirdWire.text = _calculator.ampThirdWire.toString();
           }
 
           _calculator.calculate();
