@@ -32,10 +32,107 @@ class Calculator {
   }
 
   //
+  // Calculate using the lower voltages (220V to 230V as defined by ISO).
+  //
+  double calculateLow(int voltage) {
+    if (voltage < 220 || voltage > 230) {
+      return _coolingTime = 0.0;
+    }
+
+    _coolingTime /= ampFirstWire;
+
+    String coolingTimeRound = _coolingTime.toStringAsFixed(2);
+
+    _coolingTime = double.parse(coolingTimeRound);
+
+    return _coolingTime;
+  }
+
+  //
+  // Calculate using the higher voltages (380V to 400V as defined by ISO).
+  //
+  double calculateHigh(int voltage) {
+    if (voltage < 380 || voltage > 400) {
+      return _coolingTime = 0.0;
+    }
+
+    if (ampSecondWire > _amperageLimit) {
+      return _coolingTime = 0.0;
+    }
+
+    if (ampThirdWire > _amperageLimit) {
+      return _coolingTime = 0.0;
+    }
+
+    //
+    // Switch to three-phase electric power in case of higher voltages.
+    //
+    ampFirstWire += ampSecondWire + ampThirdWire;
+    ampFirstWire = ampFirstWire / sqrt(3);
+
+    if (ampFirstWire <= 0) {
+      return _coolingTime = 0.0;
+    }
+
+    _coolingTime = _coolingTime / ampFirstWire;
+
+    String coolingTimeRound = _coolingTime.toStringAsFixed(2);
+
+    _coolingTime = double.parse(coolingTimeRound);
+
+    return _coolingTime;
+  }
+
+  //
   // Find out total amount of time necessary to cool down an industrial-sized
   // milk tank.
   //
-  double calculate() {
+  double calculate(int voltage) {
+    _coolingTime = initialTemp - setTemp;
+
+    //
+    // No point in going any further when the result will always be the same
+    // and equal to 0.
+    //
+    if (_coolingTime <= 0) {
+      return _coolingTime = 0.0;
+    }
+
+    _coolingTime = _constant * _coolingTime;
+    _coolingTime = volume * _coolingTime;
+
+    //
+    // Division by zero is undefined.
+    //
+    if (voltage <= 0) {
+      return _coolingTime = 0.0;
+    }
+
+    _coolingTime /= voltage;
+
+    //
+    // Same thing can happen here.
+    //
+    if (ampFirstWire <= 0 || ampFirstWire > _amperageLimit) {
+      return _coolingTime = 0.0;
+    }
+
+    if (voltage >= 220 && voltage <= 230) {
+      return calculateLow(voltage);
+    }
+
+    if (voltage >= 380 && voltage <= 400) {
+      return calculateHigh(voltage);
+    }
+
+    return _coolingTime = 0.0;
+  }
+
+  //
+  // Find out total amount of time necessary to cool down an industrial-sized
+  // milk tank.
+  //
+  /*double calculate() {
     _coolingTime = initialTemp - setTemp;
 
     //
@@ -100,5 +197,5 @@ class Calculator {
     _coolingTime = double.parse(coolingTimeRound);
 
     return _coolingTime;
-  }
+  }*/
 }

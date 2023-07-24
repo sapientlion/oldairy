@@ -86,8 +86,14 @@ class _HomePageState extends State<HomePage> {
             _tecAmpFirstWire.text = _calculator.ampFirstWire.toString();
           }
 
-          _calculator.calculate();
+          _calculator.calculate(_dropdownValue);
         });
+      },
+      onTap: () {
+        _tecAmpFirstWire.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _tecAmpFirstWire.toString().length,
+        );
       },
       style: const TextStyle(fontSize: 20),
       textAlign: TextAlign.center,
@@ -142,8 +148,14 @@ class _HomePageState extends State<HomePage> {
               _tecAmpSecondWire.text = _calculator.ampSecondWire.toString();
             }
 
-            _calculator.calculate();
+            _calculator.calculate(_dropdownValue);
           });
+        },
+        onTap: () {
+          _tecAmpSecondWire.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: _tecAmpSecondWire.toString().length,
+          );
         },
         style: const TextStyle(fontSize: 20),
         textAlign: TextAlign.center,
@@ -182,8 +194,14 @@ class _HomePageState extends State<HomePage> {
             _tecAmpSecondWire.text = _calculator.ampSecondWire.toString();
           }
 
-          _calculator.calculate();
+          _calculator.calculate(_dropdownValue);
         });
+      },
+      onTap: () {
+        _tecAmpSecondWire.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _tecAmpSecondWire.toString().length,
+        );
       },
       style: const TextStyle(fontSize: 20),
       textAlign: TextAlign.center,
@@ -225,8 +243,14 @@ class _HomePageState extends State<HomePage> {
               _tecAmpThirdWire.text = _calculator.ampThirdWire.toString();
             }
 
-            _calculator.calculate();
+            _calculator.calculate(_dropdownValue);
           });
+        },
+        onTap: () {
+          _tecAmpThirdWire.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: _tecAmpThirdWire.toString().length,
+          );
         },
         style: const TextStyle(fontSize: 20),
         textAlign: TextAlign.center,
@@ -265,8 +289,14 @@ class _HomePageState extends State<HomePage> {
             _tecAmpThirdWire.text = _calculator.ampThirdWire.toString();
           }
 
-          _calculator.calculate();
+          _calculator.calculate(_dropdownValue);
         });
+      },
+      onTap: () {
+        _tecAmpThirdWire.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _tecAmpThirdWire.toString().length,
+        );
       },
       style: const TextStyle(fontSize: 20),
       textAlign: TextAlign.center,
@@ -385,8 +415,14 @@ class _HomePageState extends State<HomePage> {
                                   _calculator.initialTemp = double.parse(value);
                                 }
 
-                                _calculator.calculate();
+                                _calculator.calculate(_dropdownValue);
                               });
+                            },
+                            onTap: () {
+                              _tecInitialTemp.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _tecInitialTemp.toString().length,
+                              );
                             },
                             textAlign: TextAlign.center,
                           ),
@@ -416,8 +452,14 @@ class _HomePageState extends State<HomePage> {
                                   _calculator.setTemp = double.parse(value);
                                 }
 
-                                _calculator.calculate();
+                                _calculator.calculate(_dropdownValue);
                               });
+                            },
+                            onTap: () {
+                              _tecSetTemp.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _tecSetTemp.toString().length,
+                              );
                             },
                             style: const TextStyle(fontSize: 20),
                             textAlign: TextAlign.center,
@@ -448,8 +490,14 @@ class _HomePageState extends State<HomePage> {
                                   _calculator.volume = double.parse(value);
                                 }
 
-                                _calculator.calculate();
+                                _calculator.calculate(_dropdownValue);
                               });
+                            },
+                            onTap: () {
+                              _tecVolume.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _tecVolume.toString().length,
+                              );
                             },
                             style: const TextStyle(fontSize: 20),
                             textAlign: TextAlign.center,
@@ -485,7 +533,7 @@ class _HomePageState extends State<HomePage> {
                                 _calculator.voltage = value.toDouble();
 
                                 switchPhaseFields(_calculator.voltage.toInt());
-                                _calculator.calculate();
+                                _calculator.calculate(_dropdownValue);
                               });
                             },
                           ),
