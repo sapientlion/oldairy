@@ -606,6 +606,20 @@ class _HomePageState extends State<HomePage> {
                                 _calculator.voltage = value.toDouble();
 
                                 switchPhaseFields(_calculator.voltage.toInt());
+
+                                _calculator.initialTemp =
+                                    double.parse(_tecInitialTemp.text);
+                                _calculator.setTemp =
+                                    double.parse(_tecSetTemp.text);
+                                _calculator.volume =
+                                    double.parse(_tecVolume.text);
+                                _calculator.ampFirstWire =
+                                    double.parse(_tecAmpFirstWire.text);
+                                _calculator.ampSecondWire =
+                                    double.parse(_tecAmpSecondWire.text);
+                                _calculator.ampThirdWire =
+                                    double.parse(_tecAmpThirdWire.text);
+
                                 _calculator.calculate(_dropdownValue);
                               });
                             },
