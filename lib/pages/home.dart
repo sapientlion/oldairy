@@ -127,6 +127,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     FloatingActionButton.extended(
                       onPressed: () {
+                        setState(() {
+                          _coolingTimeHours = '0';
+                          _coolingTimeMinutes = '0';
+                        });
+
                         purge(_calculator);
                       },
                       label: const Text('Clear All'),
