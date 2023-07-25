@@ -4,6 +4,9 @@ class Calculator {
   final int _amperageLimit = 125;
   final double _constant = 0.6;
 
+  bool _isMoreThanSixty = false;
+  int _coolingTimeHours = 0;
+  int _coolingTimeMinutes = 0;
   double _coolingTime = 0.0;
 
   double initialTemp = 0.0;
@@ -25,10 +28,58 @@ class Calculator {
   });
 
   //
-  // Get cooling time.
+  // Get cooling time as double literal.
   //
   double getCoolingTime() {
     return _coolingTime;
+  }
+
+  //
+  // Get cooling time: hours.
+  //
+  int getHours() {
+    _coolingTimeHours = _coolingTime.toInt();
+
+    //
+    // Trigger this to flip the 60-minute flag, if need be.
+    //
+    getMinutes();
+
+    if (_isMoreThanSixty) {
+      _coolingTimeHours += 1;
+    }
+
+    return _coolingTimeHours;
+  }
+
+  //
+  // Get cooling time: minutes.
+  //
+  int getMinutes() {
+    bool isFloatingPoint = false;
+    String coolingTimeAsString = _coolingTime.toString();
+    String coolingTimeMinutesAsString = '';
+
+    for (var element in coolingTimeAsString.runes) {
+      if (isFloatingPoint) {
+        coolingTimeMinutesAsString += String.fromCharCode(element);
+      }
+
+      if (!isFloatingPoint && String.fromCharCode(element) == '.') {
+        isFloatingPoint = true;
+      }
+    }
+
+    _coolingTimeMinutes = int.parse(coolingTimeMinutesAsString);
+
+    if (_coolingTimeMinutes > 59) {
+      _isMoreThanSixty = true;
+      _coolingTimeMinutes -= 60;
+    } else {
+      _isMoreThanSixty = false;
+    }
+
+    return _coolingTimeMinutes;
   }
 
   //

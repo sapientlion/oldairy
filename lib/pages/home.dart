@@ -50,6 +50,8 @@ class _HomePageState extends State<HomePage> {
   bool _isSecondWireEnabled = false;
   bool _isThirdWireEnabled = false;
   int _dropdownValue = 0;
+  String _coolingTimeHours = '0';
+  String _coolingTimeMinutes = '0';
 
   _HomePageState() {
     _tecInitialTemp.text = _initialValue.toString();
@@ -110,7 +112,11 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Text(
-                      '${_calculator.getCoolingTime()}',
+                      '$_coolingTimeHours h.',
+                      textScaleFactor: 4,
+                    ),
+                    Text(
+                      '$_coolingTimeMinutes m.',
                       textScaleFactor: 4,
                     ),
                     //
@@ -177,6 +183,10 @@ class _HomePageState extends State<HomePage> {
                                 }
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                             onTap: () {
@@ -222,6 +232,10 @@ class _HomePageState extends State<HomePage> {
                                 }
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                             onTap: () {
@@ -268,6 +282,10 @@ class _HomePageState extends State<HomePage> {
                                 }
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                             onTap: () {
@@ -332,6 +350,10 @@ class _HomePageState extends State<HomePage> {
                                     double.parse(_tecAmpThirdWire.text);
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                           ),
@@ -386,6 +408,10 @@ class _HomePageState extends State<HomePage> {
                                 }
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                             onTap: () {
@@ -445,6 +471,10 @@ class _HomePageState extends State<HomePage> {
                                 }
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                             onTap: () {
@@ -503,6 +533,10 @@ class _HomePageState extends State<HomePage> {
                                 }
 
                                 _calculator.calculate(_dropdownValue);
+                                _coolingTimeHours =
+                                    _calculator.getHours().toString();
+                                _coolingTimeMinutes =
+                                    _calculator.getMinutes().toString();
                               });
                             },
                             onTap: () {
