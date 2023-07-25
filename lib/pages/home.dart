@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:oldairy/classes/calculator.dart';
+import 'package:oldairy/pages/settings.dart';
 
 class Oldairy extends StatelessWidget {
   const Oldairy({super.key});
@@ -105,6 +107,48 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<int>(
+                  value: 1,
+                  child: Text("Settings"),
+                ),
+                const PopupMenuItem<int>(
+                  value: 2,
+                  child: Text("About"),
+                ),
+                const PopupMenuItem<int>(
+                  value: 3,
+                  child: Text("Exit"),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 1:
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const SettingsPage(title: 'Oldairy'),
+                      ),
+                    );
+
+                    break;
+                  }
+                case 3:
+                  {
+                    SystemNavigator.pop();
+
+                    break;
+                  }
+              }
+            },
+          )
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
