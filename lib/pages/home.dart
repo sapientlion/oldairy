@@ -375,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                               filled: true,
                               fillColor: Color.fromRGBO(211, 211, 211, 1),
                               label: Center(
-                                child: Text('Amperage'),
+                                child: Text('Amperage 1'),
                               ),
                             ),
                             keyboardType: TextInputType.number,
@@ -426,7 +426,9 @@ class _HomePageState extends State<HomePage> {
                                     _tecAmpFirstWire.value.text.length,
                               );
                             },
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -435,16 +437,30 @@ class _HomePageState extends State<HomePage> {
                           child: TextFormField(
                             autocorrect: false,
                             controller: _tecAmpSecondWire,
-                            decoration: const InputDecoration(
-                              counterStyle:
-                                  TextStyle(height: double.minPositive),
-                              counterText: '',
-                              filled: true,
-                              fillColor: Color.fromRGBO(211, 211, 211, 1),
-                              label: Center(
-                                child: Text('Amperage'),
-                              ),
-                            ),
+                            decoration: !_isSecondWireEnabled
+                                ? const InputDecoration(
+                                    counterStyle:
+                                        TextStyle(height: double.minPositive),
+                                    counterText: '',
+                                    filled: true,
+                                    fillColor: Colors.white10,
+                                    label: Center(
+                                      child: Text('Amperage 2'),
+                                    ),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white10,
+                                    ),
+                                  )
+                                : const InputDecoration(
+                                    counterStyle:
+                                        TextStyle(height: double.minPositive),
+                                    counterText: '',
+                                    filled: true,
+                                    fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                    label: Center(
+                                      child: Text('Amperage 2'),
+                                    ),
+                                  ),
                             enabled: _isSecondWireEnabled,
                             keyboardType: TextInputType.number,
                             maxLength: 8,
@@ -489,7 +505,14 @@ class _HomePageState extends State<HomePage> {
                                     _tecAmpSecondWire.value.text.length,
                               );
                             },
-                            style: const TextStyle(fontSize: 20),
+                            style: !_isSecondWireEnabled
+                                ? const TextStyle(
+                                    color: Colors.white10,
+                                    fontSize: 20,
+                                  )
+                                : const TextStyle(
+                                    fontSize: 20,
+                                  ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -498,16 +521,30 @@ class _HomePageState extends State<HomePage> {
                           child: TextFormField(
                             autocorrect: false,
                             controller: _tecAmpThirdWire,
-                            decoration: const InputDecoration(
-                              counterStyle:
-                                  TextStyle(height: double.minPositive),
-                              counterText: '',
-                              filled: true,
-                              fillColor: Color.fromRGBO(211, 211, 211, 1),
-                              label: Center(
-                                child: Text('Amperage'),
-                              ),
-                            ),
+                            decoration: !_isThirdWireEnabled
+                                ? const InputDecoration(
+                                    counterStyle:
+                                        TextStyle(height: double.minPositive),
+                                    counterText: '',
+                                    filled: true,
+                                    fillColor: Colors.white10,
+                                    label: Center(
+                                      child: Text('Amperage 3'),
+                                    ),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white10,
+                                    ),
+                                  )
+                                : const InputDecoration(
+                                    counterStyle:
+                                        TextStyle(height: double.minPositive),
+                                    counterText: '',
+                                    filled: true,
+                                    fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                    label: Center(
+                                      child: Text('Amperage 3'),
+                                    ),
+                                  ),
                             enabled: _isThirdWireEnabled,
                             keyboardType: TextInputType.number,
                             maxLength: 8,
@@ -551,7 +588,14 @@ class _HomePageState extends State<HomePage> {
                                     _tecAmpThirdWire.value.text.length,
                               );
                             },
-                            style: const TextStyle(fontSize: 20),
+                            style: !_isThirdWireEnabled
+                                ? const TextStyle(
+                                    color: Colors.white10,
+                                    fontSize: 20,
+                                  )
+                                : const TextStyle(
+                                    fontSize: 20,
+                                  ),
                             textAlign: TextAlign.center,
                           ),
                         ),
