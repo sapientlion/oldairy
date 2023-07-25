@@ -47,10 +47,9 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _tecAmpSecondWire = TextEditingController();
   final TextEditingController _tecAmpThirdWire = TextEditingController();
 
+  bool _isSecondWireEnabled = false;
+  bool _isThirdWireEnabled = false;
   int _dropdownValue = 0;
-  TextFormField _tffAmpFirstWireField = TextFormField();
-  TextFormField _tffAmpSecondWireField = TextFormField();
-  TextFormField _tffAmpThirdWireField = TextFormField();
 
   _HomePageState() {
     _tecInitialTemp.text = _initialValue.toString();
@@ -60,63 +59,7 @@ class _HomePageState extends State<HomePage> {
     _tecAmpSecondWire.text = _initialValue.toString();
     _tecAmpThirdWire.text = _initialValue.toString();
 
-    _tffAmpFirstWireField = TextFormField(
-      autocorrect: false,
-      controller: _tecAmpFirstWire,
-      decoration: const InputDecoration(
-        counterStyle: TextStyle(height: double.minPositive),
-        counterText: '',
-        filled: true,
-        fillColor: Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: Text('Amperage'),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      maxLength: 8,
-      onChanged: (value) {
-        setState(() {
-          if (_tecAmpFirstWire.value.text.isEmpty) {
-            _tecAmpFirstWire.text = _initialValue.toString();
-            _tecAmpFirstWire.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _tecAmpFirstWire.value.text.length,
-            );
-          }
-
-          if (double.tryParse(value) == null) {
-            _calculator.ampFirstWire = _initialValue;
-          } else {
-            _calculator.ampFirstWire = double.parse(value);
-          }
-
-          if (_calculator.ampFirstWire > _amperageLimit) {
-            //
-            // Set member value to pre-defined amperage limit.
-            //
-            _calculator.ampFirstWire = _amperageLimit.toDouble();
-            //
-            // Assign a new value to the input field.
-            //
-            _tecAmpFirstWire.text = _calculator.ampFirstWire.toString();
-          }
-
-          _calculator.calculate(_dropdownValue);
-        });
-      },
-      onTap: () {
-        _tecAmpFirstWire.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: _tecAmpFirstWire.value.text.length,
-        );
-      },
-      style: const TextStyle(fontSize: 20),
-      textAlign: TextAlign.center,
-    );
-
     _dropdownValue = _voltages.first;
-
-    switchPhaseFields(_voltages.first);
   }
 
   @override
@@ -128,245 +71,6 @@ class _HomePageState extends State<HomePage> {
     _tecAmpSecondWire.dispose();
     _tecAmpThirdWire.dispose();
     super.dispose();
-  }
-
-  //
-  // Three-phase electric power: switch state of the second wire field.
-  //
-  void switchSecondWireField(int voltage) {
-    if (voltage == 220 || voltage == 230) {
-      _tffAmpSecondWireField = TextFormField(
-        autocorrect: false,
-        controller: _tecAmpSecondWire,
-        decoration: const InputDecoration(
-          counterStyle: TextStyle(height: double.minPositive),
-          counterText: '',
-          filled: true,
-          fillColor: Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: Text('Amperage'),
-          ),
-        ),
-        enabled: false,
-        keyboardType: TextInputType.number,
-        maxLength: 8,
-        onChanged: (value) {
-          setState(() {
-            if (_tecAmpSecondWire.text.isEmpty) {
-              _tecAmpSecondWire.text = _initialValue.toString();
-              _tecAmpSecondWire.selection = TextSelection(
-                baseOffset: 0,
-                extentOffset: _tecAmpSecondWire.value.text.length,
-              );
-            }
-
-            if (double.tryParse(value) == null) {
-              _calculator.ampSecondWire = _initialValue;
-            } else {
-              _calculator.ampSecondWire = double.parse(value);
-            }
-
-            if (_calculator.ampSecondWire > _amperageLimit) {
-              _calculator.ampSecondWire = _amperageLimit.toDouble();
-              _tecAmpSecondWire.text = _calculator.ampSecondWire.toString();
-            }
-
-            _calculator.calculate(_dropdownValue);
-          });
-        },
-        onTap: () {
-          _tecAmpSecondWire.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: _tecAmpSecondWire.value.text.length,
-          );
-        },
-        style: const TextStyle(fontSize: 20),
-        textAlign: TextAlign.center,
-      );
-
-      return;
-    }
-
-    //
-    // Execute the following when using 380/440 volts.
-    //
-    _tffAmpSecondWireField = TextFormField(
-      autocorrect: false,
-      controller: _tecAmpSecondWire,
-      decoration: const InputDecoration(
-        counterStyle: TextStyle(height: double.minPositive),
-        counterText: '',
-        filled: true,
-        fillColor: Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: Text('Amperage'),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      maxLength: 8,
-      onChanged: (value) {
-        setState(() {
-          if (_tecAmpSecondWire.text.isEmpty) {
-            _tecAmpSecondWire.text = _initialValue.toString();
-            _tecAmpSecondWire.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _tecAmpSecondWire.value.text.length,
-            );
-          }
-
-          if (double.tryParse(value) == null) {
-            _calculator.ampSecondWire = _initialValue;
-          } else {
-            _calculator.ampSecondWire = double.parse(value);
-          }
-
-          if (_calculator.ampSecondWire > _amperageLimit) {
-            _calculator.ampSecondWire = _amperageLimit.toDouble();
-            _tecAmpSecondWire.text = _calculator.ampSecondWire.toString();
-          }
-
-          _calculator.calculate(_dropdownValue);
-        });
-      },
-      onTap: () {
-        _tecAmpSecondWire.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: _tecAmpSecondWire.value.text.length,
-        );
-      },
-      style: const TextStyle(fontSize: 20),
-      textAlign: TextAlign.center,
-    );
-
-    return;
-  }
-
-  //
-  // Three-phase electric power: switch state of the thrid wire field.
-  //
-  void switchThirdWireField(int voltage) {
-    if (voltage == 220 || voltage == 230) {
-      _tffAmpThirdWireField = TextFormField(
-        autocorrect: false,
-        controller: _tecAmpThirdWire,
-        decoration: const InputDecoration(
-          counterStyle: TextStyle(height: double.minPositive),
-          counterText: '',
-          filled: true,
-          fillColor: Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: Text('Amperage'),
-          ),
-        ),
-        enabled: false,
-        keyboardType: TextInputType.number,
-        maxLength: 8,
-        onChanged: (value) {
-          setState(() {
-            if (_tecAmpThirdWire.text.isEmpty) {
-              _tecAmpThirdWire.text = _initialValue.toString();
-              _tecAmpThirdWire.selection = TextSelection(
-                baseOffset: 0,
-                extentOffset: _tecAmpThirdWire.value.text.length,
-              );
-            }
-
-            if (double.tryParse(value) == null) {
-              _calculator.ampThirdWire = _initialValue;
-            } else {
-              _calculator.ampThirdWire = double.parse(value);
-            }
-
-            if (_calculator.ampThirdWire > _amperageLimit) {
-              _calculator.ampThirdWire = _amperageLimit.toDouble();
-              _tecAmpThirdWire.text = _calculator.ampThirdWire.toString();
-            }
-
-            _calculator.calculate(_dropdownValue);
-          });
-        },
-        onTap: () {
-          _tecAmpThirdWire.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: _tecAmpThirdWire.value.text.length,
-          );
-        },
-        style: const TextStyle(fontSize: 20),
-        textAlign: TextAlign.center,
-      );
-
-      return;
-    }
-
-    //
-    // Execute the following when using 380/400 volts.
-    //
-    _tffAmpThirdWireField = TextFormField(
-      autocorrect: false,
-      controller: _tecAmpThirdWire,
-      decoration: const InputDecoration(
-        counterStyle: TextStyle(height: double.minPositive),
-        counterText: '',
-        filled: true,
-        fillColor: Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: Text('Amperage'),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      maxLength: 8,
-      onChanged: (value) {
-        setState(() {
-          if (_tecAmpThirdWire.text.isEmpty) {
-            _tecAmpThirdWire.text = _initialValue.toString();
-            _tecAmpThirdWire.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _tecAmpThirdWire.value.text.length,
-            );
-          }
-
-          if (double.tryParse(value) == null) {
-            _calculator.ampThirdWire = _initialValue;
-          } else {
-            _calculator.ampThirdWire = double.parse(value);
-          }
-
-          if (_calculator.ampThirdWire > _amperageLimit) {
-            _calculator.ampThirdWire = _amperageLimit.toDouble();
-            _tecAmpThirdWire.text = _calculator.ampThirdWire.toString();
-          }
-
-          _calculator.calculate(_dropdownValue);
-        });
-      },
-      onTap: () {
-        _tecAmpThirdWire.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: _tecAmpThirdWire.value.text.length,
-        );
-      },
-      style: const TextStyle(fontSize: 20),
-      textAlign: TextAlign.center,
-    );
-
-    return;
-  }
-
-  //
-  // Three-phase electric power: switch the state of wire fields all at once.
-  //
-  void switchPhaseFields(int voltage) {
-    if (voltage == 220 || voltage == 230) {
-      switchSecondWireField(voltage);
-      switchThirdWireField(voltage);
-
-      return;
-    }
-
-    switchSecondWireField(voltage);
-    switchThirdWireField(voltage);
-
-    return;
   }
 
   //
@@ -605,7 +309,14 @@ class _HomePageState extends State<HomePage> {
                                 _dropdownValue = value!;
                                 _calculator.voltage = value.toDouble();
 
-                                switchPhaseFields(_calculator.voltage.toInt());
+                                if (_calculator.voltage >= 220 &&
+                                    _calculator.voltage <= 230) {
+                                  _isSecondWireEnabled = false;
+                                  _isThirdWireEnabled = false;
+                                } else {
+                                  _isSecondWireEnabled = true;
+                                  _isThirdWireEnabled = true;
+                                }
 
                                 _calculator.initialTemp =
                                     double.parse(_tecInitialTemp.text);
@@ -627,15 +338,183 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(
                           width: 128,
-                          child: _tffAmpFirstWireField,
+                          child: TextFormField(
+                            autocorrect: false,
+                            controller: _tecAmpFirstWire,
+                            decoration: const InputDecoration(
+                              counterStyle:
+                                  TextStyle(height: double.minPositive),
+                              counterText: '',
+                              filled: true,
+                              fillColor: Color.fromRGBO(211, 211, 211, 1),
+                              label: Center(
+                                child: Text('Amperage'),
+                              ),
+                            ),
+                            keyboardType: TextInputType.number,
+                            maxLength: 8,
+                            onChanged: (value) {
+                              setState(() {
+                                if (_tecAmpFirstWire.value.text.isEmpty) {
+                                  _tecAmpFirstWire.text =
+                                      _initialValue.toString();
+                                  _tecAmpFirstWire.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset:
+                                        _tecAmpFirstWire.value.text.length,
+                                  );
+                                }
+
+                                if (double.tryParse(value) == null) {
+                                  _calculator.ampFirstWire = _initialValue;
+                                } else {
+                                  _calculator.ampFirstWire =
+                                      double.parse(value);
+                                }
+
+                                if (_calculator.ampFirstWire > _amperageLimit) {
+                                  //
+                                  // Set member value to pre-defined amperage limit.
+                                  //
+                                  _calculator.ampFirstWire =
+                                      _amperageLimit.toDouble();
+                                  //
+                                  // Assign a new value to the input field.
+                                  //
+                                  _tecAmpFirstWire.text =
+                                      _calculator.ampFirstWire.toString();
+                                }
+
+                                _calculator.calculate(_dropdownValue);
+                              });
+                            },
+                            onTap: () {
+                              _tecAmpFirstWire.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _tecAmpFirstWire.value.text.length,
+                              );
+                            },
+                            style: const TextStyle(fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         SizedBox(
                           width: 128,
-                          child: _tffAmpSecondWireField,
+                          child: TextFormField(
+                            autocorrect: false,
+                            controller: _tecAmpSecondWire,
+                            decoration: const InputDecoration(
+                              counterStyle:
+                                  TextStyle(height: double.minPositive),
+                              counterText: '',
+                              filled: true,
+                              fillColor: Color.fromRGBO(211, 211, 211, 1),
+                              label: Center(
+                                child: Text('Amperage'),
+                              ),
+                            ),
+                            enabled: _isSecondWireEnabled,
+                            keyboardType: TextInputType.number,
+                            maxLength: 8,
+                            onChanged: (value) {
+                              setState(() {
+                                if (_tecAmpSecondWire.text.isEmpty) {
+                                  _tecAmpSecondWire.text =
+                                      _initialValue.toString();
+                                  _tecAmpSecondWire.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset:
+                                        _tecAmpSecondWire.value.text.length,
+                                  );
+                                }
+
+                                if (double.tryParse(value) == null) {
+                                  _calculator.ampSecondWire = _initialValue;
+                                } else {
+                                  _calculator.ampSecondWire =
+                                      double.parse(value);
+                                }
+
+                                if (_calculator.ampSecondWire >
+                                    _amperageLimit) {
+                                  _calculator.ampSecondWire =
+                                      _amperageLimit.toDouble();
+                                  _tecAmpSecondWire.text =
+                                      _calculator.ampSecondWire.toString();
+                                }
+
+                                _calculator.calculate(_dropdownValue);
+                              });
+                            },
+                            onTap: () {
+                              _tecAmpSecondWire.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _tecAmpSecondWire.value.text.length,
+                              );
+                            },
+                            style: const TextStyle(fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         SizedBox(
                           width: 128,
-                          child: _tffAmpThirdWireField,
+                          child: TextFormField(
+                            autocorrect: false,
+                            controller: _tecAmpThirdWire,
+                            decoration: const InputDecoration(
+                              counterStyle:
+                                  TextStyle(height: double.minPositive),
+                              counterText: '',
+                              filled: true,
+                              fillColor: Color.fromRGBO(211, 211, 211, 1),
+                              label: Center(
+                                child: Text('Amperage'),
+                              ),
+                            ),
+                            enabled: _isThirdWireEnabled,
+                            keyboardType: TextInputType.number,
+                            maxLength: 8,
+                            onChanged: (value) {
+                              setState(() {
+                                if (_tecAmpThirdWire.text.isEmpty) {
+                                  _tecAmpThirdWire.text =
+                                      _initialValue.toString();
+                                  _tecAmpThirdWire.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset:
+                                        _tecAmpThirdWire.value.text.length,
+                                  );
+                                }
+
+                                if (double.tryParse(value) == null) {
+                                  _calculator.ampThirdWire = _initialValue;
+                                } else {
+                                  _calculator.ampThirdWire =
+                                      double.parse(value);
+                                }
+
+                                if (_calculator.ampThirdWire > _amperageLimit) {
+                                  _calculator.ampThirdWire =
+                                      _amperageLimit.toDouble();
+                                  _tecAmpThirdWire.text =
+                                      _calculator.ampThirdWire.toString();
+                                }
+
+                                _calculator.calculate(_dropdownValue);
+                              });
+                            },
+                            onTap: () {
+                              _tecAmpThirdWire.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _tecAmpThirdWire.value.text.length,
+                              );
+                            },
+                            style: const TextStyle(fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
