@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, required this.title});
+class SettingsRoute extends StatefulWidget {
+  const SettingsRoute({super.key, required this.title});
 
   final String title;
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsRoute> createState() => _SettingsRouteState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsRouteState extends State<SettingsRoute> {
   final List<String> _languages = <String>[
     'English (US)',
     'Serbian (Cyrillic)',
@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String _dropdownValue = '';
 
-  _SettingsPageState() {
+  _SettingsRouteState() {
     _dropdownValue = _languages.first;
   }
 

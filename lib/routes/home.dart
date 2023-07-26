@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:oldairy/classes/calculator.dart';
-import 'package:oldairy/pages/settings.dart';
+import 'package:oldairy/routes/settings.dart';
 
 class Oldairy extends StatelessWidget {
   const Oldairy({super.key});
@@ -17,23 +17,23 @@ class Oldairy extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: HomePage(
+      home: HomeRoute(
         title: _appTitle,
       ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+class HomeRoute extends StatefulWidget {
+  const HomeRoute({super.key, required this.title});
 
   final String title;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeRoute> createState() => _HomeRouteState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeRouteState extends State<HomeRoute> {
   final int _initialTempLimit = 50;
   final int _setTempLimit = -50;
   final int _volumeLimit = 30000;
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   String _coolingTimeHours = '0';
   String _coolingTimeMinutes = '0';
 
-  _HomePageState() {
+  _HomeRouteState() {
     _tecInitialTemp.text = _initialValue.toString();
     _tecSetTemp.text = _initialValue.toString();
     _tecVolume.text = _initialValue.toString();
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            const SettingsPage(title: 'Oldairy'),
+                            const SettingsRoute(title: 'Oldairy'),
                       ),
                     );
 
