@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:oldairy/classes/calculator.dart';
+import 'package:oldairy/classes/settings.dart';
 import 'package:oldairy/routes/settings.dart';
 
 class Oldairy extends StatelessWidget {
@@ -40,12 +41,6 @@ class _HomeRouteState extends State<HomeRoute> {
   final int _amperageLimit = 125;
   final double _initialValue = 0.0;
   final Calculator _calculator = Calculator();
-  final List<int> _voltages = <int>[
-    220,
-    230,
-    380,
-    400
-  ]; // Use ISO-approved voltages.
   final TextEditingController _tecInitialTemp = TextEditingController();
   final TextEditingController _tecSetTemp = TextEditingController();
   final TextEditingController _tecVolume = TextEditingController();
@@ -58,6 +53,11 @@ class _HomeRouteState extends State<HomeRoute> {
   int _dropdownValue = 0;
   String _coolingTimeHours = '0';
   String _coolingTimeMinutes = '0';
+  Settings _settings = Settings();
+  //
+  // Store ISO-approved voltages here.
+  //
+  List<int> _voltages = <int>[230, 400];
 
   _HomeRouteState() {
     _tecInitialTemp.text = _initialValue.toString();
@@ -125,17 +125,29 @@ class _HomeRouteState extends State<HomeRoute> {
                 ),
               ];
             },
-            onSelected: (value) {
+            onSelected: (value) async {
               switch (value) {
                 case 1:
                   {
-                    Navigator.push(
+                    final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const SettingsRoute(title: 'Oldairy'),
+                        builder: (context) => SettingsRoute(
+                          title: 'Oldairy',
+                          settings: _settings,
+                        ),
                       ),
                     );
+
+                    setState(() {
+                      _settings = result;
+
+                      if (!_settings.isOldStandardEnabled) {
+                        _voltages = <int>[230, 400];
+                      } else {
+                        _voltages = <int>[220, 230, 380, 400];
+                      }
+                    });
 
                     break;
                   }

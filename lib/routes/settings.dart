@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:oldairy/classes/settings.dart';
 
 class SettingsRoute extends StatefulWidget {
-  const SettingsRoute({super.key, required this.title});
+  const SettingsRoute({super.key, required this.title, required this.settings});
 
   final String title;
+  final Settings settings;
 
   @override
   State<SettingsRoute> createState() => _SettingsRouteState();
@@ -17,6 +19,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ];
 
   String _dropdownValue = '';
+  Settings _settings = Settings();
 
   _SettingsRouteState() {
     _dropdownValue = _languages.first;
@@ -24,6 +27,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
   @override
   Widget build(BuildContext context) {
+    _settings = widget.settings;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -64,19 +69,36 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 },
               ),
             ),
+            //
+            // Support previous standard via checkbox interaction.
+            //
             Padding(
               padding: const EdgeInsets.all(32),
               child: CheckboxListTile(
-                checkColor: Colors.white,
                 controlAffinity: ListTileControlAffinity.leading,
+                tileColor: const Color.fromRGBO(211, 211, 211, 0),
                 title: const Text('Enable 220V/380V Support'),
-                //fillColor: MaterialStateProperty.resolveWith(getColor),
-                value: false,
+                value: _settings.isOldStandardEnabled,
                 onChanged: (bool? value) {
-                  setState(() {});
+                  setState(() {
+                    if (!_settings.isOldStandardEnabled) {
+                      _settings.isOldStandardEnabled = true;
+                    } else {
+                      _settings.isOldStandardEnabled = false;
+                    }
+                  });
                 },
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.pop(context, _settings);
+                },
+                label: const Text('Apply'),
+              ),
+            )
           ],
         ),
       ),
