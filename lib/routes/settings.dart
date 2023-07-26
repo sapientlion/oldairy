@@ -70,7 +70,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
               ),
             ),
             //
-            // Support previous standard via checkbox interaction.
+            // Support previous ISO standard via checkbox interaction.
             //
             Padding(
               padding: const EdgeInsets.all(32),
@@ -92,11 +92,41 @@ class _SettingsRouteState extends State<SettingsRoute> {
             ),
             Padding(
               padding: const EdgeInsets.all(32),
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  Navigator.pop(context, _settings);
-                },
-                label: const Text('Apply'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Wrap(
+                    spacing: 32,
+                    children: [
+                      //
+                      // Reset all settings to their default values.
+                      //
+                      SizedBox(
+                        width: 128,
+                        child: FloatingActionButton.extended(
+                          onPressed: () {
+                            setState(() {
+                              _settings.isOldStandardEnabled = false;
+                            });
+                          },
+                          label: const Text('Defaults'),
+                        ),
+                      ),
+                      //
+                      // Apply current app settings.
+                      //
+                      SizedBox(
+                        width: 128,
+                        child: FloatingActionButton.extended(
+                          onPressed: () {
+                            Navigator.pop(context, _settings);
+                          },
+                          label: const Text('Apply'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             )
           ],
