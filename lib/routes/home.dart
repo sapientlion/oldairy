@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,6 +73,12 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    readDefaultLocale();
+  }
+
+  @override
   void dispose() {
     _tecInitialTemp.dispose();
     _tecSetTemp.dispose();
@@ -79,6 +87,35 @@ class _HomeRouteState extends State<HomeRoute> {
     _tecAmpSecondWire.dispose();
     _tecAmpThirdWire.dispose();
     super.dispose();
+  }
+
+  Future<void> readDefaultLocale() async {
+    final String response =
+        await rootBundle.loadString('assets/locales/en_us.json');
+    final data = await json.decode(response);
+    Map<String, dynamic> locale = data;
+
+    setState(() {
+      _settings.locale.hours = locale['hours'];
+      _settings.locale.minutes = locale['minutes'];
+      _settings.locale.initialTemp = locale['initialTemp'];
+      _settings.locale.setTemp = locale['setTemp'];
+      _settings.locale.volume = locale['volume'];
+      _settings.locale.voltage = locale['voltage'];
+      _settings.locale.ampFirstWire = locale['ampFirst'];
+      _settings.locale.ampSecondWire = locale['ampSecond'];
+      _settings.locale.ampThirdWire = locale['ampThird'];
+      _settings.locale.clearAll = locale['clearAll'];
+      _settings.locale.settings = locale['settings'];
+      _settings.locale.about = locale['about'];
+      _settings.locale.help = locale['help'];
+      _settings.locale.exit = locale['exit'];
+      _settings.locale.general = locale['general'];
+      _settings.locale.language = locale['language'];
+      _settings.locale.oldStandardSupport = locale['oldStandard'];
+      _settings.locale.defaults = locale['defaults'];
+      _settings.locale.apply = locale['apply'];
+    });
   }
 
   //
@@ -111,17 +148,23 @@ class _HomeRouteState extends State<HomeRoute> {
           PopupMenuButton(
             itemBuilder: (context) {
               return [
-                const PopupMenuItem<int>(
+                PopupMenuItem<int>(
+                  //const PopupMenuItem<int>(
                   value: 1,
-                  child: Text("Settings"),
+                  child: Text(_settings.locale.settings),
+                  //child: Text("Settings"),
                 ),
-                const PopupMenuItem<int>(
+                PopupMenuItem<int>(
+                  //const PopupMenuItem<int>(
                   value: 2,
-                  child: Text("About"),
+                  child: Text(_settings.locale.about),
+                  //child: Text("About"),
                 ),
-                const PopupMenuItem<int>(
+                PopupMenuItem<int>(
+                  //const PopupMenuItem<int>(
                   value: 3,
-                  child: Text("Exit"),
+                  child: Text(_settings.locale.exit),
+                  //child: Text("Exit"),
                 ),
               ];
             },
@@ -133,7 +176,7 @@ class _HomeRouteState extends State<HomeRoute> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => SettingsRoute(
-                          title: 'Oldairy',
+                          title: widget.title,
                           settings: _settings,
                         ),
                       ),
@@ -175,11 +218,13 @@ class _HomeRouteState extends State<HomeRoute> {
                       Wrap(
                         children: [
                           Text(
-                            ' $_coolingTimeHours h.',
+                            '$_coolingTimeHours ${_settings.locale.hours}',
+                            //' $_coolingTimeHours h.',
                             textScaleFactor: 4,
                           ),
                           Text(
-                            ' $_coolingTimeMinutes m.',
+                            '$_coolingTimeMinutes ${_settings.locale.minutes}',
+                            //' $_coolingTimeMinutes m.',
                             textScaleFactor: 4,
                           ),
                         ],
@@ -200,7 +245,8 @@ class _HomeRouteState extends State<HomeRoute> {
 
                           purge(_calculator);
                         },
-                        label: const Text('Clear All'),
+                        label: Text(_settings.locale.clearAll),
+                        //label: const Text('Clear All'),
                       ),
                       //
                       // Add an empty space between the form and the text output.
@@ -216,11 +262,13 @@ class _HomeRouteState extends State<HomeRoute> {
                           SizedBox(
                             width: 128,
                             child: DropdownButtonFormField<int>(
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                //decoration: const InputDecoration(
                                 filled: true,
                                 fillColor: Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text('Voltage'),
+                                  child: Text(_settings.locale.voltage),
+                                  //child: Text('Voltage'),
                                 ),
                                 labelStyle: TextStyle(
                                   fontSize: 20,
@@ -280,14 +328,16 @@ class _HomeRouteState extends State<HomeRoute> {
                             child: TextFormField(
                               autocorrect: false,
                               controller: _tecAmpFirstWire,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                //decoration: const InputDecoration(
                                 counterStyle:
                                     TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
                                 fillColor: Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text('Amperage 1'),
+                                  child: Text(_settings.locale.ampFirstWire),
+                                  //child: Text('Amperage 1'),
                                 ),
                               ),
                               keyboardType: TextInputType.number,
@@ -351,7 +401,8 @@ class _HomeRouteState extends State<HomeRoute> {
                               autocorrect: false,
                               controller: _tecAmpSecondWire,
                               decoration: !_isSecondWireEnabled
-                                  ? const InputDecoration(
+                                  ? InputDecoration(
+                                      //? const InputDecoration(
                                       counterStyle:
                                           TextStyle(height: double.minPositive),
                                       counterText: '',
@@ -359,13 +410,16 @@ class _HomeRouteState extends State<HomeRoute> {
                                       fillColor:
                                           Color.fromRGBO(211, 211, 211, 0),
                                       label: Center(
-                                        child: Text('Amperage 2'),
+                                        child: Text(
+                                            _settings.locale.ampSecondWire),
+                                        //child: Text('Amperage 2'),
                                       ),
                                       labelStyle: TextStyle(
                                         color: Color.fromRGBO(211, 211, 211, 0),
                                       ),
                                     )
-                                  : const InputDecoration(
+                                  : InputDecoration(
+                                      //: const InputDecoration(
                                       counterStyle:
                                           TextStyle(height: double.minPositive),
                                       counterText: '',
@@ -373,7 +427,9 @@ class _HomeRouteState extends State<HomeRoute> {
                                       fillColor:
                                           Color.fromRGBO(211, 211, 211, 1),
                                       label: Center(
-                                        child: Text('Amperage 2'),
+                                        child: Text(
+                                            _settings.locale.ampSecondWire),
+                                        //child: Text('Amperage 2'),
                                       ),
                                     ),
                               enabled: _isSecondWireEnabled,
@@ -437,20 +493,24 @@ class _HomeRouteState extends State<HomeRoute> {
                               autocorrect: false,
                               controller: _tecAmpThirdWire,
                               decoration: !_isThirdWireEnabled
-                                  ? const InputDecoration(
+                                  ? InputDecoration(
+                                      //? const InputDecoration(
                                       counterStyle:
                                           TextStyle(height: double.minPositive),
                                       counterText: '',
                                       filled: true,
                                       fillColor: Colors.white10,
                                       label: Center(
-                                        child: Text('Amperage 3'),
+                                        child:
+                                            Text(_settings.locale.ampThirdWire),
+                                        //child: Text('Amperage 3'),
                                       ),
                                       labelStyle: TextStyle(
                                         color: Color.fromRGBO(211, 211, 211, 0),
                                       ),
                                     )
-                                  : const InputDecoration(
+                                  : InputDecoration(
+                                      //: const InputDecoration(
                                       counterStyle:
                                           TextStyle(height: double.minPositive),
                                       counterText: '',
@@ -458,7 +518,9 @@ class _HomeRouteState extends State<HomeRoute> {
                                       fillColor:
                                           Color.fromRGBO(211, 211, 211, 1),
                                       label: Center(
-                                        child: Text('Amperage 3'),
+                                        child:
+                                            Text(_settings.locale.ampThirdWire),
+                                        //child: Text('Amperage 3'),
                                       ),
                                     ),
                               enabled: _isThirdWireEnabled,
@@ -525,14 +587,16 @@ class _HomeRouteState extends State<HomeRoute> {
                               // Get rid of the counter; do the same thing for
                               // the other fields as well.
                               //
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                //decoration: const InputDecoration(
                                 counterStyle:
                                     TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
                                 fillColor: Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text('Initial Temp'),
+                                  child: Text(_settings.locale.initialTemp),
+                                  //child: Text('Initial Temp'),
                                 ),
                               ),
                               style: const TextStyle(
@@ -590,14 +654,16 @@ class _HomeRouteState extends State<HomeRoute> {
                             child: TextFormField(
                               autocorrect: false,
                               controller: _tecSetTemp,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                //decoration: const InputDecoration(
                                 counterStyle:
                                     TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
                                 fillColor: Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text('Set Temp'),
+                                  child: Text(_settings.locale.setTemp),
+                                  //child: Text('Set Temp'),
                                 ),
                               ),
                               keyboardType: TextInputType.number,
@@ -651,14 +717,16 @@ class _HomeRouteState extends State<HomeRoute> {
                             child: TextFormField(
                               autocorrect: false,
                               controller: _tecVolume,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                //decoration: const InputDecoration(
                                 counterStyle:
                                     TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
                                 fillColor: Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text('Volume'),
+                                  child: Text(_settings.locale.volume),
+                                  //child: Text('Volume'),
                                 ),
                               ),
                               keyboardType: TextInputType.number,
