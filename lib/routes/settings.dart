@@ -29,8 +29,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
     super.initState();
 
     setState(() {
-      _settings.isOldStandardEnabled = widget.settings.isOldStandardEnabled;
-      _settings.currentLocale = _dropdownValue = widget.settings.currentLocale;
+      _settings = widget.settings;
+      _dropdownValue = widget.settings.currentLocale;
+      /*_settings.isOldStandardEnabled = widget.settings.isOldStandardEnabled;
+      _settings.currentLocale = _dropdownValue = widget.settings.currentLocale;*/
 
       /*_localesDropdown = DropdownButtonFormField<String>(
         decoration: const InputDecoration(
@@ -71,10 +73,12 @@ class _SettingsRouteState extends State<SettingsRoute> {
       body: Center(
         child: ListView(
           children: [
-            const Padding(
+            Padding(
+              //const Padding(
               padding: EdgeInsets.all(32),
               child: Text(
-                'General',
+                _settings.locale.general,
+                //'General',
                 textScaleFactor: 2,
               ),
             ),
@@ -83,8 +87,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
               //child: _localesDropdown,
               child: DropdownButtonFormField<String>(
                 key: _dropdownKey,
-                decoration: const InputDecoration(
-                  label: Text('Language'),
+                decoration: InputDecoration(
+                  //decoration: const InputDecoration(
+                  label: Text(_settings.locale.language),
+                  //label: Text('Language'),
                   labelStyle: TextStyle(
                     fontSize: 20,
                   ),
@@ -116,7 +122,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
               child: CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: const Text('Enable 220V/380V Support'),
+                title: Text(_settings.locale.oldStandardSupport),
+                //title: const Text('Enable 220V/380V Support'),
                 value: _settings.isOldStandardEnabled,
                 onChanged: (bool? value) {
                   setState(() {
@@ -152,7 +159,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
                               _dropdownKey.currentState!.reset();
                             });
                           },
-                          label: const Text('Defaults'),
+                          label: Text(_settings.locale.defaults),
+                          //label: const Text('Defaults'),
                         ),
                       ),
                       //
@@ -164,7 +172,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
                           onPressed: () {
                             Navigator.pop(context, _settings);
                           },
-                          label: const Text('Apply'),
+                          label: Text(_settings.locale.apply),
+                          //label: const Text('Apply'),
                         ),
                       ),
                     ],
