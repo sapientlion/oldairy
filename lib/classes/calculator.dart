@@ -2,7 +2,7 @@ import 'dart:math';
 
 class Calculator {
   final int _amperageLimit = 125;
-  final double _constant = 0.6;
+  final double _constant = 0.685;
 
   bool _isMoreThanSixty = false;
   int _coolingTimeHours = 0;
