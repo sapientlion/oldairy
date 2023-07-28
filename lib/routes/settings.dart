@@ -12,7 +12,8 @@ class SettingsRoute extends StatefulWidget {
 }
 
 class _SettingsRouteState extends State<SettingsRoute> {
-  final List<String> _languages = <String>[
+  final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
+  final List<String> _locales = <String>[
     'English (US)',
     'Serbian (Cyrillic)',
     'Serbian (Latin)',
@@ -20,9 +21,43 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
   String _dropdownValue = '';
   Settings _settings = Settings();
+  /*DropdownButtonFormField _localesDropdown =
+      DropdownButtonFormField(items: null, onChanged: null);*/
 
-  _SettingsRouteState() {
-    _dropdownValue = _languages.first;
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _settings.isOldStandardEnabled = widget.settings.isOldStandardEnabled;
+      _settings.currentLocale = _dropdownValue = widget.settings.currentLocale;
+
+      /*_localesDropdown = DropdownButtonFormField<String>(
+        decoration: const InputDecoration(
+          label: Text('Language'),
+          labelStyle: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+        value: _dropdownValue,
+        items: _locales.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value.toString()),
+          );
+        }).toList(),
+        onChanged: (String? value) {
+          // This is called when the user selects an item.
+          setState(() {
+            _settings.currentLocale = value!;
+          });
+        },
+      );*/
+    });
   }
 
   @override
@@ -45,7 +80,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
             ),
             Padding(
               padding: const EdgeInsets.all(32),
+              //child: _localesDropdown,
               child: DropdownButtonFormField<String>(
+                key: _dropdownKey,
                 decoration: const InputDecoration(
                   label: Text('Language'),
                   labelStyle: TextStyle(
@@ -57,7 +94,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   fontSize: 16,
                 ),
                 value: _dropdownValue,
-                items: _languages.map<DropdownMenuItem<String>>((String value) {
+                items: _locales.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value.toString()),
@@ -65,7 +102,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 }).toList(),
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
-                  setState(() {});
+                  setState(() {
+                    _settings.currentLocale = value!;
+                  });
                 },
               ),
             ),
@@ -107,6 +146,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
                           onPressed: () {
                             setState(() {
                               _settings.isOldStandardEnabled = false;
+                              _settings.currentLocale =
+                                  _dropdownValue = _locales.first;
+
+                              _dropdownKey.currentState!.reset();
                             });
                           },
                           label: const Text('Defaults'),

@@ -118,6 +118,34 @@ class _HomeRouteState extends State<HomeRoute> {
     });
   }
 
+  Future<void> readLocale(String name) async {
+    final String response = await rootBundle.loadString('assets/locales/$name');
+    final data = await json.decode(response);
+    Map<String, dynamic> locale = data;
+
+    setState(() {
+      _settings.locale.hours = locale['hours'];
+      _settings.locale.minutes = locale['minutes'];
+      _settings.locale.initialTemp = locale['initialTemp'];
+      _settings.locale.setTemp = locale['setTemp'];
+      _settings.locale.volume = locale['volume'];
+      _settings.locale.voltage = locale['voltage'];
+      _settings.locale.ampFirstWire = locale['ampFirst'];
+      _settings.locale.ampSecondWire = locale['ampSecond'];
+      _settings.locale.ampThirdWire = locale['ampThird'];
+      _settings.locale.clearAll = locale['clearAll'];
+      _settings.locale.settings = locale['settings'];
+      _settings.locale.about = locale['about'];
+      _settings.locale.help = locale['help'];
+      _settings.locale.exit = locale['exit'];
+      _settings.locale.general = locale['general'];
+      _settings.locale.language = locale['language'];
+      _settings.locale.oldStandardSupport = locale['oldStandard'];
+      _settings.locale.defaults = locale['defaults'];
+      _settings.locale.apply = locale['apply'];
+    });
+  }
+
   //
   // Purge all fields from data.
   //
@@ -191,6 +219,27 @@ class _HomeRouteState extends State<HomeRoute> {
                         _voltages = <int>[220, 230, 380, 400];
                       }
                     });
+
+                    switch (_settings.currentLocale) {
+                      case 'Serbian (Cyrillic)':
+                        {
+                          readLocale('rs_cyrillic.json');
+
+                          break;
+                        }
+                      case 'Serbian (Latin)':
+                        {
+                          readLocale('rs_latin.json');
+
+                          break;
+                        }
+                      default:
+                        {
+                          readDefaultLocale();
+
+                          break;
+                        }
+                    }
 
                     break;
                   }
