@@ -86,6 +86,9 @@ class _HomeRouteState extends State<HomeRoute> {
     super.dispose();
   }
 
+  //
+  // Get a default locale from a file.
+  //
   Future<void> readDefaultLocale() async {
     String response = '';
 
@@ -121,6 +124,9 @@ class _HomeRouteState extends State<HomeRoute> {
     });
   }
 
+  //
+  // Get specific locale from a file.
+  //
   Future<void> readLocale(String name) async {
     String response = '';
 
@@ -154,6 +160,40 @@ class _HomeRouteState extends State<HomeRoute> {
       _settings.locale.defaults = locale['defaults'];
       _settings.locale.apply = locale['apply'];
     });
+  }
+
+  //
+  // Switch to specific locale.
+  //
+  String switchLocale(String locale) {
+    switch (locale) {
+      case 'Serbian (Cyrillic)':
+        {
+          readLocale('rs_cyrillic.json');
+
+          break;
+        }
+      case 'Serbian (Latin)':
+        {
+          readLocale('rs_latin.json');
+
+          break;
+        }
+      case 'Swedish':
+        {
+          readLocale('sv_se.json');
+
+          break;
+        }
+      default:
+        {
+          readDefaultLocale();
+
+          break;
+        }
+    }
+
+    return locale;
   }
 
   //
@@ -224,32 +264,7 @@ class _HomeRouteState extends State<HomeRoute> {
                       }
                     });
 
-                    switch (_settings.currentLocale) {
-                      case 'Serbian (Cyrillic)':
-                        {
-                          readLocale('rs_cyrillic.json');
-
-                          break;
-                        }
-                      case 'Serbian (Latin)':
-                        {
-                          readLocale('rs_latin.json');
-
-                          break;
-                        }
-                      case 'Swedish':
-                        {
-                          readLocale('sv_se.json');
-
-                          break;
-                        }
-                      default:
-                        {
-                          readDefaultLocale();
-
-                          break;
-                        }
-                    }
+                    switchLocale(_settings.currentLocale);
 
                     break;
                   }
