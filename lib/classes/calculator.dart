@@ -43,11 +43,11 @@ class Calculator {
     //
     // Trigger this to flip the 60-minute flag, if need be.
     //
-    getMinutes();
+    /*getMinutes();
 
     if (_isMoreThanSixty) {
       _coolingTimeHours += 1;
-    }
+    }*/
 
     return _coolingTimeHours;
   }
@@ -72,12 +72,12 @@ class Calculator {
 
     _coolingTimeMinutes = int.parse(coolingTimeMinutesAsString);
 
-    if (_coolingTimeMinutes > 59) {
+    /*if (_coolingTimeMinutes > 59) {
       _isMoreThanSixty = true;
       _coolingTimeMinutes -= 60;
     } else {
       _isMoreThanSixty = false;
-    }
+    }*/
 
     return _coolingTimeMinutes;
   }
