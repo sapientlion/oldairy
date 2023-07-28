@@ -233,6 +233,12 @@ class _HomeRouteState extends State<HomeRoute> {
 
                           break;
                         }
+                      case 'Swedish':
+                        {
+                          readLocale('sv_se.json');
+
+                          break;
+                        }
                       default:
                         {
                           readDefaultLocale();

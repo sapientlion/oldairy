@@ -68,6 +68,7 @@ flutter:
       - assets/locales/en_us.json
       - assets/locales/rs_cyrillic.json
       - assets/locales/rs_latin.json
+      - assets/locales/sv_se.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

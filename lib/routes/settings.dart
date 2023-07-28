@@ -17,6 +17,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     'English (US)',
     'Serbian (Cyrillic)',
     'Serbian (Latin)',
+    'Swedish',
   ];
 
   String _dropdownValue = '';

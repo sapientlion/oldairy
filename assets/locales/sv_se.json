@@ -1,0 +1,21 @@
+{
+	"hours": "t. ",
+	"minutes": "m. ",
+	"initialTemp": "Initial Temp",
+	"setTemp": "Satt Temp",
+	"volume": "Del",
+	"voltage": "Spänning",
+	"ampFirst": "Strömstyrka 1",
+	"ampSecond": "Strömstyrka 2",
+	"ampThird": "Strömstyrka 3",
+	"clearAll": "Klara all",
+	"settings": "Insättningar",
+	"about": "Såpass",
+	"help": "Hjälp",
+	"exit": "Utgång",
+	"general": "Allmän",
+	"language": "Språk",
+	"oldStandard": "Aktivera stöd av 230V/380V",
+	"defaults": "Tredskas",
+	"apply": "Applicera"
+}
