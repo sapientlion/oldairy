@@ -87,7 +87,14 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   Future<void> readDefaultLocale() async {
-    final String response = await rootBundle.loadString('assets/locales/en_us.json');
+    String response = '';
+
+    try {
+      response = await rootBundle.loadString('assets/locales/en_us.json');
+    } catch (e) {
+      return;
+    }
+
     final data = await json.decode(response);
     Map<String, dynamic> locale = data;
 
@@ -115,7 +122,14 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   Future<void> readLocale(String name) async {
-    final String response = await rootBundle.loadString('assets/locales/$name');
+    String response = '';
+
+    try {
+      response = await rootBundle.loadString('assets/locales/$name');
+    } catch (e) {
+      return;
+    }
+
     final data = await json.decode(response);
     Map<String, dynamic> locale = data;
 
@@ -529,8 +543,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                       fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                       label: Center(
                                         child: _settings.locale.ampThirdWire.isEmpty
-                                            ? Text(_settings.locale.ampThirdWire)
-                                            : const Text('Amperage 3'),
+                                            ? const Text('Amperage 3')
+                                            : Text(_settings.locale.ampThirdWire),
                                       ),
                                     ),
                               enabled: _isThirdWireEnabled,
