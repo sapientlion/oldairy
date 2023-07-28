@@ -43,31 +43,28 @@ class _HomeRouteState extends State<HomeRoute> {
   final int _amperageLimit = 125;
   final double _initialValue = 0.0;
   final Calculator _calculator = Calculator();
-  final TextEditingController _tecInitialTemp = TextEditingController();
-  final TextEditingController _tecSetTemp = TextEditingController();
-  final TextEditingController _tecVolume = TextEditingController();
-  final TextEditingController _tecAmpFirstWire = TextEditingController();
-  final TextEditingController _tecAmpSecondWire = TextEditingController();
-  final TextEditingController _tecAmpThirdWire = TextEditingController();
+  final TextEditingController _initialTempController = TextEditingController();
+  final TextEditingController _setTempController = TextEditingController();
+  final TextEditingController _volumeController = TextEditingController();
+  final TextEditingController _ampFirstWireController = TextEditingController();
+  final TextEditingController _ampSecondWireController = TextEditingController();
+  final TextEditingController _ampThirdWireController = TextEditingController();
 
   bool _isSecondWireEnabled = false;
   bool _isThirdWireEnabled = false;
-  int _dropdownValue = 0;
-  String _coolingTimeHours = '0';
-  String _coolingTimeMinutes = '0';
-  Settings _settings = Settings();
-  //
-  // Store ISO-approved voltages here.
-  //
-  List<int> _voltages = <int>[230, 400];
+  int _dropdownValue = 0; // Current dropdown button value.
+  String _coolingTimeHours = '0'; // Cooling time: hours.
+  String _coolingTimeMinutes = '0'; // Cooling time: minutes.
+  Settings _settings = Settings(); // General app settings.
+  List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
   _HomeRouteState() {
-    _tecInitialTemp.text = _initialValue.toString();
-    _tecSetTemp.text = _initialValue.toString();
-    _tecVolume.text = _initialValue.toString();
-    _tecAmpFirstWire.text = _initialValue.toString();
-    _tecAmpSecondWire.text = _initialValue.toString();
-    _tecAmpThirdWire.text = _initialValue.toString();
+    _initialTempController.text = _initialValue.toString();
+    _setTempController.text = _initialValue.toString();
+    _volumeController.text = _initialValue.toString();
+    _ampFirstWireController.text = _initialValue.toString();
+    _ampSecondWireController.text = _initialValue.toString();
+    _ampThirdWireController.text = _initialValue.toString();
 
     _dropdownValue = _voltages.first;
   }
@@ -80,18 +77,17 @@ class _HomeRouteState extends State<HomeRoute> {
 
   @override
   void dispose() {
-    _tecInitialTemp.dispose();
-    _tecSetTemp.dispose();
-    _tecVolume.dispose();
-    _tecAmpFirstWire.dispose();
-    _tecAmpSecondWire.dispose();
-    _tecAmpThirdWire.dispose();
+    _initialTempController.dispose();
+    _setTempController.dispose();
+    _volumeController.dispose();
+    _ampFirstWireController.dispose();
+    _ampSecondWireController.dispose();
+    _ampThirdWireController.dispose();
     super.dispose();
   }
 
   Future<void> readDefaultLocale() async {
-    final String response =
-        await rootBundle.loadString('assets/locales/en_us.json');
+    final String response = await rootBundle.loadString('assets/locales/en_us.json');
     final data = await json.decode(response);
     Map<String, dynamic> locale = data;
 
@@ -157,12 +153,12 @@ class _HomeRouteState extends State<HomeRoute> {
     _calculator.ampSecondWire = 0.0;
     _calculator.ampThirdWire = 0.0;
 
-    _tecInitialTemp.text = _initialValue.toString();
-    _tecSetTemp.text = _initialValue.toString();
-    _tecVolume.text = _initialValue.toString();
-    _tecAmpFirstWire.text = _initialValue.toString();
-    _tecAmpSecondWire.text = _initialValue.toString();
-    _tecAmpThirdWire.text = _initialValue.toString();
+    _initialTempController.text = _initialValue.toString();
+    _setTempController.text = _initialValue.toString();
+    _volumeController.text = _initialValue.toString();
+    _ampFirstWireController.text = _initialValue.toString();
+    _ampSecondWireController.text = _initialValue.toString();
+    _ampThirdWireController.text = _initialValue.toString();
 
     return calculator;
   }
@@ -177,22 +173,16 @@ class _HomeRouteState extends State<HomeRoute> {
             itemBuilder: (context) {
               return [
                 PopupMenuItem<int>(
-                  //const PopupMenuItem<int>(
                   value: 1,
-                  child: Text(_settings.locale.settings),
-                  //child: Text("Settings"),
+                  child: _settings.locale.settings.isEmpty ? const Text("Settings") : Text(_settings.locale.settings),
                 ),
                 PopupMenuItem<int>(
-                  //const PopupMenuItem<int>(
                   value: 2,
-                  child: Text(_settings.locale.about),
-                  //child: Text("About"),
+                  child: _settings.locale.about.isEmpty ? const Text("About") : Text(_settings.locale.about),
                 ),
                 PopupMenuItem<int>(
-                  //const PopupMenuItem<int>(
                   value: 3,
-                  child: Text(_settings.locale.exit),
-                  //child: Text("Exit"),
+                  child: _settings.locale.exit.isEmpty ? const Text("Exit") : Text(_settings.locale.exit),
                 ),
               ];
             },
@@ -272,19 +262,23 @@ class _HomeRouteState extends State<HomeRoute> {
                     children: [
                       Wrap(
                         children: [
-                          Text(
-                            '$_coolingTimeHours ${_settings.locale.hours}',
-                            //' $_coolingTimeHours h.',
-                            textScaleFactor: 4,
-                          ),
-                          Text(
-                            '$_coolingTimeMinutes ${_settings.locale.minutes}',
-                            //' $_coolingTimeMinutes m.',
-                            textScaleFactor: 4,
-                          ),
+                          _settings.locale.hours.isEmpty
+                              ? Text('$_coolingTimeHours h. ') // Trailing space is intentional. Do not remove!
+                              : Text(
+                                  '$_coolingTimeHours ${_settings.locale.hours}',
+                                  textScaleFactor: 4,
+                                ),
+                          _settings.locale.minutes.isEmpty
+                              ? Text(
+                                  '$_coolingTimeMinutes m.',
+                                  textScaleFactor: 4,
+                                )
+                              : Text(
+                                  '$_coolingTimeMinutes ${_settings.locale.minutes}',
+                                  textScaleFactor: 4,
+                                ),
                         ],
                       ),
-
                       //
                       // Add an empty space between the form and the text output.
                       //
@@ -300,8 +294,9 @@ class _HomeRouteState extends State<HomeRoute> {
 
                           purge(_calculator);
                         },
-                        label: Text(_settings.locale.clearAll),
-                        //label: const Text('Clear All'),
+                        label: _settings.locale.clearAll.isEmpty
+                            ? const Text('Clear All')
+                            : Text(_settings.locale.clearAll),
                       ),
                       //
                       // Add an empty space between the form and the text output.
@@ -318,14 +313,14 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: DropdownButtonFormField<int>(
                               decoration: InputDecoration(
-                                //decoration: const InputDecoration(
                                 filled: true,
-                                fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text(_settings.locale.voltage),
-                                  //child: Text('Voltage'),
+                                  child: _settings.locale.voltage.isEmpty
+                                      ? const Text('Voltage')
+                                      : Text(_settings.locale.voltage),
                                 ),
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontSize: 20,
                                 ),
                               ),
@@ -334,8 +329,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                 fontSize: 20,
                               ),
                               value: _dropdownValue,
-                              items: _voltages
-                                  .map<DropdownMenuItem<int>>((int value) {
+                              items: _voltages.map<DropdownMenuItem<int>>((int value) {
                                 return DropdownMenuItem<int>(
                                   value: value,
                                   child: Text(value.toString()),
@@ -347,8 +341,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _dropdownValue = value!;
                                   _calculator.voltage = value.toDouble();
 
-                                  if (_calculator.voltage >= 220 &&
-                                      _calculator.voltage <= 230) {
+                                  if (_calculator.voltage >= 220 && _calculator.voltage <= 230) {
                                     _isSecondWireEnabled = false;
                                     _isThirdWireEnabled = false;
                                   } else {
@@ -356,24 +349,16 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _isThirdWireEnabled = true;
                                   }
 
-                                  _calculator.initialTemp =
-                                      double.parse(_tecInitialTemp.text);
-                                  _calculator.setTemp =
-                                      double.parse(_tecSetTemp.text);
-                                  _calculator.volume =
-                                      double.parse(_tecVolume.text);
-                                  _calculator.ampFirstWire =
-                                      double.parse(_tecAmpFirstWire.text);
-                                  _calculator.ampSecondWire =
-                                      double.parse(_tecAmpSecondWire.text);
-                                  _calculator.ampThirdWire =
-                                      double.parse(_tecAmpThirdWire.text);
+                                  _calculator.initialTemp = double.parse(_initialTempController.text);
+                                  _calculator.setTemp = double.parse(_setTempController.text);
+                                  _calculator.volume = double.parse(_volumeController.text);
+                                  _calculator.ampFirstWire = double.parse(_ampFirstWireController.text);
+                                  _calculator.ampSecondWire = double.parse(_ampSecondWireController.text);
+                                  _calculator.ampThirdWire = double.parse(_ampThirdWireController.text);
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                             ),
@@ -382,66 +367,56 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: TextFormField(
                               autocorrect: false,
-                              controller: _tecAmpFirstWire,
+                              controller: _ampFirstWireController,
                               decoration: InputDecoration(
-                                //decoration: const InputDecoration(
-                                counterStyle:
-                                    TextStyle(height: double.minPositive),
+                                counterStyle: const TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
-                                fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text(_settings.locale.ampFirstWire),
-                                  //child: Text('Amperage 1'),
+                                  child: _settings.locale.ampFirstWire.isEmpty
+                                      ? const Text('Amperage 1')
+                                      : Text(_settings.locale.ampFirstWire),
                                 ),
                               ),
                               keyboardType: TextInputType.number,
                               maxLength: 3,
                               onChanged: (value) {
                                 setState(() {
-                                  if (_tecAmpFirstWire.value.text.isEmpty) {
-                                    _tecAmpFirstWire.text =
-                                        _initialValue.toString();
-                                    _tecAmpFirstWire.selection = TextSelection(
+                                  if (_ampFirstWireController.value.text.isEmpty) {
+                                    _ampFirstWireController.text = _initialValue.toString();
+                                    _ampFirstWireController.selection = TextSelection(
                                       baseOffset: 0,
-                                      extentOffset:
-                                          _tecAmpFirstWire.value.text.length,
+                                      extentOffset: _ampFirstWireController.value.text.length,
                                     );
                                   }
 
                                   if (double.tryParse(value) == null) {
                                     _calculator.ampFirstWire = _initialValue;
                                   } else {
-                                    _calculator.ampFirstWire =
-                                        double.parse(value);
+                                    _calculator.ampFirstWire = double.parse(value);
                                   }
 
-                                  if (_calculator.ampFirstWire >
-                                      _amperageLimit) {
+                                  if (_calculator.ampFirstWire > _amperageLimit) {
                                     //
                                     // Set member value to pre-defined amperage limit.
                                     //
-                                    _calculator.ampFirstWire =
-                                        _amperageLimit.toDouble();
+                                    _calculator.ampFirstWire = _amperageLimit.toDouble();
                                     //
                                     // Assign a new value to the input field.
                                     //
-                                    _tecAmpFirstWire.text =
-                                        _calculator.ampFirstWire.toString();
+                                    _ampFirstWireController.text = _calculator.ampFirstWire.toString();
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                               onTap: () {
-                                _tecAmpFirstWire.selection = TextSelection(
+                                _ampFirstWireController.selection = TextSelection(
                                   baseOffset: 0,
-                                  extentOffset:
-                                      _tecAmpFirstWire.value.text.length,
+                                  extentOffset: _ampFirstWireController.value.text.length,
                                 );
                               },
                               style: const TextStyle(
@@ -454,37 +429,31 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: TextFormField(
                               autocorrect: false,
-                              controller: _tecAmpSecondWire,
+                              controller: _ampSecondWireController,
                               decoration: !_isSecondWireEnabled
                                   ? InputDecoration(
-                                      //? const InputDecoration(
-                                      counterStyle:
-                                          TextStyle(height: double.minPositive),
+                                      counterStyle: const TextStyle(height: double.minPositive),
                                       counterText: '',
                                       filled: true,
-                                      fillColor:
-                                          Color.fromRGBO(211, 211, 211, 0),
+                                      fillColor: const Color.fromRGBO(211, 211, 211, 0),
                                       label: Center(
-                                        child: Text(
-                                            _settings.locale.ampSecondWire),
-                                        //child: Text('Amperage 2'),
+                                        child: _settings.locale.ampSecondWire.isEmpty
+                                            ? const Text('Amperage 2')
+                                            : Text(_settings.locale.ampSecondWire),
                                       ),
-                                      labelStyle: TextStyle(
+                                      labelStyle: const TextStyle(
                                         color: Color.fromRGBO(211, 211, 211, 0),
                                       ),
                                     )
                                   : InputDecoration(
-                                      //: const InputDecoration(
-                                      counterStyle:
-                                          TextStyle(height: double.minPositive),
+                                      counterStyle: const TextStyle(height: double.minPositive),
                                       counterText: '',
                                       filled: true,
-                                      fillColor:
-                                          Color.fromRGBO(211, 211, 211, 1),
+                                      fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                       label: Center(
-                                        child: Text(
-                                            _settings.locale.ampSecondWire),
-                                        //child: Text('Amperage 2'),
+                                        child: _settings.locale.ampSecondWire.isEmpty
+                                            ? const Text('Amperage 2')
+                                            : Text(_settings.locale.ampSecondWire),
                                       ),
                                     ),
                               enabled: _isSecondWireEnabled,
@@ -492,43 +461,34 @@ class _HomeRouteState extends State<HomeRoute> {
                               maxLength: 3,
                               onChanged: (value) {
                                 setState(() {
-                                  if (_tecAmpSecondWire.text.isEmpty) {
-                                    _tecAmpSecondWire.text =
-                                        _initialValue.toString();
-                                    _tecAmpSecondWire.selection = TextSelection(
+                                  if (_ampSecondWireController.text.isEmpty) {
+                                    _ampSecondWireController.text = _initialValue.toString();
+                                    _ampSecondWireController.selection = TextSelection(
                                       baseOffset: 0,
-                                      extentOffset:
-                                          _tecAmpSecondWire.value.text.length,
+                                      extentOffset: _ampSecondWireController.value.text.length,
                                     );
                                   }
 
                                   if (double.tryParse(value) == null) {
                                     _calculator.ampSecondWire = _initialValue;
                                   } else {
-                                    _calculator.ampSecondWire =
-                                        double.parse(value);
+                                    _calculator.ampSecondWire = double.parse(value);
                                   }
 
-                                  if (_calculator.ampSecondWire >
-                                      _amperageLimit) {
-                                    _calculator.ampSecondWire =
-                                        _amperageLimit.toDouble();
-                                    _tecAmpSecondWire.text =
-                                        _calculator.ampSecondWire.toString();
+                                  if (_calculator.ampSecondWire > _amperageLimit) {
+                                    _calculator.ampSecondWire = _amperageLimit.toDouble();
+                                    _ampSecondWireController.text = _calculator.ampSecondWire.toString();
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                               onTap: () {
-                                _tecAmpSecondWire.selection = TextSelection(
+                                _ampSecondWireController.selection = TextSelection(
                                   baseOffset: 0,
-                                  extentOffset:
-                                      _tecAmpSecondWire.value.text.length,
+                                  extentOffset: _ampSecondWireController.value.text.length,
                                 );
                               },
                               style: !_isSecondWireEnabled
@@ -546,36 +506,31 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: TextFormField(
                               autocorrect: false,
-                              controller: _tecAmpThirdWire,
+                              controller: _ampThirdWireController,
                               decoration: !_isThirdWireEnabled
                                   ? InputDecoration(
-                                      //? const InputDecoration(
-                                      counterStyle:
-                                          TextStyle(height: double.minPositive),
+                                      counterStyle: const TextStyle(height: double.minPositive),
                                       counterText: '',
                                       filled: true,
                                       fillColor: Colors.white10,
                                       label: Center(
-                                        child:
-                                            Text(_settings.locale.ampThirdWire),
-                                        //child: Text('Amperage 3'),
+                                        child: _settings.locale.ampThirdWire.isEmpty
+                                            ? const Text('Amperage 3')
+                                            : Text(_settings.locale.ampThirdWire),
                                       ),
-                                      labelStyle: TextStyle(
+                                      labelStyle: const TextStyle(
                                         color: Color.fromRGBO(211, 211, 211, 0),
                                       ),
                                     )
                                   : InputDecoration(
-                                      //: const InputDecoration(
-                                      counterStyle:
-                                          TextStyle(height: double.minPositive),
+                                      counterStyle: const TextStyle(height: double.minPositive),
                                       counterText: '',
                                       filled: true,
-                                      fillColor:
-                                          Color.fromRGBO(211, 211, 211, 1),
+                                      fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                       label: Center(
-                                        child:
-                                            Text(_settings.locale.ampThirdWire),
-                                        //child: Text('Amperage 3'),
+                                        child: _settings.locale.ampThirdWire.isEmpty
+                                            ? Text(_settings.locale.ampThirdWire)
+                                            : const Text('Amperage 3'),
                                       ),
                                     ),
                               enabled: _isThirdWireEnabled,
@@ -583,43 +538,34 @@ class _HomeRouteState extends State<HomeRoute> {
                               maxLength: 3,
                               onChanged: (value) {
                                 setState(() {
-                                  if (_tecAmpThirdWire.text.isEmpty) {
-                                    _tecAmpThirdWire.text =
-                                        _initialValue.toString();
-                                    _tecAmpThirdWire.selection = TextSelection(
+                                  if (_ampThirdWireController.text.isEmpty) {
+                                    _ampThirdWireController.text = _initialValue.toString();
+                                    _ampThirdWireController.selection = TextSelection(
                                       baseOffset: 0,
-                                      extentOffset:
-                                          _tecAmpThirdWire.value.text.length,
+                                      extentOffset: _ampThirdWireController.value.text.length,
                                     );
                                   }
 
                                   if (double.tryParse(value) == null) {
                                     _calculator.ampThirdWire = _initialValue;
                                   } else {
-                                    _calculator.ampThirdWire =
-                                        double.parse(value);
+                                    _calculator.ampThirdWire = double.parse(value);
                                   }
 
-                                  if (_calculator.ampThirdWire >
-                                      _amperageLimit) {
-                                    _calculator.ampThirdWire =
-                                        _amperageLimit.toDouble();
-                                    _tecAmpThirdWire.text =
-                                        _calculator.ampThirdWire.toString();
+                                  if (_calculator.ampThirdWire > _amperageLimit) {
+                                    _calculator.ampThirdWire = _amperageLimit.toDouble();
+                                    _ampThirdWireController.text = _calculator.ampThirdWire.toString();
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                               onTap: () {
-                                _tecAmpThirdWire.selection = TextSelection(
+                                _ampThirdWireController.selection = TextSelection(
                                   baseOffset: 0,
-                                  extentOffset:
-                                      _tecAmpThirdWire.value.text.length,
+                                  extentOffset: _ampThirdWireController.value.text.length,
                                 );
                               },
                               style: !_isThirdWireEnabled
@@ -637,21 +583,20 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: TextFormField(
                               autocorrect: false,
-                              controller: _tecInitialTemp,
+                              controller: _initialTempController,
                               //
                               // Get rid of the counter; do the same thing for
                               // the other fields as well.
                               //
                               decoration: InputDecoration(
-                                //decoration: const InputDecoration(
-                                counterStyle:
-                                    TextStyle(height: double.minPositive),
+                                counterStyle: const TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
-                                fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text(_settings.locale.initialTemp),
-                                  //child: Text('Initial Temp'),
+                                  child: _settings.locale.initialTemp.isEmpty
+                                      ? const Text('Initial Temp')
+                                      : Text(_settings.locale.initialTemp),
                                 ),
                               ),
                               style: const TextStyle(
@@ -661,44 +606,34 @@ class _HomeRouteState extends State<HomeRoute> {
                               maxLength: 4,
                               onChanged: (value) {
                                 setState(() {
-                                  if (_tecInitialTemp.text.isEmpty) {
-                                    _tecInitialTemp.text =
-                                        _initialValue.toString();
-                                    _tecInitialTemp.selection = TextSelection(
+                                  if (_initialTempController.text.isEmpty) {
+                                    _initialTempController.text = _initialValue.toString();
+                                    _initialTempController.selection = TextSelection(
                                       baseOffset: 0,
-                                      extentOffset:
-                                          _tecInitialTemp.value.text.length,
+                                      extentOffset: _initialTempController.value.text.length,
                                     );
                                   }
 
                                   if (double.tryParse(value) == null) {
                                     _calculator.initialTemp = _initialValue;
                                   } else {
-                                    _calculator.initialTemp =
-                                        double.parse(value);
+                                    _calculator.initialTemp = double.parse(value);
                                   }
 
-                                  if (_calculator.initialTemp >
-                                          _initialTempLimit ||
-                                      _calculator.initialTemp < 0) {
-                                    _calculator.initialTemp =
-                                        _initialTempLimit.toDouble();
-                                    _tecInitialTemp.text =
-                                        _calculator.initialTemp.toString();
+                                  if (_calculator.initialTemp > _initialTempLimit || _calculator.initialTemp < 0) {
+                                    _calculator.initialTemp = _initialTempLimit.toDouble();
+                                    _initialTempController.text = _calculator.initialTemp.toString();
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                               onTap: () {
-                                _tecInitialTemp.selection = TextSelection(
+                                _initialTempController.selection = TextSelection(
                                   baseOffset: 0,
-                                  extentOffset:
-                                      _tecInitialTemp.value.text.length,
+                                  extentOffset: _initialTempController.value.text.length,
                                 );
                               },
                               textAlign: TextAlign.center,
@@ -708,29 +643,27 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: TextFormField(
                               autocorrect: false,
-                              controller: _tecSetTemp,
+                              controller: _setTempController,
                               decoration: InputDecoration(
-                                //decoration: const InputDecoration(
-                                counterStyle:
-                                    TextStyle(height: double.minPositive),
+                                counterStyle: const TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
-                                fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text(_settings.locale.setTemp),
-                                  //child: Text('Set Temp'),
+                                  child: _settings.locale.setTemp.isEmpty
+                                      ? const Text('Set Temp')
+                                      : Text(_settings.locale.setTemp),
                                 ),
                               ),
                               keyboardType: TextInputType.number,
                               maxLength: 4,
                               onChanged: (value) {
                                 setState(() {
-                                  if (_tecSetTemp.text.isEmpty) {
-                                    _tecSetTemp.text = _initialValue.toString();
-                                    _tecSetTemp.selection = TextSelection(
+                                  if (_setTempController.text.isEmpty) {
+                                    _setTempController.text = _initialValue.toString();
+                                    _setTempController.selection = TextSelection(
                                       baseOffset: 0,
-                                      extentOffset:
-                                          _tecSetTemp.value.text.length,
+                                      extentOffset: _setTempController.value.text.length,
                                     );
                                   }
 
@@ -740,25 +673,20 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _calculator.setTemp = double.parse(value);
                                   }
 
-                                  if (_calculator.setTemp < _setTempLimit ||
-                                      _calculator.setTemp > _initialTempLimit) {
-                                    _calculator.setTemp =
-                                        _setTempLimit.toDouble();
-                                    _tecSetTemp.text =
-                                        _calculator.setTemp.toString();
+                                  if (_calculator.setTemp < _setTempLimit || _calculator.setTemp > _initialTempLimit) {
+                                    _calculator.setTemp = _setTempLimit.toDouble();
+                                    _setTempController.text = _calculator.setTemp.toString();
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                               onTap: () {
-                                _tecSetTemp.selection = TextSelection(
+                                _setTempController.selection = TextSelection(
                                   baseOffset: 0,
-                                  extentOffset: _tecSetTemp.value.text.length,
+                                  extentOffset: _setTempController.value.text.length,
                                 );
                               },
                               style: const TextStyle(
@@ -771,29 +699,27 @@ class _HomeRouteState extends State<HomeRoute> {
                             width: 128,
                             child: TextFormField(
                               autocorrect: false,
-                              controller: _tecVolume,
+                              controller: _volumeController,
                               decoration: InputDecoration(
-                                //decoration: const InputDecoration(
-                                counterStyle:
-                                    TextStyle(height: double.minPositive),
+                                counterStyle: const TextStyle(height: double.minPositive),
                                 counterText: '',
                                 filled: true,
-                                fillColor: Color.fromRGBO(211, 211, 211, 1),
+                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
                                 label: Center(
-                                  child: Text(_settings.locale.volume),
-                                  //child: Text('Volume'),
+                                  child: _settings.locale.volume.isEmpty
+                                      ? const Text('Volume')
+                                      : Text(_settings.locale.volume),
                                 ),
                               ),
                               keyboardType: TextInputType.number,
                               maxLength: 5,
                               onChanged: (value) {
                                 setState(() {
-                                  if (_tecVolume.text.isEmpty) {
-                                    _tecVolume.text = _initialValue.toString();
-                                    _tecVolume.selection = TextSelection(
+                                  if (_volumeController.text.isEmpty) {
+                                    _volumeController.text = _initialValue.toString();
+                                    _volumeController.selection = TextSelection(
                                       baseOffset: 0,
-                                      extentOffset:
-                                          _tecVolume.value.text.length,
+                                      extentOffset: _volumeController.value.text.length,
                                     );
                                   }
 
@@ -804,23 +730,19 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   if (_calculator.volume > _volumeLimit) {
-                                    _calculator.volume =
-                                        _volumeLimit.toDouble();
-                                    _tecVolume.text =
-                                        _calculator.volume.toString();
+                                    _calculator.volume = _volumeLimit.toDouble();
+                                    _volumeController.text = _calculator.volume.toString();
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours =
-                                      _calculator.getHours().toString();
-                                  _coolingTimeMinutes =
-                                      _calculator.getMinutes().toString();
+                                  _coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
                                 });
                               },
                               onTap: () {
-                                _tecVolume.selection = TextSelection(
+                                _volumeController.selection = TextSelection(
                                   baseOffset: 0,
-                                  extentOffset: _tecVolume.value.text.length,
+                                  extentOffset: _volumeController.value.text.length,
                                 );
                               },
                               style: const TextStyle(fontSize: 20),
