@@ -22,8 +22,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
   String _dropdownValue = '';
   Settings _settings = Settings();
-  /*DropdownButtonFormField _localesDropdown =
-      DropdownButtonFormField(items: null, onChanged: null);*/
 
   @override
   void initState() {
@@ -32,34 +30,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
     setState(() {
       _settings = widget.settings;
       _dropdownValue = widget.settings.currentLocale;
-      /*_settings.isOldStandardEnabled = widget.settings.isOldStandardEnabled;
-      _settings.currentLocale = _dropdownValue = widget.settings.currentLocale;*/
-
-      /*_localesDropdown = DropdownButtonFormField<String>(
-        decoration: const InputDecoration(
-          label: Text('Language'),
-          labelStyle: TextStyle(
-            fontSize: 20,
-          ),
-        ),
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-        value: _dropdownValue,
-        items: _locales.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value.toString()),
-          );
-        }).toList(),
-        onChanged: (String? value) {
-          // This is called when the user selects an item.
-          setState(() {
-            _settings.currentLocale = value!;
-          });
-        },
-      );*/
     });
   }
 
@@ -75,24 +45,24 @@ class _SettingsRouteState extends State<SettingsRoute> {
         child: ListView(
           children: [
             Padding(
-              //const Padding(
-              padding: EdgeInsets.all(32),
-              child: Text(
-                _settings.locale.general,
-                //'General',
-                textScaleFactor: 2,
-              ),
+              padding: const EdgeInsets.all(32),
+              child: _settings.locale.general.isEmpty
+                  ? const Text(
+                      'General',
+                      textScaleFactor: 2,
+                    )
+                  : Text(
+                      _settings.locale.general,
+                      textScaleFactor: 2,
+                    ),
             ),
             Padding(
               padding: const EdgeInsets.all(32),
-              //child: _localesDropdown,
               child: DropdownButtonFormField<String>(
                 key: _dropdownKey,
                 decoration: InputDecoration(
-                  //decoration: const InputDecoration(
-                  label: Text(_settings.locale.language),
-                  //label: Text('Language'),
-                  labelStyle: TextStyle(
+                  label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
+                  labelStyle: const TextStyle(
                     fontSize: 20,
                   ),
                 ),
@@ -123,8 +93,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
               child: CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: Text(_settings.locale.oldStandardSupport),
-                //title: const Text('Enable 220V/380V Support'),
+                title: _settings.locale.oldStandardSupport.isEmpty
+                    ? const Text('Enable 220V/380V Support')
+                    : Text(_settings.locale.oldStandardSupport),
                 value: _settings.isOldStandardEnabled,
                 onChanged: (bool? value) {
                   setState(() {
@@ -154,14 +125,14 @@ class _SettingsRouteState extends State<SettingsRoute> {
                           onPressed: () {
                             setState(() {
                               _settings.isOldStandardEnabled = false;
-                              _settings.currentLocale =
-                                  _dropdownValue = _locales.first;
+                              _settings.currentLocale = _dropdownValue = _locales.first;
 
                               _dropdownKey.currentState!.reset();
                             });
                           },
-                          label: Text(_settings.locale.defaults),
-                          //label: const Text('Defaults'),
+                          label: _settings.locale.defaults.isEmpty
+                              ? const Text('Defaults')
+                              : Text(_settings.locale.defaults),
                         ),
                       ),
                       //
@@ -173,8 +144,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                           onPressed: () {
                             Navigator.pop(context, _settings);
                           },
-                          label: Text(_settings.locale.apply),
-                          //label: const Text('Apply'),
+                          label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
                         ),
                       ),
                     ],
