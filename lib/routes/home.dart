@@ -29,6 +29,7 @@ import 'package:flutter/services.dart';
 
 import 'package:oldairy/classes/calculator.dart';
 import 'package:oldairy/classes/settings.dart';
+import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/settings.dart';
 
 class Oldairy extends StatelessWidget {
@@ -335,6 +336,22 @@ class _HomeRouteState extends State<HomeRoute> {
                     });
 
                     switchLocale(_settings.currentLocale);
+
+                    break;
+                  }
+                //
+                // About application.
+                //
+                case 2:
+                  {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AboutRoute(
+                          title: widget.title,
+                        ),
+                      ),
+                    );
 
                     break;
                   }
