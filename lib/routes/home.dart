@@ -37,11 +37,13 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> {
+  bool _azFlag = false; // Absolute zero flag.
   final int _initialTempLimit = 50;
-  final int _setTempLimit = -50;
+  final double _setTempLimit = -273.15;
   final int _volumeLimit = 30000;
   final int _amperageLimit = 125;
   final double _initialValue = 0.0;
+  final double _absoluteZero = -273.15;
   final Calculator _calculator = Calculator();
   final TextEditingController _initialTempController = TextEditingController();
   final TextEditingController _setTempController = TextEditingController();
@@ -339,6 +341,12 @@ class _HomeRouteState extends State<HomeRoute> {
                                   '$_coolingTimeMinutes ${_settings.locale.minutes}',
                                   textScaleFactor: 4,
                                 ),
+                          _azFlag && _settings.isOldStandardEnabled
+                              ? const Text(
+                                  '\u{1f480}',
+                                  textScaleFactor: 4,
+                                )
+                              : const Text(''),
                         ],
                       ),
                       //
@@ -665,7 +673,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                 fontSize: 20,
                               ),
                               keyboardType: TextInputType.number,
-                              maxLength: 4,
+                              maxLength: 8,
                               onChanged: (value) {
                                 setState(() {
                                   if (_initialTempController.text.isEmpty) {
@@ -718,7 +726,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                 ),
                               ),
                               keyboardType: TextInputType.number,
-                              maxLength: 4,
+                              maxLength: 8,
                               onChanged: (value) {
                                 setState(() {
                                   if (_setTempController.text.isEmpty) {
@@ -735,7 +743,21 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _calculator.setTemp = double.parse(value);
                                   }
 
-                                  if (_calculator.setTemp < _setTempLimit || _calculator.setTemp > _initialTempLimit) {
+                                  //
+                                  // Check whether set temperature is equal to an absolute zero.
+                                  //
+                                  if (_calculator.setTemp == _absoluteZero) {
+                                    setState(() {
+                                      _azFlag = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _azFlag = false;
+                                    });
+                                  }
+
+                                  if (!_azFlag && _calculator.setTemp <= _setTempLimit ||
+                                      _calculator.setTemp > _initialTempLimit) {
                                     _calculator.setTemp = _setTempLimit.toDouble();
                                     _setTempController.text = _calculator.setTemp.toString();
                                   }
