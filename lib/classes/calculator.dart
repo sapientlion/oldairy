@@ -36,7 +36,9 @@
 
 import 'dart:math';
 
-class Calculator {
+import 'package:oldairy/interfaces/icalculator.dart';
+
+class Calculator implements ICalculator {
   final int _ampsLimits = 125;
   final double _milkConstant = 0.685;
 
@@ -63,16 +65,12 @@ class Calculator {
     this.ampsThirdWire = 0.0,
   });
 
-  //
-  // Get total cooling time as a double literal.
-  //
+  @override
   double getCoolingTime() {
     return _coolingTime;
   }
 
-  //
-  // Get total cooling time (hours only).
-  //
+  @override
   int getHours() {
     _cTimeInHours = _coolingTime.toInt();
 
@@ -88,9 +86,7 @@ class Calculator {
     return _cTimeInHours;
   }
 
-  //
-  // Get total cooling time (minutes only).
-  //
+  @override
   int getMinutes() {
     bool fpFlag = false; // Floating point flag.
     String cTimeAsString = _coolingTime.toString(); // Get total cooling time.
@@ -131,9 +127,7 @@ class Calculator {
     return _cTimeInMinutes;
   }
 
-  //
-  // Calculate using the lower voltages (220V to 230V as defined by ISO).
-  //
+  @override
   double calculateLow(int voltage) {
     if (voltage < 220 || voltage > 230) {
       return _coolingTime = 0.0;
@@ -148,9 +142,7 @@ class Calculator {
     return _coolingTime;
   }
 
-  //
-  // Calculate using the higher voltages (380V to 400V as defined by ISO).
-  //
+  @override
   double calculateHigh(int voltage) {
     if (voltage < 380 || voltage > 400) {
       return _coolingTime = 0.0;
@@ -184,10 +176,7 @@ class Calculator {
     return _coolingTime;
   }
 
-  //
-  // Find out the total amount of time necessary to cool down an industrial-sized
-  // milk tank.
-  //
+  @override
   double calculate(int voltage) {
     _coolingTime = initialTemp - setTemp;
 

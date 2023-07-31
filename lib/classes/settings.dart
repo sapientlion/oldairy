@@ -25,9 +25,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:oldairy/classes/locale.dart';
+import 'package:oldairy/interfaces/isettings.dart';
 import 'package:path_provider/path_provider.dart';
 
-class Settings {
+class Settings implements ISettings {
   bool osFlag = false; // Old standard support flag.
   String currentLocale = 'English (US)';
   String localeFileName = '';
@@ -58,15 +59,14 @@ class Settings {
   //
   // Convert class members to JSON attributes.
   //
+  @override
   Map<String, dynamic> toJson() => {
         'isOldStandardEnabled': osFlag,
         'currentLocale': currentLocale,
         'localeFile': localeFileName,
       };
 
-  //
-  // Write data to the file.
-  //
+  @override
   Future<File> write(Settings settings) async {
     final file = await _settingsFile;
 
@@ -78,9 +78,7 @@ class Settings {
     return file.writeAsString(encodedSettings);
   }
 
-  //
-  // Read data from the file.
-  //
+  @override
   Future<String> read() async {
     try {
       final file = await _settingsFile;
