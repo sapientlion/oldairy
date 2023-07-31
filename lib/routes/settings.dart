@@ -142,6 +142,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                         width: 128,
                         child: FloatingActionButton.extended(
                           onPressed: () {
+                            _settings.write(_settings);
                             Navigator.pop(context, _settings);
                           },
                           label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),

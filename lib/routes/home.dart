@@ -72,7 +72,25 @@ class _HomeRouteState extends State<HomeRoute> {
   @override
   void initState() {
     super.initState();
-    readDefaultLocale();
+
+    _settings.read().then((value) {
+      setState(() {
+        bool lFlag = true;
+        Map<String, dynamic> json = jsonDecode(value);
+
+        _settings.isOldStandardEnabled = json['isOldStandardEnabled'];
+        _settings.currentLocale = json['currentLocale'];
+        _settings.localeFile = json['localeFile'];
+
+        readLocale(_settings.localeFile).then((value) {
+          lFlag = value;
+        });
+
+        if (!lFlag) {
+          readDefaultLocale();
+        }
+      });
+    });
   }
 
   @override
@@ -122,18 +140,20 @@ class _HomeRouteState extends State<HomeRoute> {
       _settings.locale.defaults = locale['defaults'];
       _settings.locale.apply = locale['apply'];
     });
+
+    return;
   }
 
   //
   // Get specific locale from a file.
   //
-  Future<void> readLocale(String name) async {
+  Future<bool> readLocale(String name) async {
     String response = '';
 
     try {
       response = await rootBundle.loadString('assets/locales/$name');
     } catch (e) {
-      return;
+      return false;
     }
 
     final data = await json.decode(response);
@@ -160,6 +180,8 @@ class _HomeRouteState extends State<HomeRoute> {
       _settings.locale.defaults = locale['defaults'];
       _settings.locale.apply = locale['apply'];
     });
+
+    return true;
   }
 
   //
@@ -169,24 +191,32 @@ class _HomeRouteState extends State<HomeRoute> {
     switch (locale) {
       case 'Serbian (Cyrillic)':
         {
-          readLocale('rs_cyrillic.json');
+          _settings.localeFile = 'rs_cyrillic.json';
+
+          readLocale(_settings.localeFile);
 
           break;
         }
       case 'Serbian (Latin)':
         {
-          readLocale('rs_latin.json');
+          _settings.localeFile = 'rs_latin.json';
+
+          readLocale(_settings.localeFile);
 
           break;
         }
       case 'Swedish':
         {
-          readLocale('sv_se.json');
+          _settings.localeFile = 'sv_se.json';
+
+          readLocale(_settings.localeFile);
 
           break;
         }
       default:
         {
+          _settings.localeFile = 'en_us.json';
+
           readDefaultLocale();
 
           break;
@@ -292,7 +322,10 @@ class _HomeRouteState extends State<HomeRoute> {
                       Wrap(
                         children: [
                           _settings.locale.hours.isEmpty
-                              ? Text('$_coolingTimeHours h. ') // Trailing space is intentional. Do not remove!
+                              ? Text(
+                                  '$_coolingTimeHours h. ',
+                                  textScaleFactor: 4,
+                                ) // Trailing space is intentional. Do not remove!
                               : Text(
                                   '$_coolingTimeHours ${_settings.locale.hours}',
                                   textScaleFactor: 4,
