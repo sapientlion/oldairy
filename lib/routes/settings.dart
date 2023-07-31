@@ -1,3 +1,26 @@
+/*
+
+    Oldairy - a simple calculator for finding out the approximate
+	cooling time of a typical industrial-sized milk tank.
+    Copyright (C) 2023  Leo "SapientLion" Markoff
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+	Description: the settings route.
+
+*/
+
 import 'package:flutter/material.dart';
 import 'package:oldairy/classes/settings.dart';
 
@@ -96,13 +119,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 title: _settings.locale.oldStandardSupport.isEmpty
                     ? const Text('Enable 220V/380V Support')
                     : Text(_settings.locale.oldStandardSupport),
-                value: _settings.isOldStandardEnabled,
+                value: _settings.osFlag,
                 onChanged: (bool? value) {
                   setState(() {
-                    if (!_settings.isOldStandardEnabled) {
-                      _settings.isOldStandardEnabled = true;
+                    if (!_settings.osFlag) {
+                      _settings.osFlag = true;
                     } else {
-                      _settings.isOldStandardEnabled = false;
+                      _settings.osFlag = false;
                     }
                   });
                 },
@@ -124,7 +147,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                         child: FloatingActionButton.extended(
                           onPressed: () {
                             setState(() {
-                              _settings.isOldStandardEnabled = false;
+                              _settings.osFlag = false;
                               _settings.currentLocale = _dropdownValue = _locales.first;
 
                               _dropdownKey.currentState!.reset();

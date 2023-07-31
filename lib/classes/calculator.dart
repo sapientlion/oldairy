@@ -1,44 +1,80 @@
+/*
+
+    Oldairy - a simple calculator for finding out the approximate
+	cooling time of a typical industrial-sized milk tank.
+    Copyright (C) 2023  Leo "SapientLion" Markoff
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+	Description: the main component of the app - the calculator. It
+	utilizes the following formula for achieving the desirable results:
+
+	Tcooling = (((0.685 x (tinitial - tset)) x Vtank) / U) / I.
+
+	The included constant is used for the cow/goat milk only. In theory,
+	it can be used for similar substances as well.
+
+	It's not a precise number and it will never be like that. It is
+	completely dependent on the current state of equipment and environmental
+	factors such as temperature and air pressure. What is used here is the
+	optimal number for such formula which was found out by pure observation
+	during the series of practices in the field (milk tank service and
+	maintenance).
+
+*/
+
 import 'dart:math';
 
 class Calculator {
-  final int _amperageLimit = 125;
-  final double _constant = 0.685;
+  final int _ampsLimits = 125;
+  final double _milkConstant = 0.685;
 
-  bool _isMoreThanSixty = false;
-  int _coolingTimeHours = 0;
-  int _coolingTimeMinutes = 0;
+  //bool _isMoreThanSixty = false;
+  int _cTimeInHours = 0;
+  int _cTimeInMinutes = 0;
   double _coolingTime = 0.0;
 
   double initialTemp = 0.0;
   double setTemp = 0.0;
   double volume = 0.0;
   double voltage = 0.0;
-  double ampFirstWire = 0.0;
-  double ampSecondWire = 0.0;
-  double ampThirdWire = 0.0;
+  double ampsFirstWire = 0.0;
+  double ampsSecondWire = 0.0;
+  double ampsThirdWire = 0.0;
 
   Calculator({
     this.initialTemp = 0.0,
     this.setTemp = 0.0,
     this.volume = 0.0,
     this.voltage = 0.0,
-    this.ampFirstWire = 0.0,
-    this.ampSecondWire = 0.0,
-    this.ampThirdWire = 0.0,
+    this.ampsFirstWire = 0.0,
+    this.ampsSecondWire = 0.0,
+    this.ampsThirdWire = 0.0,
   });
 
   //
-  // Get cooling time as double literal.
+  // Get total cooling time as a double literal.
   //
   double getCoolingTime() {
     return _coolingTime;
   }
 
   //
-  // Get cooling time: hours.
+  // Get total cooling time (hours only).
   //
   int getHours() {
-    _coolingTimeHours = _coolingTime.toInt();
+    _cTimeInHours = _coolingTime.toInt();
 
     //
     // Trigger this to flip the 60-minute flag, if need be.
@@ -49,29 +85,42 @@ class Calculator {
       _coolingTimeHours += 1;
     }*/
 
-    return _coolingTimeHours;
+    return _cTimeInHours;
   }
 
   //
-  // Get cooling time: minutes.
+  // Get total cooling time (minutes only).
   //
   int getMinutes() {
-    bool isFloatingPoint = false;
-    String coolingTimeAsString = _coolingTime.toString();
-    String coolingTimeMinutesAsString = '';
+    bool fpFlag = false; // Floating point flag.
+    String cTimeAsString = _coolingTime.toString(); // Get total cooling time.
+    String cTimeMinutesAsString = ''; // Cooling time (minutes).
 
-    for (var element in coolingTimeAsString.runes) {
-      if (isFloatingPoint) {
-        coolingTimeMinutesAsString += String.fromCharCode(element);
+    //
+    // Separate minutes from the total cooling time. Use the following approach for better reliability when using
+    // different encodings.
+    //
+    for (var element in cTimeAsString.runes) {
+      //
+      // Start including digits until after the floating point is reached.
+      //
+      if (fpFlag) {
+        cTimeMinutesAsString += String.fromCharCode(element);
       }
 
-      if (!isFloatingPoint && String.fromCharCode(element) == '.') {
-        isFloatingPoint = true;
+      //
+      // Detect the first occurence of the floating point.
+      //
+      if (!fpFlag && String.fromCharCode(element) == '.') {
+        fpFlag = true;
       }
     }
 
-    _coolingTimeMinutes = int.parse(coolingTimeMinutesAsString);
+    _cTimeInMinutes = int.parse(cTimeMinutesAsString);
 
+    //
+    // TODO check the following segment for any errors and improve it where possible.
+    //
     /*if (_coolingTimeMinutes > 59) {
       _isMoreThanSixty = true;
       _coolingTimeMinutes -= 60;
@@ -79,7 +128,7 @@ class Calculator {
       _isMoreThanSixty = false;
     }*/
 
-    return _coolingTimeMinutes;
+    return _cTimeInMinutes;
   }
 
   //
@@ -90,7 +139,7 @@ class Calculator {
       return _coolingTime = 0.0;
     }
 
-    _coolingTime /= ampFirstWire;
+    _coolingTime /= ampsFirstWire;
 
     String coolingTimeRound = _coolingTime.toStringAsFixed(2);
 
@@ -107,18 +156,18 @@ class Calculator {
       return _coolingTime = 0.0;
     }
 
-    if (ampSecondWire > _amperageLimit) {
+    if (ampsSecondWire > _ampsLimits) {
       return _coolingTime = 0.0;
     }
 
-    if (ampThirdWire > _amperageLimit) {
+    if (ampsThirdWire > _ampsLimits) {
       return _coolingTime = 0.0;
     }
 
     //
     // Switch to three-phase electric power in case of higher voltages.
     //
-    double combinedAmperage = ampFirstWire + ampSecondWire + ampThirdWire;
+    double combinedAmperage = ampsFirstWire + ampsSecondWire + ampsThirdWire;
 
     combinedAmperage = combinedAmperage / sqrt(3);
 
@@ -136,7 +185,7 @@ class Calculator {
   }
 
   //
-  // Find out total amount of time necessary to cool down an industrial-sized
+  // Find out the total amount of time necessary to cool down an industrial-sized
   // milk tank.
   //
   double calculate(int voltage) {
@@ -150,7 +199,7 @@ class Calculator {
       return _coolingTime = 0.0;
     }
 
-    _coolingTime = _constant * _coolingTime;
+    _coolingTime = _milkConstant * _coolingTime;
     _coolingTime = volume * _coolingTime;
 
     //
@@ -163,16 +212,22 @@ class Calculator {
     _coolingTime /= voltage;
 
     //
-    // Same thing can happen here.
+    // The exact same thing can happen here.
     //
-    if (ampFirstWire <= 0 || ampFirstWire > _amperageLimit) {
+    if (ampsFirstWire <= 0 || ampsFirstWire > _ampsLimits) {
       return _coolingTime = 0.0;
     }
 
+    //
+    // In case of lower voltages.
+    //
     if (voltage >= 220 && voltage <= 230) {
       return calculateLow(voltage);
     }
 
+    //
+    // In case of higher voltages.
+    //
     if (voltage >= 380 && voltage <= 400) {
       return calculateHigh(voltage);
     }
