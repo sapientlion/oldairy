@@ -50,8 +50,8 @@ class _AboutRouteState extends State<AboutRoute> {
   void initState() {
     super.initState();
 
-    setState(() {
-      PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() {
         packageVersion = packageInfo.version;
       });
     });
