@@ -92,6 +92,15 @@ class _AboutRouteState extends State<AboutRoute> {
             Padding(
               padding: const EdgeInsets.all(24),
               child: TextField(
+                decoration: const InputDecoration(labelText: 'Development:'),
+                controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy'),
+                readOnly: true,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: TextField(
                 decoration: const InputDecoration(labelText: 'License: GNU General Public License Version 3'),
                 controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE'),
                 readOnly: true,
@@ -106,7 +115,6 @@ class _AboutRouteState extends State<AboutRoute> {
                 textAlign: TextAlign.center,
               ),
             ),
-
             /*Padding(
               padding: const EdgeInsets.all(24),
               child: InkWell(
