@@ -29,8 +29,8 @@ The easiest and recommended way to build `*.apk` installation packages is via An
 
 ## Screenshots
 
-![Home](./oldairy_home.jpg?raw=true "Home")
-![Settings](./oldairy_settings.jpg?raw=true "Settings")
+<img alt="Home" src="./oldairy_home.jpg?raw=true" width="360">
+<img alt="Settings" src="./oldairy_settings.jpg?raw=true" width="360">
 
 ## Coffee?
 
