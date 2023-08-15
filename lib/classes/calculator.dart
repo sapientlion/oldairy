@@ -20,7 +20,7 @@
 	Description: the main component of the app - the calculator. It
 	utilizes the following formula for achieving the desirable results:
 
-	Tcooling = (((0.685 x (tinitial - tset)) x Vtank) / U) / I.
+	tcooling = (((0.685 x (tinitial - tset)) x Vtank) / U) / I.
 
 	The included constant is used for the cow/goat milk only. In theory,
 	it can be used for similar substances as well.
@@ -36,16 +36,16 @@
 
 import 'dart:math';
 
+import 'package:oldairy/classes/tformatter.dart';
 import 'package:oldairy/interfaces/icalculator.dart';
 
 class Calculator implements ICalculator {
   final int _ampsLimits = 125;
   final double _milkConstant = 0.685;
-
-  //bool _isMoreThanSixty = false;
-  int _cTimeInHours = 0;
-  int _cTimeInMinutes = 0;
+  /*int _cTimeInHours = 0;
+  int _cTimeInMinutes = 0;*/
   double _coolingTime = 0.0;
+  TimeFormatter _timeFormatter = TimeFormatter();
 
   double initialTemp = 0.0;
   double setTemp = 0.0;
@@ -54,6 +54,20 @@ class Calculator implements ICalculator {
   double ampsFirstWire = 0.0;
   double ampsSecondWire = 0.0;
   double ampsThirdWire = 0.0;
+
+  //bool _isMoreThanSixty = false;
+  /*int _cTimeInHours = 0;
+  int _cTimeInMinutes = 0;
+  double _coolingTime = 0.0;
+  TimeFormatter _timeFormatter = TimeFormatter();
+
+  double initialTemp = 0.0;
+  double setTemp = 0.0;
+  double volume = 0.0;
+  double voltage = 0.0;
+  double ampsFirstWire = 0.0;
+  double ampsSecondWire = 0.0;
+  double ampsThirdWire = 0.0;*/
 
   Calculator({
     this.initialTemp = 0.0,
@@ -65,7 +79,7 @@ class Calculator implements ICalculator {
     this.ampsThirdWire = 0.0,
   });
 
-  @override
+  /*@override
   double getCoolingTime() {
     return _coolingTime;
   }
@@ -125,7 +139,7 @@ class Calculator implements ICalculator {
     }*/
 
     return _cTimeInMinutes;
-  }
+  }*/
 
   @override
   double calculateLow(int voltage) {

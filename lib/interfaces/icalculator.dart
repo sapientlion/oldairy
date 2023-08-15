@@ -25,7 +25,7 @@ abstract class ICalculator {
   //
   // Get total cooling time as a double literal.
   //
-  double getCoolingTime();
+  /*double getCoolingTime();
   //
   // Get total cooling time (hours only).
   //
@@ -33,7 +33,7 @@ abstract class ICalculator {
   //
   // Get total cooling time (minutes only).
   //
-  int getMinutes();
+  int getMinutes();*/
   //
   // Calculate using the lower voltages (220V to 230V as defined by ISO).
   //
