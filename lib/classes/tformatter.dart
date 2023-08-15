@@ -22,13 +22,16 @@
 */
 
 class TimeFormatter {
-  int cTimeHours = 0;
-  int cTimeMinutes = 0;
+  int _cTimeHours = 0;
+  int _cTimeMinutes = 0;
+
+  /*int cTimeHours = 0;
+  int cTimeMinutes = 0;*/
   double cTime = 0.0;
 
   TimeFormatter({
-    this.cTimeHours = 0,
-    this.cTimeMinutes = 0,
+    /*this.cTimeHours = 0,
+    this.cTimeMinutes = 0,*/
     this.cTime = 0.0,
   });
 
@@ -36,79 +39,90 @@ class TimeFormatter {
   // Round time.
   //
   double round() {
-    const int numOfMinutesInOneHour = 60;
+    //
+    // Why waste CPU cycles when you can do something more productive than this.
+    //
+    if (cTime <= 0) {
+      return cTime;
+    }
+
+    const int numOfMinutesInOneHour = 60; // Well, obviously.
     bool fpFlag = false; // Floating point flag.
-    /*int cTimeMinutes = 0;
-    int cTimeHours = 0;*/
-    double cTime = 0.0;
+    double cTimeRounded = 0.0;
     String cTimeAsString = cTime.toString();
     String cTimeMinutesAsString = '';
 
     //
-    // Extract minutes from the total cooling time. Use the following approach for better reliability when using
+    // Extract minutes from the given time. Use the following approach for better reliability when using
     // different encodings.
     //
     for (var element in cTimeAsString.runes) {
-      //
-      // Detect the first occurence of the floating point.
-      //
-      if (!fpFlag && String.fromCharCode(element) == '.') {
-        fpFlag = true;
-      }
-
       //
       // Start including digits until after the floating point is reached.
       //
       if (fpFlag) {
         cTimeMinutesAsString += String.fromCharCode(element);
       }
+
+      //
+      // Detect the first occurence of the floating point.
+      //
+      if (!fpFlag && String.fromCharCode(element) == '.') {
+        fpFlag = true;
+      }
     }
 
-    cTimeMinutes = int.parse(cTimeMinutesAsString);
+    _cTimeMinutes = int.parse(cTimeMinutesAsString);
 
-    if (cTimeMinutes < numOfMinutesInOneHour) {
+    //
+    // Don't bother with rounding if minutes are less than or equal to 60 minutes.
+    //
+    if (_cTimeMinutes <= numOfMinutesInOneHour) {
       return cTime;
     }
 
     //
-    // Round the cooling time.
+    // Round given time.
     //
-    while (cTimeMinutes > numOfMinutesInOneHour) {
-      cTimeHours++;
+    while (_cTimeMinutes > numOfMinutesInOneHour) {
+      _cTimeHours++;
       //
       // TODO the following may result in imprecise value. Check this out later.
       //
-      cTimeMinutes = cTimeMinutes ~/ numOfMinutesInOneHour;
+      _cTimeMinutes = _cTimeMinutes ~/ numOfMinutesInOneHour;
     }
 
-    cTime = cTimeMinutes.toDouble();
-    cTimeMinutesAsString = cTimeMinutes.toString();
+    cTimeRounded = _cTimeMinutes.toDouble();
+    cTimeMinutesAsString = _cTimeMinutes.toString();
 
     //
     // Add digits after the floating point.
     //
     for (int index = 0; index < cTimeMinutesAsString.length; index++) {
-      cTime /= 10;
+      cTimeRounded /= 10;
     }
 
-    return cTime += cTimeHours;
+    //
+    // Get rid of the digits after the floating point.
+    //
+    cTime = cTime.toInt().toDouble();
+
+    return cTime += _cTimeHours.toDouble() + cTimeRounded;
   }
 
   double get() {
-    round();
-
-    return cTime;
+    return cTime = round();
   }
 
   int getHours() {
     round();
 
-    return cTimeHours;
+    return _cTimeHours;
   }
 
   int getMinutes() {
     round();
 
-    return cTimeMinutes;
+    return _cTimeMinutes;
   }
 }

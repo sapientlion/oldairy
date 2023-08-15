@@ -488,8 +488,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                             ),
@@ -543,8 +543,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -619,8 +619,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -700,8 +700,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -770,8 +770,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -839,8 +839,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -895,8 +895,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   }
 
                                   _calculator.calculate(_dropdownValue);
-                                  _coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();
+                                  /*_coolingTimeHours = _calculator.getHours().toString();
+                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
