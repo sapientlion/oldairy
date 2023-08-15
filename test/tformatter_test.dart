@@ -26,7 +26,7 @@ import 'package:oldairy/classes/tformatter.dart';
 
 void main() {
   //
-  // Test time rounding.
+  // Test time rounding on `get`.
   //
   test('[NEG] Given time is negative', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: -11.123123);
@@ -44,6 +44,48 @@ void main() {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
 
     expect(timeFormatter.get(true), 13.34);
+  });
+
+  //
+  // Test time rounding on `getHours`.
+  //
+  test('[NEG] Given hours are negative', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: -11.123123);
+
+    expect(timeFormatter.getHours(true), -11);
+  });
+
+  test('[NEG] Given hours are equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: 0.0);
+
+    expect(timeFormatter.getHours(true), 0);
+  });
+
+  test('[POS] Given hours are in correct format', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
+
+    expect(timeFormatter.getHours(true), 13);
+  });
+
+  //
+  // Test time rounding on `getMinutes`.
+  //
+  test('[NEG] Given minutes are negative', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: -11.123123);
+
+    expect(timeFormatter.getMinutes(true), 0);
+  });
+
+  test('[NEG] Given hour is equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: 0.0);
+
+    expect(timeFormatter.getMinutes(true), 0);
+  });
+
+  test('[POS] Given hour is in correct format', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
+
+    expect(timeFormatter.getMinutes(true), 34);
   });
 
   /*testWidgets('Counter increments smoke test', (WidgetTester tester) async {
