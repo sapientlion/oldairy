@@ -25,22 +25,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:oldairy/classes/tformatter.dart';
 
 void main() {
+  //
+  // Test time rounding.
+  //
   test('[NEG] Given time is negative', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: -11.123123);
 
-    expect(timeFormatter.get(), -11.123123);
+    expect(timeFormatter.get(true), -11.123123);
   });
 
   test('[NEG] Given time is equal to zero', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 0.0);
 
-    expect(timeFormatter.get(), 0.0);
+    expect(timeFormatter.get(true), 0.0);
   });
 
   test('[POS] Given time is correct', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
 
-    expect(timeFormatter.get(), 13.34);
+    expect(timeFormatter.get(true), 13.34);
   });
 
   /*testWidgets('Counter increments smoke test', (WidgetTester tester) async {

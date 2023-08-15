@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-	Description: N/a
+	Description: time formatter class.
 
 */
 
@@ -35,20 +35,12 @@ class TimeFormatter {
     this.cTime = 0.0,
   });
 
-  //
-  // Round time.
-  //
-  double round() {
-    //
-    // Why waste CPU cycles when you can do something more productive than this.
-    //
+  int extractMinutes() {
     if (cTime <= 0) {
-      return cTime;
+      return _cTimeMinutes;
     }
 
-    const int numOfMinutesInOneHour = 60; // Well, obviously.
     bool fpFlag = false; // Floating point flag.
-    double cTimeRounded = 0.0;
     String cTimeAsString = cTime.toString();
     String cTimeMinutesAsString = '';
 
@@ -72,7 +64,49 @@ class TimeFormatter {
       }
     }
 
-    _cTimeMinutes = int.parse(cTimeMinutesAsString);
+    return _cTimeMinutes = int.parse(cTimeMinutesAsString);
+  }
+
+  //
+  // Round time.
+  //
+  double round() {
+    //
+    // Why waste CPU cycles when you can do something more productive than this.
+    //
+    if (cTime <= 0) {
+      return cTime;
+    }
+
+    const int numOfMinutesInOneHour = 60; // Well, obviously.
+    //bool fpFlag = false; // Floating point flag.
+    double cTimeRounded = 0.0;
+    //String cTimeAsString = cTime.toString();
+    String cTimeMinutesAsString = '';
+
+    _cTimeMinutes = extractMinutes();
+
+    //
+    // Extract minutes from the given time. Use the following approach for better reliability when using
+    // different encodings.
+    //
+    /*for (var element in cTimeAsString.runes) {
+      //
+      // Start including digits until after the floating point is reached.
+      //
+      if (fpFlag) {
+        cTimeMinutesAsString += String.fromCharCode(element);
+      }
+
+      //
+      // Detect the first occurence of the floating point.
+      //
+      if (!fpFlag && String.fromCharCode(element) == '.') {
+        fpFlag = true;
+      }
+    }
+
+    _cTimeMinutes = int.parse(cTimeMinutesAsString);*/
 
     //
     // Don't bother with rounding if minutes are less than or equal to 60 minutes.
@@ -110,17 +144,41 @@ class TimeFormatter {
     return cTime += _cTimeHours.toDouble() + cTimeRounded;
   }
 
-  double get() {
+  double get(bool rFlag) {
+    if (cTime <= 0) {
+      return cTime;
+    }
+
+    if (!rFlag) {
+      return cTime;
+    }
+
     return cTime = round();
   }
 
-  int getHours() {
+  int getHours(bool rFlag) {
+    if (cTime <= 0) {
+      return cTime.toInt();
+    }
+
+    if (!rFlag) {
+      return cTime.toInt();
+    }
+
     round();
 
-    return _cTimeHours;
+    return cTime.toInt();
   }
 
-  int getMinutes() {
+  int getMinutes(bool rFlag) {
+    if (cTime <= 0) {
+      return extractMinutes();
+    }
+
+    if (!rFlag) {
+      return extractMinutes();
+    }
+
     round();
 
     return _cTimeMinutes;
