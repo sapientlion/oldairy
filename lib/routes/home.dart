@@ -496,7 +496,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
                                   _calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
@@ -551,7 +551,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsFirstWireCtrl.text = _calculator.ampsFirstWire.toString();
                                   }
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
@@ -627,7 +627,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsSecondWireCtrl.text = _calculator.ampsSecondWire.toString();
                                   }
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
@@ -708,7 +708,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsThirdWireCtrl.text = _calculator.ampsThirdWire.toString();
                                   }
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
@@ -778,7 +778,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _initTempCtrl.text = _calculator.initialTemp.toString();
                                   }
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
@@ -847,7 +847,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _setTempCtrl.text = _calculator.setTemp.toString();*/
                                   }
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
@@ -903,7 +903,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _volumeCtrl.text = _calculator.volume.toString();
                                   }
 
-                                  _calculator.calculate(_dropdownValue);
+                                  //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });

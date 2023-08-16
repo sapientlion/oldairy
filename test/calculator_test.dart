@@ -39,7 +39,8 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(220), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(220), 0.0);
   });
 
   test('[NEG] Using a low voltage, voltage is equal to zero (simulate division by zero)', () {
@@ -53,7 +54,8 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(0), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(0), 0.0);
   });
 
   test('[NEG] Using a low voltage, amperage is equal to zero (simulate division by zero)', () {
@@ -67,7 +69,8 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(220), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(220), 0.0);
   });
 
   test('[POS] Using a low voltage, get adequate result', () {
@@ -81,7 +84,8 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(220), 0.47);
+    expect(calculator.calculate(), 0.47);
+    //expect(calculator.calculate(220), 0.47);
   });
 
   //
@@ -98,7 +102,8 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(380), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(380), 0.0);
   });
 
   test('[NEG] Using a high voltage, voltage is equal to zero (simulate division by zero)', () {
@@ -112,7 +117,8 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(0), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(0), 0.0);
   });
 
   test('[NEG] Using a high voltage, all amperages are equal to zero (simulate division by zero)', () {
@@ -126,7 +132,8 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(380), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(380), 0.0);
   });
 
   test('[NEG] Using a high voltage, first amperage is equal to zero (simulate division by zero)', () {
@@ -140,7 +147,8 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(380), 0.0);
+    expect(calculator.calculate(), 0.0);
+    //expect(calculator.calculate(380), 0.0);
   });
 
   test('[POS] Using a high voltage, get adequate result without the inclusion of the second wire', () {
@@ -154,7 +162,8 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(380), 0.23);
+    expect(calculator.calculate(), 0.23);
+    //expect(calculator.calculate(380), 0.23);
   });
 
   test('[POS] Using a high voltage, get adequate result without the inclusion of the third wire', () {
@@ -168,7 +177,8 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(380), 0.23);
+    expect(calculator.calculate(), 0.23);
+    //expect(calculator.calculate(380), 0.23);
   });
 
   test('[POS] Using a high voltage, get adequate result', () {
@@ -182,6 +192,7 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(380), 0.16);
+    expect(calculator.calculate(), 0.16);
+    //expect(calculator.calculate(380), 0.16);
   });
 }

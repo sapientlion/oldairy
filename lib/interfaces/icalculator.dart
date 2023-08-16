@@ -37,7 +37,7 @@ abstract class ICalculator {
   //
   // Calculate using the lower voltages (220V to 230V as defined by ISO).
   //
-  double calculateLow(int voltage);
+  /*double calculateLow(int voltage);
   //
   // Calculate using the higher voltages (380V to 400V as defined by ISO).
   //
@@ -46,5 +46,5 @@ abstract class ICalculator {
   // Find out the total amount of time necessary to cool down an industrial-sized
   // milk tank.
   //
-  double calculate(int voltage);
+  double calculate(int voltage);*/
 }

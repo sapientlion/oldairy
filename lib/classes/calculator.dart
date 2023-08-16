@@ -152,7 +152,8 @@ class Calculator implements ICalculator {
   }*/
 
   @override
-  double calculateLow(int voltage) {
+  double calculateLow() {
+    //double calculateLow(int voltage) {
     if (voltage < 220 || voltage > 230) {
       return _coolingTime = 0.0;
     }
@@ -167,7 +168,8 @@ class Calculator implements ICalculator {
   }
 
   @override
-  double calculateHigh(int voltage) {
+  double calculateHigh() {
+    //double calculateHigh(int voltage) {
     if (voltage < 380 || voltage > 400) {
       return _coolingTime = 0.0;
     }
@@ -201,7 +203,8 @@ class Calculator implements ICalculator {
   }
 
   @override
-  double calculate(int voltage) {
+  double calculate() {
+    //double calculate(int voltage) {
     _coolingTime = initialTemp - setTemp;
 
     //
@@ -235,14 +238,16 @@ class Calculator implements ICalculator {
     // In case of lower voltages.
     //
     if (voltage >= 220 && voltage <= 230) {
-      return calculateLow(voltage);
+      return calculateLow();
+      //return calculateLow(voltage);
     }
 
     //
     // In case of higher voltages.
     //
     if (voltage >= 380 && voltage <= 400) {
-      return calculateHigh(voltage);
+      return calculateHigh();
+      //return calculateHigh(voltage);
     }
 
     return _coolingTime = 0.0;
