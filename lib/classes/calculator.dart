@@ -70,6 +70,16 @@ class Calculator implements ICalculator {
   double ampsThirdWire = 0.0;*/
 
   Calculator({
+    required this.initialTemp,
+    required this.setTemp,
+    required this.volume,
+    required this.voltage,
+    required this.ampsFirstWire,
+    required this.ampsSecondWire,
+    required this.ampsThirdWire,
+  });
+
+  /*Calculator({
     this.initialTemp = 0.0,
     this.setTemp = 0.0,
     this.volume = 0.0,
@@ -77,7 +87,7 @@ class Calculator implements ICalculator {
     this.ampsFirstWire = 0.0,
     this.ampsSecondWire = 0.0,
     this.ampsThirdWire = 0.0,
-  });
+  });*/
 
   /*@override
   double getCoolingTime() {

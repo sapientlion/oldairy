@@ -68,7 +68,16 @@ class _HomeRouteState extends State<HomeRoute> {
   final double _initValue = 0.0;
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
-  final Calculator _calculator = Calculator();
+  final Calculator _calculator = Calculator(
+    initialTemp: 0.0,
+    setTemp: 0.0,
+    volume: 0.0,
+    voltage: 230,
+    ampsFirstWire: 0.0,
+    ampsSecondWire: 0.0,
+    ampsThirdWire: 0.0,
+  );
+  //final Calculator _calculator = Calculator();
   final TextEditingController _initTempCtrl = TextEditingController();
   final TextEditingController _setTempCtrl = TextEditingController();
   final TextEditingController _volumeCtrl = TextEditingController();
