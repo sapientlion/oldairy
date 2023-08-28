@@ -43,22 +43,22 @@ class TimeFormatter {
       return 0;
     }
 
-    bool fpFlag = false; // Floating point flag.
+    bool dpFlag = false; // Decimla point flag.
     String resValue = '';
 
     for (var element in value.runes) {
       //
       // Start including digits until after the floating point is reached.
       //
-      if (fpFlag) {
+      if (dpFlag) {
         resValue += String.fromCharCode(element);
       }
 
       //
       // Detect the first occurence of the floating point.
       //
-      if (!fpFlag && String.fromCharCode(element) == '.') {
-        fpFlag = true;
+      if (!dpFlag && String.fromCharCode(element) == '.') {
+        dpFlag = true;
       }
     }
 
@@ -66,6 +66,14 @@ class TimeFormatter {
   }
 
   int extractMinutes() {
+    if (cTime <= 0) {
+      return _cTimeMinutes;
+    }
+
+    return _cTimeMinutes = getFraction(cTime.toString());
+  }
+
+  /*int extractMinutes() {
     if (cTime <= 0) {
       return _cTimeMinutes;
     }
@@ -95,7 +103,7 @@ class TimeFormatter {
     }
 
     return _cTimeMinutes = int.parse(cTimeMinutesAsString);
-  }
+  }*/
 
   //
   // Round time.
