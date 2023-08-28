@@ -108,6 +108,37 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 },
               ),
             ),
+
+            //
+            // TODO make the following 2 settings actually functional.
+            //
+            //
+            // More precise minutes setting.
+            //
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                tileColor: const Color.fromRGBO(211, 211, 211, 0),
+                title: const Text('Allow Use of More Precise Minutes'),
+                value: true,
+                onChanged: (bool? value) {},
+              ),
+            ),
+            //
+            // Time rounding setting.
+            //
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                tileColor: const Color.fromRGBO(211, 211, 211, 0),
+                title: const Text('Enable Time Rounding'),
+                value: true,
+                onChanged: (bool? value) {},
+              ),
+            ),
+
             //
             // Support previous ISO standard via checkbox interaction.
             //
