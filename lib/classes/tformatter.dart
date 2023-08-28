@@ -65,13 +65,16 @@ class TimeFormatter {
     return int.parse(resValue);
   }
 
-  int extractMinutes() {
+  //
+  // TODO remove this once confirmed that it is no longer needed by the class.
+  //
+  /*int extractMinutes({bool mpmFlag = true}) {
     if (cTime <= 0) {
       return _cTimeMinutes;
     }
 
     return _cTimeMinutes = getFraction(cTime.toString());
-  }
+  }*/
 
   /*int extractMinutes() {
     if (cTime <= 0) {
@@ -122,7 +125,8 @@ class TimeFormatter {
     //String cTimeAsString = cTime.toString();
     String cTimeMinutesAsString = '';
 
-    _cTimeMinutes = extractMinutes();
+    _cTimeMinutes = getFraction(cTime.toString());
+    //_cTimeMinutes = extractMinutes();
 
     //
     // Extract minutes from the given time. Use the following approach for better reliability when using
@@ -237,16 +241,24 @@ class TimeFormatter {
     return cTime.toInt();
   }
 
-  int getMinutes(bool rFlag) {
+  int getMinutes(bool rFlag, {bool mpmFlag = true}) {
     if (cTime <= 0) {
-      return extractMinutes();
+      return _cTimeMinutes;
+      //return extractMinutes(mpmFlag: mpmFlag);
     }
 
+    //
+    // Do not round time.
+    //
     if (!rFlag) {
-      return extractMinutes();
+      return _cTimeMinutes = getFraction(cTime.toString());
+      //return extractMinutes(mpmFlag: mpmFlag);
     }
 
-    round();
+    //
+    // Ignore previous statement.
+    //
+    round(mpmFlag: mpmFlag);
 
     return _cTimeMinutes;
   }

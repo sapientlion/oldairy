@@ -76,13 +76,24 @@ void main() {
     expect(timeFormatter.getMinutes(true), 0);
   });
 
-  test('[NEG] Given hour is equal to zero', () {
+  test('[NEG] Given minutes are equal to zero', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 0.0);
 
     expect(timeFormatter.getMinutes(true), 0);
   });
 
-  test('[POS] Given hour is in correct format', () {
+  test('[POS] Resulting minutes are correct, but left untouched', () {
+    TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
+
+    expect(
+        timeFormatter.getMinutes(
+          true,
+          mpmFlag: false,
+        ),
+        34);
+  });
+
+  test('[POS] Resulting minutes are correct, but were rounded for more precision', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
 
     expect(timeFormatter.getMinutes(true), 35);
