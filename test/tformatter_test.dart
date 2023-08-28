@@ -43,7 +43,7 @@ void main() {
   test('[POS] Given time is correct', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
 
-    expect(timeFormatter.get(true), 13.34);
+    expect(timeFormatter.get(true), 13.35);
   });
 
   //
@@ -85,7 +85,7 @@ void main() {
   test('[POS] Given hour is in correct format', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
 
-    expect(timeFormatter.getMinutes(true), 34);
+    expect(timeFormatter.getMinutes(true), 35);
   });
 
   /*testWidgets('Counter increments smoke test', (WidgetTester tester) async {

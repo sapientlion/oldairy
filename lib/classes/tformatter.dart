@@ -35,6 +35,36 @@ class TimeFormatter {
     this.cTime = 0.0,
   });
 
+  //
+  // Get fraction of the given number.
+  //
+  int getFraction(String value) {
+    if (value.isEmpty) {
+      return 0;
+    }
+
+    bool fpFlag = false; // Floating point flag.
+    String resValue = '';
+
+    for (var element in value.runes) {
+      //
+      // Start including digits until after the floating point is reached.
+      //
+      if (fpFlag) {
+        resValue += String.fromCharCode(element);
+      }
+
+      //
+      // Detect the first occurence of the floating point.
+      //
+      if (!fpFlag && String.fromCharCode(element) == '.') {
+        fpFlag = true;
+      }
+    }
+
+    return int.parse(resValue);
+  }
+
   int extractMinutes() {
     if (cTime <= 0) {
       return _cTimeMinutes;
@@ -70,7 +100,7 @@ class TimeFormatter {
   //
   // Round time.
   //
-  double round() {
+  double round({bool mpmFlag = true}) {
     //
     // Why waste CPU cycles when you can do something more productive than this.
     //
@@ -118,13 +148,42 @@ class TimeFormatter {
     //
     // Round given time.
     //
-    while (_cTimeMinutes > numOfMinutesInOneHour) {
-      _cTimeHours++;
-      //
-      // TODO the following may result in imprecise value. Check this out later.
-      //
-      _cTimeMinutes = _cTimeMinutes ~/ numOfMinutesInOneHour;
+    if (mpmFlag) {
+      while (_cTimeMinutes > numOfMinutesInOneHour) {
+        double remainder = 0.0;
+
+        _cTimeHours++;
+
+        remainder = _cTimeMinutes / numOfMinutesInOneHour;
+        _cTimeMinutes = remainder.toInt();
+        //double remainder = _cTimeMinutes / numOfMinutesInOneHour;
+
+        if (getFraction(remainder.toString()) >= 5) {
+          _cTimeMinutes++;
+        }
+        //_cTimeMinutes = _cTimeMinutes ~/ numOfMinutesInOneHour;
+      }
+    } else {
+      while (_cTimeMinutes > numOfMinutesInOneHour) {
+        _cTimeHours++;
+        _cTimeMinutes = _cTimeMinutes ~/ numOfMinutesInOneHour;
+      }
     }
+
+    /*while (_cTimeMinutes > numOfMinutesInOneHour) {
+      double remainder = 0.0;
+
+      _cTimeHours++;
+
+      remainder = _cTimeMinutes / numOfMinutesInOneHour;
+      _cTimeMinutes = remainder.toInt();
+      //double remainder = _cTimeMinutes / numOfMinutesInOneHour;
+
+      if (getRemainder(remainder.toString()) >= 5) {
+        _cTimeMinutes++;
+      }
+      //_cTimeMinutes = _cTimeMinutes ~/ numOfMinutesInOneHour;
+    }*/
 
     cTimeRounded = _cTimeMinutes.toDouble();
     cTimeMinutesAsString = _cTimeMinutes.toString();
