@@ -21,19 +21,40 @@
 
 */
 
+import 'calculator.dart';
+
 class TimeFormatter {
   int _cTimeHours = 0;
   int _cTimeMinutes = 0;
 
   /*int cTimeHours = 0;
   int cTimeMinutes = 0;*/
-  double cTime = 0.0;
+  double _cTime = 0.0;
+  //double cTime = 0.0;
+
+  Calculator calculator = Calculator(
+    initialTemp: 0.0,
+    setTemp: 0.0,
+    volume: 0.0,
+    voltage: 0.0,
+    ampsFirstWire: 0.0,
+    ampsSecondWire: 0.0,
+    ampsThirdWire: 0.0,
+  );
 
   TimeFormatter({
-    /*this.cTimeHours = 0,
-    this.cTimeMinutes = 0,*/
+    required this.calculator,
+  }) {
+    calculator.calculate();
+
+    _cTime = calculator.get();
+  }
+
+  /*TimeFormatter({
+    this.cTimeHours = 0,
+    this.cTimeMinutes = 0,
     this.cTime = 0.0,
-  });
+  });*/
 
   //
   // Get fraction of the given number.
@@ -115,8 +136,8 @@ class TimeFormatter {
     //
     // Why waste CPU cycles when you can do something more productive than this.
     //
-    if (cTime <= 0) {
-      return cTime;
+    if (_cTime <= 0) {
+      return _cTime;
     }
 
     const int numOfMinutesInOneHour = 60; // Well, obviously.
@@ -125,7 +146,7 @@ class TimeFormatter {
     //String cTimeAsString = cTime.toString();
     String cTimeMinutesAsString = '';
 
-    _cTimeMinutes = getFraction(cTime.toString());
+    _cTimeMinutes = getFraction(_cTime.toString());
     //_cTimeMinutes = extractMinutes();
 
     //
@@ -154,7 +175,7 @@ class TimeFormatter {
     // Don't bother with rounding if minutes are less than or equal to 60 minutes.
     //
     if (_cTimeMinutes <= numOfMinutesInOneHour) {
-      return cTime;
+      return _cTime;
     }
 
     //
@@ -210,39 +231,39 @@ class TimeFormatter {
     //
     // Get rid of the digits after the floating point.
     //
-    cTime = cTime.toInt().toDouble();
+    _cTime = _cTime.toInt().toDouble();
 
-    return cTime += _cTimeHours.toDouble() + cTimeRounded;
+    return _cTime += _cTimeHours.toDouble() + cTimeRounded;
   }
 
   double get(bool rFlag) {
-    if (cTime <= 0) {
-      return cTime;
+    if (_cTime <= 0) {
+      return _cTime;
     }
 
     if (!rFlag) {
-      return cTime;
+      return _cTime;
     }
 
-    return cTime = round();
+    return _cTime = round();
   }
 
   int getHours(bool rFlag) {
-    if (cTime <= 0) {
-      return cTime.toInt();
+    if (_cTime <= 0) {
+      return _cTime.toInt();
     }
 
     if (!rFlag) {
-      return cTime.toInt();
+      return _cTime.toInt();
     }
 
     round();
 
-    return cTime.toInt();
+    return _cTime.toInt();
   }
 
   int getMinutes(bool rFlag, {bool mpmFlag = true}) {
-    if (cTime <= 0) {
+    if (_cTime <= 0) {
       return _cTimeMinutes;
       //return extractMinutes(mpmFlag: mpmFlag);
     }
@@ -251,7 +272,7 @@ class TimeFormatter {
     // Do not round time.
     //
     if (!rFlag) {
-      return _cTimeMinutes = getFraction(cTime.toString());
+      return _cTimeMinutes = getFraction(_cTime.toString());
       //return extractMinutes(mpmFlag: mpmFlag);
     }
 

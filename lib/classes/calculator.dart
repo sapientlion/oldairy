@@ -45,7 +45,7 @@ class Calculator implements ICalculator {
   /*int _cTimeInHours = 0;
   int _cTimeInMinutes = 0;*/
   double _coolingTime = 0.0;
-  TimeFormatter _timeFormatter = TimeFormatter();
+  //TimeFormatter _timeFormatter = TimeFormatter();
 
   double initialTemp = 0.0;
   double setTemp = 0.0;
@@ -150,6 +150,10 @@ class Calculator implements ICalculator {
 
     return _cTimeInMinutes;
   }*/
+
+  double get() {
+    return _coolingTime;
+  }
 
   @override
   double calculateLow() {

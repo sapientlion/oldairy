@@ -22,13 +22,84 @@
 */
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:oldairy/classes/calculator.dart';
 import 'package:oldairy/classes/tformatter.dart';
 
 void main() {
+  Calculator calcZero = Calculator(
+      initialTemp: 0.0,
+      setTemp: 0.0,
+      volume: 0.0,
+      voltage: 0.0,
+      ampsFirstWire: 0.0,
+      ampsSecondWire: 0.0,
+      ampsThirdWire: 0.0);
+  Calculator calc = Calculator(
+      initialTemp: 64.0,
+      setTemp: -64.0,
+      volume: 100.0,
+      voltage: 220.0,
+      ampsFirstWire: 4.0,
+      ampsSecondWire: 0.0,
+      ampsThirdWire: 0.0);
+
   //
   // Test time rounding on `get`.
   //
-  test('[NEG] Given time is negative', () {
+  test('[NEG] Given time is equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calcZero);
+
+    expect(timeFormatter.get(true), 0.0);
+  });
+
+  test('[POS] Given time is correct', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.get(true), 10.2);
+  });
+
+  //
+  // Test time rounding on `getHours`.
+  //
+  test('[NEG] Given hours are equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calcZero);
+
+    expect(timeFormatter.getHours(true), 0);
+  });
+
+  test('[POS] Given hours are in correct format', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.getHours(true), 10);
+  });
+
+  //
+  // Test time rounding on `getMinutes`.
+  //
+  test('[NEG] Given minutes are equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calcZero);
+
+    expect(timeFormatter.getMinutes(true), 0);
+  });
+
+  test('[POS] Resulting minutes are correct, but left untouched', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(
+        timeFormatter.getMinutes(
+          true,
+          mpmFlag: false,
+        ),
+        1);
+  });
+
+  test('[POS] Resulting minutes are correct, but were rounded for more precision', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.getMinutes(true), 2);
+  });
+
+  /*test('[NEG] Given time is negative', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: -11.123123);
 
     expect(timeFormatter.get(true), -11.123123);
@@ -97,7 +168,7 @@ void main() {
     TimeFormatter timeFormatter = TimeFormatter(cTime: 11.123123);
 
     expect(timeFormatter.getMinutes(true), 35);
-  });
+  });*/
 
   /*testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
