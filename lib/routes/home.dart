@@ -118,9 +118,9 @@ class _HomeRouteState extends State<HomeRoute> {
         //
         _settings.osFlag = json['isOldStandardEnabled'];
         _settings.currentLocale = json['currentLocale'];
-        _settings.localeFileName = json['localeFile'];
+        _settings.localeName = json['localeFile'];
 
-        readLocale(_settings.localeFileName).then((value) {
+        readLocale(_settings.localeName).then((value) {
           lFlag = value;
         });
 
@@ -235,31 +235,31 @@ class _HomeRouteState extends State<HomeRoute> {
     switch (locale) {
       case 'Serbian (Cyrillic)':
         {
-          _settings.localeFileName = 'rs_cyrillic.json';
+          _settings.localeName = 'rs_cyrillic.json';
 
-          readLocale(_settings.localeFileName);
+          readLocale(_settings.localeName);
 
           break;
         }
       case 'Serbian (Latin)':
         {
-          _settings.localeFileName = 'rs_latin.json';
+          _settings.localeName = 'rs_latin.json';
 
-          readLocale(_settings.localeFileName);
+          readLocale(_settings.localeName);
 
           break;
         }
       case 'Swedish':
         {
-          _settings.localeFileName = 'sv_se.json';
+          _settings.localeName = 'sv_se.json';
 
-          readLocale(_settings.localeFileName);
+          readLocale(_settings.localeName);
 
           break;
         }
       default:
         {
-          _settings.localeFileName = 'en_us.json';
+          _settings.localeName = 'en_us.json';
 
           readDefaultLocale();
 

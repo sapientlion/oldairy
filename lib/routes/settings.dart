@@ -108,10 +108,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 },
               ),
             ),
-
-            //
-            // TODO make the following 2 settings actually functional.
-            //
             //
             // More precise minutes setting.
             //
@@ -120,9 +116,17 @@ class _SettingsRouteState extends State<SettingsRoute> {
               child: CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: const Text('Allow Use of More Precise Minutes'),
-                value: true,
-                onChanged: (bool? value) {},
+                title: const Text('Allow Use of Absolute Values'),
+                value: _settings.avFlag,
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (!_settings.avFlag) {
+                      _settings.avFlag = true;
+                    } else {
+                      _settings.avFlag = false;
+                    }
+                  });
+                },
               ),
             ),
             //
@@ -134,11 +138,18 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
                 title: const Text('Enable Time Rounding'),
-                value: true,
-                onChanged: (bool? value) {},
+                value: _settings.trFlag,
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (!_settings.trFlag) {
+                      _settings.trFlag = true;
+                    } else {
+                      _settings.trFlag = false;
+                    }
+                  });
+                },
               ),
             ),
-
             //
             // Support previous ISO standard via checkbox interaction.
             //
