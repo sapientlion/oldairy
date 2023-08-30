@@ -36,16 +36,13 @@
 
 import 'dart:math';
 
-import 'package:oldairy/classes/tformatter.dart';
 import 'package:oldairy/interfaces/icalculator.dart';
 
 class Calculator implements ICalculator {
   final int _ampsLimits = 125;
   final double _milkConstant = 0.685;
-  /*int _cTimeInHours = 0;
-  int _cTimeInMinutes = 0;*/
+
   double _coolingTime = 0.0;
-  //TimeFormatter _timeFormatter = TimeFormatter();
 
   double initialTemp = 0.0;
   double setTemp = 0.0;
@@ -54,20 +51,6 @@ class Calculator implements ICalculator {
   double ampsFirstWire = 0.0;
   double ampsSecondWire = 0.0;
   double ampsThirdWire = 0.0;
-
-  //bool _isMoreThanSixty = false;
-  /*int _cTimeInHours = 0;
-  int _cTimeInMinutes = 0;
-  double _coolingTime = 0.0;
-  TimeFormatter _timeFormatter = TimeFormatter();
-
-  double initialTemp = 0.0;
-  double setTemp = 0.0;
-  double volume = 0.0;
-  double voltage = 0.0;
-  double ampsFirstWire = 0.0;
-  double ampsSecondWire = 0.0;
-  double ampsThirdWire = 0.0;*/
 
   Calculator({
     required this.initialTemp,
@@ -78,78 +61,6 @@ class Calculator implements ICalculator {
     required this.ampsSecondWire,
     required this.ampsThirdWire,
   });
-
-  /*Calculator({
-    this.initialTemp = 0.0,
-    this.setTemp = 0.0,
-    this.volume = 0.0,
-    this.voltage = 0.0,
-    this.ampsFirstWire = 0.0,
-    this.ampsSecondWire = 0.0,
-    this.ampsThirdWire = 0.0,
-  });*/
-
-  /*@override
-  double getCoolingTime() {
-    return _coolingTime;
-  }
-
-  @override
-  int getHours() {
-    _cTimeInHours = _coolingTime.toInt();
-
-    //
-    // Trigger this to flip the 60-minute flag, if need be.
-    //
-    /*getMinutes();
-
-    if (_isMoreThanSixty) {
-      _coolingTimeHours += 1;
-    }*/
-
-    return _cTimeInHours;
-  }
-
-  @override
-  int getMinutes() {
-    bool fpFlag = false; // Floating point flag.
-    String cTimeAsString = _coolingTime.toString(); // Get total cooling time.
-    String cTimeMinutesAsString = ''; // Cooling time (minutes).
-
-    //
-    // Separate minutes from the total cooling time. Use the following approach for better reliability when using
-    // different encodings.
-    //
-    for (var element in cTimeAsString.runes) {
-      //
-      // Start including digits until after the floating point is reached.
-      //
-      if (fpFlag) {
-        cTimeMinutesAsString += String.fromCharCode(element);
-      }
-
-      //
-      // Detect the first occurence of the floating point.
-      //
-      if (!fpFlag && String.fromCharCode(element) == '.') {
-        fpFlag = true;
-      }
-    }
-
-    _cTimeInMinutes = int.parse(cTimeMinutesAsString);
-
-    //
-    // TODO check the following segment for any errors and improve it where possible.
-    //
-    /*if (_coolingTimeMinutes > 59) {
-      _isMoreThanSixty = true;
-      _coolingTimeMinutes -= 60;
-    } else {
-      _isMoreThanSixty = false;
-    }*/
-
-    return _cTimeInMinutes;
-  }*/
 
   double get() {
     return _coolingTime;

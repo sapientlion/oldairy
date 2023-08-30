@@ -43,11 +43,6 @@ class Settings implements ISettings {
     this.currentLocale = 'English (US)',
   });
 
-  /*Settings({
-    this.osFlag = false,
-    this.currentLocale = 'English (US)',
-  });*/
-
   //
   // Get app data location path.
   //
@@ -76,12 +71,6 @@ class Settings implements ISettings {
         'currentLocale': currentLocale,
         'localeFile': localeName,
       };
-
-  /*Map<String, dynamic> toJson() => {
-        'isOldStandardEnabled': osFlag,
-        'currentLocale': currentLocale,
-        'localeFile': localeName,
-      };*/
 
   @override
   Future<File> write(Settings settings) async {

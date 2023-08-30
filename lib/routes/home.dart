@@ -78,7 +78,6 @@ class _HomeRouteState extends State<HomeRoute> {
     ampsSecondWire: 0.0,
     ampsThirdWire: 0.0,
   );
-  //final Calculator _calculator = Calculator();
   final TextEditingController _initTempCtrl = TextEditingController();
   final TextEditingController _setTempCtrl = TextEditingController();
   final TextEditingController _volumeCtrl = TextEditingController();
@@ -518,9 +517,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         mpmFlag: _settings.avFlag,
                                       )
                                       .toString();
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                             ),
@@ -584,9 +580,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         mpmFlag: _settings.avFlag,
                                       )
                                       .toString();
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -671,9 +664,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         mpmFlag: _settings.avFlag,
                                       )
                                       .toString();
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -763,9 +753,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         mpmFlag: _settings.avFlag,
                                       )
                                       .toString();
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -844,9 +831,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         mpmFlag: _settings.avFlag,
                                       )
                                       .toString();
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
@@ -924,9 +908,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         mpmFlag: _settings.avFlag,
                                       )
                                       .toString();
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {
