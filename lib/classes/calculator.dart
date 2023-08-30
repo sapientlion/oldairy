@@ -62,6 +62,7 @@ class Calculator implements ICalculator {
     required this.ampsThirdWire,
   });
 
+  @override
   double get() {
     return _coolingTime;
   }

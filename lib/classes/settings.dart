@@ -60,9 +60,6 @@ class Settings implements ISettings {
     return File('$path/settings.json');
   }
 
-  //
-  // Convert class members to JSON attributes.
-  //
   @override
   Map<String, dynamic> toJson() => {
         'isOldStandardEnabled': osFlag,

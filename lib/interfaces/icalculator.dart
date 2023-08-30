@@ -25,6 +25,21 @@ abstract class ICalculator {
   //
   // Get total cooling time as a double literal.
   //
+  double get();
+  //
+  // Calculate using the lower voltages (220V to 230V as defined by ISO).
+  //
+  double calculateLow();
+  //
+  // Calculate using the higher voltages (380V to 400V as defined by ISO).
+  //
+  double calculateHigh();
+  //
+  // Find out the total amount of time necessary to cool down an industrial-sized
+  // milk tank.
+  //
+  double calculate();
+
   /*double getCoolingTime();
   //
   // Get total cooling time (hours only).

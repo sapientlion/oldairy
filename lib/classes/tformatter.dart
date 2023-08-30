@@ -21,9 +21,11 @@
 
 */
 
+import 'package:oldairy/interfaces/itformatter.dart';
+
 import 'calculator.dart';
 
-class TimeFormatter {
+class TimeFormatter implements ITimeFormatter {
   int _cTimeHours = 0;
   int _cTimeMinutes = 0;
   double _cTime = 0.0;
@@ -46,9 +48,7 @@ class TimeFormatter {
     _cTime = calculator.get();
   }
 
-  //
-  // Get fraction of the given number.
-  //
+  @override
   int getFraction(String value) {
     if (value.isEmpty) {
       return 0;
@@ -76,44 +76,7 @@ class TimeFormatter {
     return int.parse(resValue);
   }
 
-  //
-  // TODO remove this once confirmed that it is no longer needed by the class.
-  //
-  /*int extractMinutes() {
-    if (cTime <= 0) {
-      return _cTimeMinutes;
-    }
-
-    bool fpFlag = false; // Floating point flag.
-    String cTimeAsString = cTime.toString();
-    String cTimeMinutesAsString = '';
-
-    //
-    // Extract minutes from the given time. Use the following approach for better reliability when using
-    // different encodings.
-    //
-    for (var element in cTimeAsString.runes) {
-      //
-      // Start including digits until after the floating point is reached.
-      //
-      if (fpFlag) {
-        cTimeMinutesAsString += String.fromCharCode(element);
-      }
-
-      //
-      // Detect the first occurence of the floating point.
-      //
-      if (!fpFlag && String.fromCharCode(element) == '.') {
-        fpFlag = true;
-      }
-    }
-
-    return _cTimeMinutes = int.parse(cTimeMinutesAsString);
-  }*/
-
-  //
-  // Round time.
-  //
+  @override
   double round({bool mpmFlag = true}) {
     //
     // Why waste CPU cycles when you can do something more productive than this.
@@ -178,6 +141,7 @@ class TimeFormatter {
     return _cTime += _cTimeHours.toDouble() + cTimeRounded;
   }
 
+  @override
   double get(bool rFlag) {
     if (_cTime <= 0) {
       return _cTime;
@@ -190,6 +154,7 @@ class TimeFormatter {
     return _cTime = round();
   }
 
+  @override
   int getHours(bool rFlag) {
     _cTime = calculator.get();
 
@@ -206,6 +171,7 @@ class TimeFormatter {
     return _cTime.toInt();
   }
 
+  @override
   int getMinutes(bool rFlag, {bool mpmFlag = true}) {
     _cTime = calculator.get();
 
