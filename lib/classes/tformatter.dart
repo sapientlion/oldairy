@@ -146,6 +146,7 @@ class TimeFormatter {
     //String cTimeAsString = cTime.toString();
     String cTimeMinutesAsString = '';
 
+    _cTimeHours = 0;
     _cTimeMinutes = getFraction(_cTime.toString());
     //_cTimeMinutes = extractMinutes();
 
@@ -249,6 +250,8 @@ class TimeFormatter {
   }
 
   int getHours(bool rFlag) {
+    _cTime = calculator.get();
+
     if (_cTime <= 0) {
       return _cTime.toInt();
     }
@@ -263,6 +266,8 @@ class TimeFormatter {
   }
 
   int getMinutes(bool rFlag, {bool mpmFlag = true}) {
+    _cTime = calculator.get();
+
     if (_cTime <= 0) {
       return _cTimeMinutes;
       //return extractMinutes(mpmFlag: mpmFlag);

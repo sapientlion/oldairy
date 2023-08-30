@@ -29,6 +29,7 @@ import 'package:flutter/services.dart';
 
 import 'package:oldairy/classes/calculator.dart';
 import 'package:oldairy/classes/settings.dart';
+import 'package:oldairy/classes/tformatter.dart';
 import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/settings.dart';
 
@@ -72,7 +73,7 @@ class _HomeRouteState extends State<HomeRoute> {
     initialTemp: 0.0,
     setTemp: 0.0,
     volume: 0.0,
-    voltage: 230,
+    voltage: 230.0,
     ampsFirstWire: 0.0,
     ampsSecondWire: 0.0,
     ampsThirdWire: 0.0,
@@ -90,6 +91,16 @@ class _HomeRouteState extends State<HomeRoute> {
   int _dropdownValue = 0; // Current dropdown button value.
   String _coolingTimeHours = '0'; // Cooling time: hours.
   String _coolingTimeMinutes = '0'; // Cooling time: minutes.
+  TimeFormatter timeFormatter = TimeFormatter(
+      calculator: Calculator(
+    initialTemp: 0.0,
+    setTemp: 0.0,
+    volume: 0.0,
+    voltage: 0.0,
+    ampsFirstWire: 0.0,
+    ampsSecondWire: 0.0,
+    ampsThirdWire: 0.0,
+  ));
   Settings _settings = Settings(); // General app settings.
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
@@ -496,6 +507,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
                                   _calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
@@ -551,6 +573,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsFirstWireCtrl.text = _calculator.ampsFirstWire.toString();
                                   }
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
@@ -627,6 +660,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsSecondWireCtrl.text = _calculator.ampsSecondWire.toString();
                                   }
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
@@ -708,6 +752,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsThirdWireCtrl.text = _calculator.ampsThirdWire.toString();
                                   }
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
@@ -778,6 +833,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _initTempCtrl.text = _calculator.initialTemp.toString();
                                   }
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
@@ -847,6 +913,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _setTempCtrl.text = _calculator.setTemp.toString();*/
                                   }
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
@@ -903,6 +980,17 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _volumeCtrl.text = _calculator.volume.toString();
                                   }
 
+                                  _calculator.calculate();
+
+                                  timeFormatter.calculator = _calculator;
+
+                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        _settings.trFlag,
+                                        mpmFlag: _settings.avFlag,
+                                      )
+                                      .toString();
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/
