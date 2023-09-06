@@ -519,14 +519,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
                                 });
                               },
                             ),
@@ -590,14 +582,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -682,14 +666,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -779,14 +755,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -865,14 +833,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -935,8 +895,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                       _calculator.setTemp > _initTempLimit) {
                                     _calculator.setTemp = -50.0;
                                     _setTempCtrl.text = _calculator.setTemp.toString();
-                                    /*_calculator.setTemp = _setTempLimit.toDouble();
-                                    _setTempCtrl.text = _calculator.setTemp.toString();*/
                                   }
 
                                   _calculator.calculate();
@@ -950,14 +908,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -1022,17 +972,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                         pFlag: _settings.pFlag,
                                       )
                                       .toString();
-
-                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        _settings.trFlag,
-                                        mpmFlag: _settings.avFlag,
-                                      )
-                                      .toString();*/
-                                  //_calculator.calculate(_dropdownValue);
-                                  /*_coolingTimeHours = _calculator.getHours().toString();
-                                  _coolingTimeMinutes = _calculator.getMinutes().toString();*/
                                 });
                               },
                               onTap: () {

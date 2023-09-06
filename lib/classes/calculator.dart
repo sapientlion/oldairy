@@ -69,23 +69,15 @@ class Calculator implements ICalculator {
 
   @override
   double calculateLow() {
-    //double calculateLow(int voltage) {
     if (voltage < 220 || voltage > 230) {
       return _coolingTime = 0.0;
     }
-
-    /*_coolingTime /= ampsFirstWire;
-
-    String coolingTimeRound = _coolingTime.toStringAsFixed(2);
-
-    _coolingTime = double.parse(coolingTimeRound);*/
 
     return _coolingTime /= ampsFirstWire;
   }
 
   @override
   double calculateHigh() {
-    //double calculateHigh(int voltage) {
     if (voltage < 380 || voltage > 400) {
       return _coolingTime = 0.0;
     }
@@ -109,18 +101,11 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-    /*_coolingTime = _coolingTime / combinedAmperage;
-
-    String coolingTimeRound = _coolingTime.toStringAsFixed(2);
-
-    _coolingTime = double.parse(coolingTimeRound);*/
-
     return _coolingTime /= combinedAmperage;
   }
 
   @override
   double calculate() {
-    //double calculate(int voltage) {
     _coolingTime = initialTemp - setTemp;
 
     //
@@ -155,7 +140,6 @@ class Calculator implements ICalculator {
     //
     if (voltage >= 220 && voltage <= 230) {
       return calculateLow();
-      //return calculateLow(voltage);
     }
 
     //
@@ -163,7 +147,6 @@ class Calculator implements ICalculator {
     //
     if (voltage >= 380 && voltage <= 400) {
       return calculateHigh();
-      //return calculateHigh(voltage);
     }
 
     return _coolingTime = 0.0;

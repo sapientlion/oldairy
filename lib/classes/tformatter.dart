@@ -50,6 +50,7 @@ class TimeFormatter implements ITimeFormatter {
     _cTime = calculator.get();
   }
 
+  @override
   int getFraction(String value) {
     if (value.isEmpty) {
       return 0;
@@ -77,99 +78,6 @@ class TimeFormatter implements ITimeFormatter {
     return int.parse(resValue);
   }
 
-  /*@override
-  int getFraction(String value) {
-    if (value.isEmpty) {
-      return 0;
-    }
-
-    bool dpFlag = false; // Decimla point flag.
-    String resValue = '';
-
-    for (var element in value.runes) {
-      //
-      // Start including digits until after the floating point is reached.
-      //
-      if (dpFlag) {
-        resValue += String.fromCharCode(element);
-      }
-
-      //
-      // Detect the first occurence of the floating point.
-      //
-      if (!dpFlag && String.fromCharCode(element) == '.') {
-        dpFlag = true;
-      }
-    }
-
-    return int.parse(resValue);
-  }*/
-
-  /*@override
-  double round({bool mpmFlag = true}) {
-    //
-    // Why waste CPU cycles when you can do something more productive than this.
-    //
-    if (_cTime <= 0) {
-      return _cTime;
-    }
-
-    const int numOfMinutesInOneHour = 60; // Well, obviously.
-
-    double cTimeRounded = 0.0;
-    String cTimeMinutesAsString = '';
-
-    _cTimeHours = 0;
-    _cTimeMinutes = getFraction(_cTime.toString());
-
-    //
-    // Don't bother with rounding if minutes are less than or equal to 60 minutes.
-    //
-    if (_cTimeMinutes <= numOfMinutesInOneHour) {
-      return _cTime;
-    }
-
-    //
-    // Round given time.
-    //
-    if (mpmFlag) {
-      while (_cTimeMinutes > numOfMinutesInOneHour) {
-        double remainder = 0.0;
-
-        _cTimeHours++;
-
-        remainder = _cTimeMinutes / numOfMinutesInOneHour;
-        _cTimeMinutes = remainder.toInt();
-
-        if (getFraction(remainder.toString()) >= 5) {
-          _cTimeMinutes++;
-        }
-      }
-    } else {
-      while (_cTimeMinutes > numOfMinutesInOneHour) {
-        _cTimeHours++;
-        _cTimeMinutes = _cTimeMinutes ~/ numOfMinutesInOneHour;
-      }
-    }
-
-    cTimeRounded = _cTimeMinutes.toDouble();
-    cTimeMinutesAsString = _cTimeMinutes.toString();
-
-    //
-    // Add digits after the floating point.
-    //
-    for (int index = 0; index < cTimeMinutesAsString.length; index++) {
-      cTimeRounded /= 10;
-    }
-
-    //
-    // Get rid of the digits after the floating point.
-    //
-    _cTime = _cTime.toInt().toDouble();
-
-    return _cTime += _cTimeHours.toDouble() + cTimeRounded;
-  }*/
-
   @override
   double get(bool rFlag) {
     if (_cTime <= 0) {
@@ -190,22 +98,6 @@ class TimeFormatter implements ITimeFormatter {
 
     return _cTimeHours = _cTime.toInt();
   }
-
-  /*int getHours(bool rFlag) {
-    _cTime = calculator.get();
-
-    if (_cTime <= 0) {
-      return _cTime.toInt();
-    }
-
-    if (!rFlag) {
-      return _cTime.toInt();
-    }
-
-    //round();
-
-    return _cTime.toInt();
-  }*/
 
   //
   // Get minutes from total cooling
@@ -240,30 +132,4 @@ class TimeFormatter implements ITimeFormatter {
 
     return _cTimeMinutes = minutes.toInt();
   }
-
-  /*@override
-  int getMinutes(bool rFlag, {bool mpmFlag = true}) {
-    _cTime = calculator.get();
-
-    if (_cTime <= 0) {
-      return _cTimeMinutes;
-    }
-
-    double time = _cTime - _cTime.toInt();
-
-    //
-    // Do not round time.
-    //
-    if (!rFlag) {
-      return _cTimeMinutes = (time * 60).toInt();
-      //return _cTimeMinutes = getFraction(_cTime.toString());
-    }
-
-    //
-    // Ignore previous statement.
-    //
-    //round(mpmFlag: mpmFlag);
-
-    return _cTimeMinutes = (time * 60).toInt();
-  }*/
 }

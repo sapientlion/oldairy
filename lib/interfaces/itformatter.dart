@@ -34,7 +34,6 @@ abstract class ITimeFormatter {
   // Get cooling time (minutes).
   //
   int getHours();
-  //int getHours(bool rFlag);
   //
   // Get cooling time (minutes).
   //
@@ -42,9 +41,4 @@ abstract class ITimeFormatter {
     bool rFlag = true, // Time rounding flag.
     bool pFlag = true, // Precision flag.
   });
-  //int getMinutes(bool rFlag, {bool mpmFlag = true});
-  //
-  // Round cooling time.
-  //
-  //double round({bool mpmFlag = true});
 }
