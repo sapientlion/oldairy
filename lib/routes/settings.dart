@@ -116,7 +116,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
               child: CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: const Text('Allow Use of Absolute Values'),
+                title: const Text('Allow Use of Precise Minutes'),
                 value: _settings.pFlag,
                 onChanged: (bool? value) {
                   setState(() {
