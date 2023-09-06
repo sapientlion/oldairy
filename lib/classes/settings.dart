@@ -30,16 +30,16 @@ import 'package:path_provider/path_provider.dart';
 
 class Settings implements ISettings {
   bool osFlag = false; // Old standard support flag.
-  bool avFlag = true; // Absolute values flag.
-  bool trFlag = true; // Time rounding flag.
+  bool pFlag = true; // Precision flag.
+  bool rFlag = true; // Time rounding flag.
   String currentLocale = 'English (US)';
   String localeName = '';
   OldairyLocale locale = OldairyLocale();
 
   Settings({
     this.osFlag = false,
-    this.avFlag = true,
-    this.trFlag = true,
+    this.pFlag = false,
+    this.rFlag = false,
     this.currentLocale = 'English (US)',
   });
 
@@ -63,8 +63,8 @@ class Settings implements ISettings {
   @override
   Map<String, dynamic> toJson() => {
         'isOldStandardEnabled': osFlag,
-        'isTimeRoundingEnabled': trFlag,
-        'areAbsoluteValuesAllowed': avFlag,
+        'isTimeRoundingEnabled': rFlag,
+        'areAbsoluteValuesAllowed': pFlag,
         'currentLocale': currentLocale,
         'localeFile': localeName,
       };

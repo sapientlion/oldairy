@@ -117,13 +117,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
                 title: const Text('Allow Use of Absolute Values'),
-                value: _settings.avFlag,
+                value: _settings.pFlag,
                 onChanged: (bool? value) {
                   setState(() {
-                    if (!_settings.avFlag) {
-                      _settings.avFlag = true;
+                    if (!_settings.pFlag) {
+                      _settings.pFlag = true;
                     } else {
-                      _settings.avFlag = false;
+                      _settings.pFlag = false;
                     }
                   });
                 },
@@ -138,13 +138,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 controlAffinity: ListTileControlAffinity.leading,
                 tileColor: const Color.fromRGBO(211, 211, 211, 0),
                 title: const Text('Enable Time Rounding'),
-                value: _settings.trFlag,
+                value: _settings.rFlag,
                 onChanged: (bool? value) {
                   setState(() {
-                    if (!_settings.trFlag) {
-                      _settings.trFlag = true;
+                    if (!_settings.rFlag) {
+                      _settings.rFlag = true;
                     } else {
-                      _settings.trFlag = false;
+                      _settings.rFlag = false;
                     }
                   });
                 },

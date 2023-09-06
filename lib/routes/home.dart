@@ -127,6 +127,8 @@ class _HomeRouteState extends State<HomeRoute> {
         // Load app settings from a map.
         //
         _settings.osFlag = json['isOldStandardEnabled'];
+        _settings.rFlag = json['isTimeRoundingEnabled'];
+        _settings.pFlag = json['areAbsoluteValuesAllowed'];
         _settings.currentLocale = json['currentLocale'];
         _settings.localeName = json['localeFile'];
 
@@ -513,8 +515,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
@@ -584,8 +586,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
@@ -676,8 +678,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
@@ -773,8 +775,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
@@ -859,8 +861,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
@@ -944,8 +946,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
@@ -1016,8 +1018,8 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _coolingTimeHours = timeFormatter.getHours().toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
-                                        rFlag: _settings.trFlag,
-                                        pFlag: _settings.avFlag,
+                                        rFlag: _settings.rFlag,
+                                        pFlag: _settings.pFlag,
                                       )
                                       .toString();
 
