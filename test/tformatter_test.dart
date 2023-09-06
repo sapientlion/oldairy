@@ -52,10 +52,10 @@ void main() {
     expect(timeFormatter.get(true), 0.0);
   });
 
-  test('[POS] Given time is correct', () {
+  test('[POS] Get raw cooling time', () {
     TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
 
-    expect(timeFormatter.get(true), 10.2);
+    expect(timeFormatter.get(true), 9.963636363636363);
   });
 
   //
@@ -64,13 +64,52 @@ void main() {
   test('[NEG] Given hours are equal to zero', () {
     TimeFormatter timeFormatter = TimeFormatter(calculator: calcZero);
 
+    expect(timeFormatter.getHours(), 0);
+  });
+
+  test('[POS] Given hours are in correct format', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.getHours(), 9);
+  });
+
+  //
+  // Test time rounding on `getMinutes`.
+  //
+  test('[NEG] Given minutes are equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calcZero);
+
+    expect(timeFormatter.getMinutes(), 0);
+  });
+
+  test('[POS] Get minutes from total cooling time, but do not convert the minutes from decimals', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.getMinutes(rFlag: false), 96);
+  });
+
+  test('[POS] Get minutes from total cooling time, but do not round minutes up', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.getMinutes(pFlag: false), 57);
+  });
+
+  test('[POS] Get minutes from total cooling time, but do round minutes up', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
+
+    expect(timeFormatter.getMinutes(pFlag: true), 58);
+  });
+
+  /*test('[NEG] Given hours are equal to zero', () {
+    TimeFormatter timeFormatter = TimeFormatter(calculator: calcZero);
+
     expect(timeFormatter.getHours(true), 0);
   });
 
   test('[POS] Given hours are in correct format', () {
     TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
 
-    expect(timeFormatter.getHours(true), 10);
+    expect(timeFormatter.getHours(true), 9);
   });
 
   //
@@ -90,14 +129,14 @@ void main() {
           true,
           mpmFlag: false,
         ),
-        1);
+        57);
   });
 
   test('[POS] Resulting minutes are correct, but were rounded for more precision', () {
     TimeFormatter timeFormatter = TimeFormatter(calculator: calc);
 
-    expect(timeFormatter.getMinutes(true), 2);
-  });
+    expect(timeFormatter.getMinutes(true), 57);
+  });*/
 
   /*test('[NEG] Given time is negative', () {
     TimeFormatter timeFormatter = TimeFormatter(cTime: -11.123123);

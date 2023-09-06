@@ -510,13 +510,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                 });
                               },
                             ),
@@ -573,13 +581,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -657,13 +673,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -746,13 +770,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -824,13 +856,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -901,13 +941,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                 });
                               },
                               onTap: () {
@@ -965,13 +1013,21 @@ class _HomeRouteState extends State<HomeRoute> {
 
                                   timeFormatter.calculator = _calculator;
 
-                                  _coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
+                                  _coolingTimeHours = timeFormatter.getHours().toString();
+                                  _coolingTimeMinutes = timeFormatter
+                                      .getMinutes(
+                                        rFlag: _settings.trFlag,
+                                        pFlag: _settings.avFlag,
+                                      )
+                                      .toString();
+
+                                  /*_coolingTimeHours = timeFormatter.getHours(_settings.trFlag).toString();
                                   _coolingTimeMinutes = timeFormatter
                                       .getMinutes(
                                         _settings.trFlag,
                                         mpmFlag: _settings.avFlag,
                                       )
-                                      .toString();
+                                      .toString();*/
                                   //_calculator.calculate(_dropdownValue);
                                   /*_coolingTimeHours = _calculator.getHours().toString();
                                   _coolingTimeMinutes = _calculator.getMinutes().toString();*/

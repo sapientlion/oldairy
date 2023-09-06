@@ -84,7 +84,7 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(), 0.47);
+    expect(calculator.calculate(), 0.4670454545454546);
     //expect(calculator.calculate(220), 0.47);
   });
 
@@ -162,7 +162,7 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(), 0.23);
+    expect(calculator.calculate(), 0.23416871115487123);
     //expect(calculator.calculate(380), 0.23);
   });
 
@@ -177,7 +177,7 @@ void main() {
       ampsThirdWire: 0.0,
     );
 
-    expect(calculator.calculate(), 0.23);
+    expect(calculator.calculate(), 0.23416871115487123);
     //expect(calculator.calculate(380), 0.23);
   });
 
@@ -192,7 +192,7 @@ void main() {
       ampsThirdWire: 4.0,
     );
 
-    expect(calculator.calculate(), 0.16);
+    expect(calculator.calculate(), 0.1561124741032475);
     //expect(calculator.calculate(380), 0.16);
   });
 }

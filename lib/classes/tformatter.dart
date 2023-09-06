@@ -26,6 +26,8 @@ import 'package:oldairy/interfaces/itformatter.dart';
 import 'calculator.dart';
 
 class TimeFormatter implements ITimeFormatter {
+  final int _minutesInOneHour = 60;
+
   int _cTimeHours = 0;
   int _cTimeMinutes = 0;
   double _cTime = 0.0;
@@ -48,7 +50,34 @@ class TimeFormatter implements ITimeFormatter {
     _cTime = calculator.get();
   }
 
-  @override
+  int getFraction(String value) {
+    if (value.isEmpty) {
+      return 0;
+    }
+
+    bool dpFlag = false; // Decimal point flag.
+    String resValue = '';
+
+    for (var element in value.runes) {
+      //
+      // Start including digits until after the floating point is reached.
+      //
+      if (dpFlag) {
+        resValue += String.fromCharCode(element);
+      }
+
+      //
+      // Detect the first occurence of the floating point.
+      //
+      if (!dpFlag && String.fromCharCode(element) == '.') {
+        dpFlag = true;
+      }
+    }
+
+    return int.parse(resValue);
+  }
+
+  /*@override
   int getFraction(String value) {
     if (value.isEmpty) {
       return 0;
@@ -74,9 +103,9 @@ class TimeFormatter implements ITimeFormatter {
     }
 
     return int.parse(resValue);
-  }
+  }*/
 
-  @override
+  /*@override
   double round({bool mpmFlag = true}) {
     //
     // Why waste CPU cycles when you can do something more productive than this.
@@ -139,7 +168,7 @@ class TimeFormatter implements ITimeFormatter {
     _cTime = _cTime.toInt().toDouble();
 
     return _cTime += _cTimeHours.toDouble() + cTimeRounded;
-  }
+  }*/
 
   @override
   double get(bool rFlag) {
@@ -151,11 +180,18 @@ class TimeFormatter implements ITimeFormatter {
       return _cTime;
     }
 
-    return _cTime = round();
+    return _cTime;
+    //return _cTime = round();
   }
 
   @override
-  int getHours(bool rFlag) {
+  int getHours() {
+    _cTime = calculator.get();
+
+    return _cTimeHours = _cTime.toInt();
+  }
+
+  /*int getHours(bool rFlag) {
     _cTime = calculator.get();
 
     if (_cTime <= 0) {
@@ -166,12 +202,46 @@ class TimeFormatter implements ITimeFormatter {
       return _cTime.toInt();
     }
 
-    round();
+    //round();
 
     return _cTime.toInt();
+  }*/
+
+  //
+  // Get minutes from total cooling
+  //
+  @override
+  int getMinutes({
+    bool rFlag = true, // Time rounding flag.
+    bool pFlag = true, // Precision flag.
+  }) {
+    _cTime = calculator.get();
+
+    if (_cTime <= 0) {
+      return _cTimeMinutes;
+    }
+
+    if (!rFlag) {
+      return _cTimeMinutes = getFraction(_cTime.toStringAsFixed(2).toString());
+    }
+
+    double minutes = _cTime - _cTime.toInt();
+    double seconds = 0.0;
+
+    minutes *= _minutesInOneHour;
+    seconds = minutes - minutes.toInt();
+
+    //
+    // Use a precision flag; force minutes to be more precise.
+    //
+    if (pFlag && seconds >= 0.5) {
+      minutes++;
+    }
+
+    return _cTimeMinutes = minutes.toInt();
   }
 
-  @override
+  /*@override
   int getMinutes(bool rFlag, {bool mpmFlag = true}) {
     _cTime = calculator.get();
 
@@ -179,18 +249,21 @@ class TimeFormatter implements ITimeFormatter {
       return _cTimeMinutes;
     }
 
+    double time = _cTime - _cTime.toInt();
+
     //
     // Do not round time.
     //
     if (!rFlag) {
-      return _cTimeMinutes = getFraction(_cTime.toString());
+      return _cTimeMinutes = (time * 60).toInt();
+      //return _cTimeMinutes = getFraction(_cTime.toString());
     }
 
     //
     // Ignore previous statement.
     //
-    round(mpmFlag: mpmFlag);
+    //round(mpmFlag: mpmFlag);
 
-    return _cTimeMinutes;
-  }
+    return _cTimeMinutes = (time * 60).toInt();
+  }*/
 }
