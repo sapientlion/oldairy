@@ -74,13 +74,13 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-    _coolingTime /= ampsFirstWire;
+    /*_coolingTime /= ampsFirstWire;
 
     String coolingTimeRound = _coolingTime.toStringAsFixed(2);
 
-    _coolingTime = double.parse(coolingTimeRound);
+    _coolingTime = double.parse(coolingTimeRound);*/
 
-    return _coolingTime;
+    return _coolingTime /= ampsFirstWire;
   }
 
   @override
@@ -109,13 +109,13 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-    _coolingTime = _coolingTime / combinedAmperage;
+    /*_coolingTime = _coolingTime / combinedAmperage;
 
     String coolingTimeRound = _coolingTime.toStringAsFixed(2);
 
-    _coolingTime = double.parse(coolingTimeRound);
+    _coolingTime = double.parse(coolingTimeRound);*/
 
-    return _coolingTime;
+    return _coolingTime /= combinedAmperage;
   }
 
   @override
