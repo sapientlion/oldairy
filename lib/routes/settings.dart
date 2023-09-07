@@ -36,6 +36,7 @@ class SettingsRoute extends StatefulWidget {
 
 class _SettingsRouteState extends State<SettingsRoute> {
   final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
+  final TextEditingController _coefficientCtrl = TextEditingController();
   final List<String> _locales = <String>[
     'English (US)',
     'Serbian (Cyrillic)',
@@ -52,8 +53,15 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
     setState(() {
       _settings = widget.settings;
+      _coefficientCtrl.text = widget.settings.coefficient.toString();
       _dropdownValue = widget.settings.currentLocale;
     });
+  }
+
+  @override
+  void dispose() {
+    _coefficientCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -173,6 +181,54 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 },
               ),
             ),
+            //
+            // The following is an experimental feature. It might end up being removed in the next release.
+            //
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: SizedBox(
+                width: 128,
+                child: TextField(
+                  autocorrect: false,
+                  controller: _coefficientCtrl,
+                  decoration: const InputDecoration(
+                    counterStyle: TextStyle(height: double.minPositive),
+                    counterText: '',
+                    filled: true,
+                    fillColor: Color.fromRGBO(211, 211, 211, 1),
+                    hintText: '0.0',
+                    label: Center(
+                      child: Text('Cooling Coefficient (TEST)'),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 5,
+                  onChanged: (value) {
+                    setState(() {
+                      if (double.tryParse(value) == null) {
+                        _settings.coefficient = 0.685;
+                      } else {
+                        if (double.parse(value) < 0.1 || double.parse(value) > 2.0) {
+                          _coefficientCtrl.text = '0.685';
+                        }
+
+                        _settings.coefficient = double.parse(_coefficientCtrl.text);
+                      }
+                    });
+                  },
+                  onTap: () {
+                    _coefficientCtrl.selection = TextSelection(
+                      baseOffset: 0,
+                      extentOffset: _coefficientCtrl.text.length,
+                    );
+                  },
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(32),
               child: Row(
@@ -192,8 +248,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
                               _settings.osFlag = false;
                               _settings.pFlag = false;
                               _settings.rFlag = false;
+                              _settings.coefficient = 0.685;
                               _settings.currentLocale = _dropdownValue = _locales.first;
 
+                              _coefficientCtrl.text = _settings.coefficient.toString();
                               _dropdownKey.currentState!.reset();
                             });
                           },

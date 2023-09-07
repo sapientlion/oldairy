@@ -129,6 +129,7 @@ class _HomeRouteState extends State<HomeRoute> {
         _settings.osFlag = json['isOldStandardEnabled'];
         _settings.rFlag = json['isTimeRoundingEnabled'];
         _settings.pFlag = json['areAbsoluteValuesAllowed'];
+        _settings.coefficient = json['coefficient'];
         _settings.currentLocale = json['currentLocale'];
         _settings.localeName = json['localeFile'];
 
@@ -508,6 +509,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                   _calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
                                   _calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
@@ -571,6 +573,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsFirstWireCtrl.text = _calculator.ampsFirstWire.toString();
                                   }
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
@@ -655,6 +658,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsSecondWireCtrl.text = _calculator.ampsSecondWire.toString();
                                   }
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
@@ -744,6 +748,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _ampsThirdWireCtrl.text = _calculator.ampsThirdWire.toString();
                                   }
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
@@ -822,6 +827,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _initTempCtrl.text = _calculator.initialTemp.toString();
                                   }
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
@@ -897,6 +903,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _setTempCtrl.text = _calculator.setTemp.toString();
                                   }
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
@@ -961,6 +968,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                     _volumeCtrl.text = _calculator.volume.toString();
                                   }
 
+                                  _calculator.coefficient = _settings.coefficient;
                                   _calculator.calculate();
 
                                   timeFormatter.calculator = _calculator;
