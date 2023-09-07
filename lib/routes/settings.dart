@@ -190,6 +190,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
                           onPressed: () {
                             setState(() {
                               _settings.osFlag = false;
+                              _settings.pFlag = false;
+                              _settings.rFlag = false;
                               _settings.currentLocale = _dropdownValue = _locales.first;
 
                               _dropdownKey.currentState!.reset();
