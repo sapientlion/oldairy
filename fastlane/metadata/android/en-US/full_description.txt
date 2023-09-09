@@ -1,0 +1,1 @@
+Oldairy is a simple calculator which is intended for finding out the approximate cooling time of a typical industrial-sized milk tank. It includes a multitude of settings that allow user to configure the app in any way they want it to be. It's simple and straightforward for use in maintenance-related tasks in dairy-focused industrial environments.
