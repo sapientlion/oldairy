@@ -89,7 +89,6 @@ class TimeFormatter implements ITimeFormatter {
     }
 
     return _cTime;
-    //return _cTime = round();
   }
 
   @override
@@ -99,9 +98,6 @@ class TimeFormatter implements ITimeFormatter {
     return _cTimeHours = _cTime.toInt();
   }
 
-  //
-  // Get minutes from total cooling
-  //
   @override
   int getMinutes({
     bool rFlag = true, // Time rounding flag.

@@ -53,7 +53,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
     setState(() {
       _settings = widget.settings;
-      _coefficientCtrl.text = widget.settings.coefficient.toString();
+      _coefficientCtrl.text = widget.settings.cCoefficient.toString();
       _dropdownValue = widget.settings.currentLocale;
     });
   }
@@ -206,13 +206,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   onChanged: (value) {
                     setState(() {
                       if (double.tryParse(value) == null) {
-                        _settings.coefficient = 0.685;
+                        _settings.cCoefficient = 0.685;
                       } else {
                         if (double.parse(value) < 0.1 || double.parse(value) > 2.0) {
                           _coefficientCtrl.text = '0.685';
                         }
 
-                        _settings.coefficient = double.parse(_coefficientCtrl.text);
+                        _settings.cCoefficient = double.parse(_coefficientCtrl.text);
                       }
                     });
                   },
@@ -248,10 +248,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
                               _settings.osFlag = false;
                               _settings.pFlag = false;
                               _settings.rFlag = false;
-                              _settings.coefficient = 0.685;
+                              _settings.cCoefficient = 0.685;
                               _settings.currentLocale = _dropdownValue = _locales.first;
 
-                              _coefficientCtrl.text = _settings.coefficient.toString();
+                              _coefficientCtrl.text = _settings.cCoefficient.toString();
                               _dropdownKey.currentState!.reset();
                             });
                           },

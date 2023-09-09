@@ -23,7 +23,7 @@
 
 abstract class ITimeFormatter {
   //
-  // Get cooling time.
+  // Get total cooling time.
   //
   double get(bool rFlag);
   //
