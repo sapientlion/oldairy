@@ -4,10 +4,10 @@ Oldairy - a simple calculator for finding out the approximate cooling time of a 
 
 ## Features
 
-* Cooling time calculator;
-* Support of older IEC standard voltages (220V/380V).
+* Basic cooling time calculator;
+* Flexible app customization; adapt the app according to your current needs.
 
-## How it works
+## How Does It Work?
 
 Oldairy utilizes the following formula for achieving the desirable results:
 
@@ -29,10 +29,12 @@ The easiest and recommended way to build `*.apk` installation packages is via An
 
 ## Screenshots
 
-<img alt="Home" src="./oldairy_home.jpg?raw=true" width="360">
-<img alt="Settings" src="./oldairy_settings.jpg?raw=true" width="360">
+<p float="left">
+    <img alt="Home" src="./fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg?raw=true" width="400" />
+    <img alt="Settings" src="./fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg?raw=true" width="400" />
+</p>
 
-## Coffee?
+## A Cup of Coffee & Stuff
 
 You can buy me a cup of coffee at https://ko-fi.com/sapientlion.
 
