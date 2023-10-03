@@ -968,7 +968,9 @@ class _HomeRouteState extends State<HomeRoute> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [getPopupMenuButton(context)],
+        actions: [
+          getPopupMenuButton(context),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -977,54 +979,53 @@ class _HomeRouteState extends State<HomeRoute> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Form(
-                child: Center(
-                  child: Column(
-                    children: [
-                      getTempOutput(),
-                      const Padding(
-                        padding: EdgeInsets.all(16),
-                      ),
-                      getClearAllButton(),
-                      const Padding(
-                        padding: EdgeInsets.all(16),
-                      ),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        runSpacing: 32,
-                        spacing: 32,
-                        children: [
-                          SizedBox(
-                            width: 128,
-                            child: getVoltageDropdown(),
-                          ),
-                          SizedBox(
-                            width: 128,
-                            child: getFirstWireField(),
-                          ),
-                          SizedBox(
-                            width: 128,
-                            child: getSecondWireField(),
-                          ),
-                          SizedBox(
-                            width: 128,
-                            child: getThirdWireField(),
-                          ),
-                          SizedBox(
-                            width: 128,
-                            child: getInitTempField(),
-                          ),
-                          SizedBox(
-                            width: 128,
-                            child: getSetTempField(),
-                          ),
-                          SizedBox(
-                            width: 128,
-                            child: getVolumeField(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    getTempOutput(),
+                    const Padding(
+                      padding: EdgeInsets.all(16),
+                    ),
+                    getClearAllButton(),
+                    const Padding(
+                      padding: EdgeInsets.all(16),
+                    ),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      runSpacing: 32,
+                      spacing: 32,
+                      children: [
+                        SizedBox(
+                          width: 128,
+                          child: getVoltageDropdown(),
+                        ),
+                        SizedBox(
+                          width: 128,
+                          child: getFirstWireField(),
+                        ),
+                        SizedBox(
+                          width: 128,
+                          child: getSecondWireField(),
+                        ),
+                        SizedBox(
+                          width: 128,
+                          child: getThirdWireField(),
+                        ),
+                        SizedBox(
+                          width: 128,
+                          child: getInitTempField(),
+                        ),
+                        SizedBox(
+                          width: 128,
+                          child: getSetTempField(),
+                        ),
+                        SizedBox(
+                          width: 128,
+                          child: getVolumeField(),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
