@@ -114,6 +114,97 @@ class _HomeRouteState extends State<HomeRoute> {
     _dropdownValue = _voltages.first;
   }
 
+  //
+  // React to popup menu button presses.
+  //
+  void doPopupAction(int value) async {
+    switch (value) {
+      //
+      // Open the settings route.
+      //
+      case 1:
+        {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SettingsRoute(
+                title: widget.title,
+                settings: _settings,
+              ),
+            ),
+          );
+
+          setState(() {
+            _settings = result;
+
+            //
+            // Switch voltage standards.
+            //
+            if (!_settings.osFlag) {
+              _voltages = <int>[230, 400];
+            } else {
+              _voltages = <int>[220, 230, 380, 400];
+            }
+          });
+
+          switchLocale(_settings.currentLocale);
+
+          return;
+        }
+      //
+      // Terminate the application.
+      //
+      case 2:
+        {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AboutRoute(
+                title: widget.title,
+              ),
+            ),
+          );
+
+          return;
+        }
+      //
+      // Exit app.
+      //
+      case 3:
+        {
+          SystemNavigator.pop();
+
+          return;
+        }
+    }
+
+    return;
+  }
+
+  PopupMenuButton<int> getPopupMenuButton(BuildContext context) {
+    return PopupMenuButton(
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem<int>(
+            value: 1,
+            child: _settings.locale.settings.isEmpty ? const Text("Settings") : Text(_settings.locale.settings),
+          ),
+          PopupMenuItem<int>(
+            value: 2,
+            child: _settings.locale.about.isEmpty ? const Text("About") : Text(_settings.locale.about),
+          ),
+          PopupMenuItem<int>(
+            value: 3,
+            child: _settings.locale.exit.isEmpty ? const Text("Exit") : Text(_settings.locale.exit),
+          ),
+        ];
+      },
+      onSelected: (value) async {
+        doPopupAction(value);
+      },
+    );
+  }
+
   Wrap getTempOutput() {
     return Wrap(
       children: [
@@ -877,87 +968,7 @@ class _HomeRouteState extends State<HomeRoute> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: _settings.locale.settings.isEmpty ? const Text("Settings") : Text(_settings.locale.settings),
-                ),
-                PopupMenuItem<int>(
-                  value: 2,
-                  child: _settings.locale.about.isEmpty ? const Text("About") : Text(_settings.locale.about),
-                ),
-                PopupMenuItem<int>(
-                  value: 3,
-                  child: _settings.locale.exit.isEmpty ? const Text("Exit") : Text(_settings.locale.exit),
-                ),
-              ];
-            },
-            onSelected: (value) async {
-              switch (value) {
-                //
-                // Open the settings route.
-                //
-                case 1:
-                  {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SettingsRoute(
-                          title: widget.title,
-                          settings: _settings,
-                        ),
-                      ),
-                    );
-
-                    setState(() {
-                      _settings = result;
-
-                      //
-                      // Switch voltage standards.
-                      //
-                      if (!_settings.osFlag) {
-                        _voltages = <int>[230, 400];
-                      } else {
-                        _voltages = <int>[220, 230, 380, 400];
-                      }
-                    });
-
-                    switchLocale(_settings.currentLocale);
-
-                    break;
-                  }
-                //
-                // About application.
-                //
-                case 2:
-                  {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AboutRoute(
-                          title: widget.title,
-                        ),
-                      ),
-                    );
-
-                    break;
-                  }
-                //
-                // Exit app.
-                //
-                case 3:
-                  {
-                    SystemNavigator.pop();
-
-                    break;
-                  }
-              }
-            },
-          )
-        ],
+        actions: [getPopupMenuButton(context)],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -970,16 +981,10 @@ class _HomeRouteState extends State<HomeRoute> {
                   child: Column(
                     children: [
                       getTempOutput(),
-                      //
-                      // Add an empty space between the form and the text output.
-                      //
                       const Padding(
                         padding: EdgeInsets.all(16),
                       ),
                       getClearAllButton(),
-                      //
-                      // Add an empty space between the form and the text output.
-                      //
                       const Padding(
                         padding: EdgeInsets.all(16),
                       ),
