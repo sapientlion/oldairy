@@ -114,6 +114,574 @@ class _HomeRouteState extends State<HomeRoute> {
     _dropdownValue = _voltages.first;
   }
 
+  Wrap getTempOutput() {
+    return Wrap(
+      children: [
+        _settings.locale.hours.isEmpty
+            ? Text(
+                '$_coolingTimeHours h. ',
+                textScaleFactor: 4,
+              ) // Trailing space is intentional. Do not remove!
+            : Text(
+                '$_coolingTimeHours ${_settings.locale.hours}',
+                textScaleFactor: 4,
+              ),
+        _settings.locale.minutes.isEmpty
+            ? Text(
+                '$_coolingTimeMinutes m.',
+                textScaleFactor: 4,
+              )
+            : Text(
+                '$_coolingTimeMinutes ${_settings.locale.minutes}',
+                textScaleFactor: 4,
+              ),
+        //
+        // Nothing to see here...
+        //
+        _azFlag && _settings.osFlag
+            ? const Text(
+                '\u{1f480}',
+                textScaleFactor: 4,
+              )
+            : const Text(''),
+      ],
+    );
+  }
+
+  FloatingActionButton getClearAllButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        setState(() {
+          _coolingTimeHours = '0';
+          _coolingTimeMinutes = '0';
+        });
+
+        purge(_calculator);
+      },
+      label: _settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(_settings.locale.clearAll),
+    );
+  }
+
+  DropdownButtonFormField<int> getVoltageDropdown() {
+    return DropdownButtonFormField<int>(
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child: _settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(_settings.locale.voltage),
+        ),
+        labelStyle: const TextStyle(
+          fontSize: 20,
+        ),
+      ),
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 20,
+      ),
+      value: _dropdownValue,
+      items: _voltages.map<DropdownMenuItem<int>>((int value) {
+        return DropdownMenuItem<int>(
+          value: value,
+          child: Text(value.toString()),
+        );
+      }).toList(),
+      onChanged: (int? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          _dropdownValue = value!;
+          _calculator.voltage = value.toDouble();
+
+          if (_calculator.voltage >= 220 && _calculator.voltage <= 230) {
+            _swaFlag = false;
+            _twaFlag = false;
+          } else {
+            _swaFlag = true;
+            _twaFlag = true;
+          }
+
+          _calculator.initialTemp = double.parse(_initTempCtrl.text);
+          _calculator.setTemp = double.parse(_setTempCtrl.text);
+          _calculator.volume = double.parse(_volumeCtrl.text);
+          _calculator.ampsFirstWire = double.parse(_ampsFirstWireCtrl.text);
+          _calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
+          _calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+    );
+  }
+
+  TextFormField getFirstWireField() {
+    return TextFormField(
+      autocorrect: false,
+      controller: _ampsFirstWireCtrl,
+      decoration: InputDecoration(
+        counterStyle: const TextStyle(height: double.minPositive),
+        counterText: '',
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child:
+              _settings.locale.ampsFirstWire.isEmpty ? const Text('Amperage 1') : Text(_settings.locale.ampsFirstWire),
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      maxLength: 3,
+      onChanged: (value) {
+        setState(() {
+          if (_ampsFirstWireCtrl.value.text.isEmpty) {
+            _ampsFirstWireCtrl.text = _initValue.toString();
+            _ampsFirstWireCtrl.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _ampsFirstWireCtrl.value.text.length,
+            );
+          }
+
+          //
+          // Input field can't be empty. Prevent that by doing the following.
+          //
+          if (double.tryParse(value) == null) {
+            _calculator.ampsFirstWire = _initValue;
+          } else {
+            _calculator.ampsFirstWire = double.parse(value);
+          }
+
+          if (_calculator.ampsFirstWire > _ampsLimit) {
+            //
+            // Set member value to pre-defined amperage limit.
+            //
+            _calculator.ampsFirstWire = _ampsLimit.toDouble();
+            //
+            // Assign a new value to the input field.
+            //
+            _ampsFirstWireCtrl.text = _calculator.ampsFirstWire.toString();
+          }
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+      onTap: () {
+        _ampsFirstWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _ampsFirstWireCtrl.value.text.length,
+        );
+      },
+      style: const TextStyle(
+        fontSize: 20,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  TextFormField getSecondWireField() {
+    return TextFormField(
+      autocorrect: false,
+      controller: _ampsSecondWireCtrl,
+      decoration: !_swaFlag
+          ? InputDecoration(
+              counterStyle: const TextStyle(
+                height: double.minPositive,
+              ),
+              counterText: '',
+              filled: true,
+              fillColor: const Color.fromRGBO(211, 211, 211, 0),
+              label: Center(
+                child: _settings.locale.ampsSecondWire.isEmpty
+                    ? const Text('Amperage 2')
+                    : Text(_settings.locale.ampsSecondWire),
+              ),
+              labelStyle: const TextStyle(
+                color: Color.fromRGBO(211, 211, 211, 0),
+              ),
+            )
+          : InputDecoration(
+              counterStyle: const TextStyle(
+                height: double.minPositive,
+              ),
+              counterText: '',
+              filled: true,
+              fillColor: const Color.fromRGBO(211, 211, 211, 1),
+              label: Center(
+                child: _settings.locale.ampsSecondWire.isEmpty
+                    ? const Text('Amperage 2')
+                    : Text(_settings.locale.ampsSecondWire),
+              ),
+            ),
+      enabled: _swaFlag,
+      keyboardType: TextInputType.number,
+      maxLength: 3,
+      onChanged: (value) {
+        setState(() {
+          if (_ampsSecondWireCtrl.text.isEmpty) {
+            _ampsSecondWireCtrl.text = _initValue.toString();
+            _ampsSecondWireCtrl.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _ampsSecondWireCtrl.value.text.length,
+            );
+          }
+
+          if (double.tryParse(value) == null) {
+            _calculator.ampsSecondWire = _initValue;
+          } else {
+            _calculator.ampsSecondWire = double.parse(value);
+          }
+
+          if (_calculator.ampsSecondWire > _ampsLimit) {
+            _calculator.ampsSecondWire = _ampsLimit.toDouble();
+            _ampsSecondWireCtrl.text = _calculator.ampsSecondWire.toString();
+          }
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+      onTap: () {
+        _ampsSecondWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _ampsSecondWireCtrl.value.text.length,
+        );
+      },
+      style: !_swaFlag
+          ? const TextStyle(
+              color: Color.fromRGBO(211, 211, 211, 0),
+              fontSize: 20,
+            )
+          : const TextStyle(
+              fontSize: 20,
+            ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  TextFormField getThirdWireField() {
+    return TextFormField(
+      autocorrect: false,
+      controller: _ampsThirdWireCtrl,
+      decoration: !_twaFlag
+          ? InputDecoration(
+              counterStyle: const TextStyle(
+                height: double.minPositive,
+              ),
+              counterText: '',
+              filled: true,
+              fillColor: Colors.white10,
+              label: Center(
+                child: _settings.locale.ampsThirdWire.isEmpty
+                    ? const Text('Amperage 3')
+                    : Text(_settings.locale.ampsThirdWire),
+              ),
+              labelStyle: const TextStyle(
+                color: Color.fromRGBO(211, 211, 211, 0),
+              ),
+            )
+          : InputDecoration(
+              counterStyle: const TextStyle(
+                height: double.minPositive,
+              ),
+              counterText: '',
+              filled: true,
+              fillColor: const Color.fromRGBO(211, 211, 211, 1),
+              label: Center(
+                child: _settings.locale.ampsThirdWire.isEmpty
+                    ? const Text('Amperage 3')
+                    : Text(_settings.locale.ampsThirdWire),
+              ),
+            ),
+      enabled: _twaFlag,
+      keyboardType: TextInputType.number,
+      maxLength: 3,
+      onChanged: (value) {
+        setState(() {
+          if (_ampsThirdWireCtrl.text.isEmpty) {
+            _ampsThirdWireCtrl.text = _initValue.toString();
+            _ampsThirdWireCtrl.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _ampsThirdWireCtrl.value.text.length,
+            );
+          }
+
+          if (double.tryParse(value) == null) {
+            _calculator.ampsThirdWire = _initValue;
+          } else {
+            _calculator.ampsThirdWire = double.parse(value);
+          }
+
+          if (_calculator.ampsThirdWire > _ampsLimit) {
+            _calculator.ampsThirdWire = _ampsLimit.toDouble();
+            _ampsThirdWireCtrl.text = _calculator.ampsThirdWire.toString();
+          }
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+      onTap: () {
+        _ampsThirdWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _ampsThirdWireCtrl.value.text.length,
+        );
+      },
+      style: !_twaFlag
+          ? const TextStyle(
+              color: Color.fromRGBO(211, 211, 211, 0),
+              fontSize: 20,
+            )
+          : const TextStyle(
+              fontSize: 20,
+            ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  TextFormField getInitTempField() {
+    return TextFormField(
+      autocorrect: false,
+      controller: _initTempCtrl,
+      //
+      // Get rid of the counter; do the same thing for
+      // the other fields as well.
+      //
+      decoration: InputDecoration(
+        counterStyle: const TextStyle(
+          height: double.minPositive,
+        ),
+        counterText: '',
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child: _settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(_settings.locale.initialTemp),
+        ),
+      ),
+      style: const TextStyle(
+        fontSize: 20,
+      ),
+      keyboardType: TextInputType.number,
+      maxLength: 8,
+      onChanged: (value) {
+        setState(() {
+          if (_initTempCtrl.text.isEmpty) {
+            _initTempCtrl.text = _initValue.toString();
+            _initTempCtrl.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _initTempCtrl.value.text.length,
+            );
+          }
+
+          if (double.tryParse(value) == null) {
+            _calculator.initialTemp = _initValue;
+          } else {
+            _calculator.initialTemp = double.parse(value);
+          }
+
+          if (_calculator.initialTemp > _initTempLimit || _calculator.initialTemp < 0) {
+            _calculator.initialTemp = _initTempLimit.toDouble();
+            _initTempCtrl.text = _calculator.initialTemp.toString();
+          }
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+      onTap: () {
+        _initTempCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _initTempCtrl.value.text.length,
+        );
+      },
+      textAlign: TextAlign.center,
+    );
+  }
+
+  TextFormField getSetTempField() {
+    return TextFormField(
+      autocorrect: false,
+      controller: _setTempCtrl,
+      decoration: InputDecoration(
+        counterStyle: const TextStyle(height: double.minPositive),
+        counterText: '',
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child: _settings.locale.setTemp.isEmpty ? const Text('Set Temp') : Text(_settings.locale.setTemp),
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      maxLength: 8,
+      onChanged: (value) {
+        setState(() {
+          if (_setTempCtrl.text.isEmpty) {
+            _setTempCtrl.text = _initValue.toString();
+            _setTempCtrl.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _setTempCtrl.value.text.length,
+            );
+          }
+
+          if (double.tryParse(value) == null) {
+            _calculator.setTemp = _initValue;
+          } else {
+            _calculator.setTemp = double.parse(value);
+          }
+
+          //
+          // Check whether set temperature is equal to an absolute zero.
+          //
+          if (_calculator.setTemp == _absoluteZero) {
+            setState(() {
+              _azFlag = true;
+            });
+          } else {
+            setState(() {
+              _azFlag = false;
+            });
+          }
+
+          if (!_azFlag && _calculator.setTemp <= _setTempLimit || _calculator.setTemp > _initTempLimit) {
+            _calculator.setTemp = -50.0;
+            _setTempCtrl.text = _calculator.setTemp.toString();
+          }
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+      onTap: () {
+        _setTempCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _setTempCtrl.value.text.length,
+        );
+      },
+      style: const TextStyle(
+        fontSize: 20,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  TextFormField getVolumeField() {
+    return TextFormField(
+      autocorrect: false,
+      controller: _volumeCtrl,
+      decoration: InputDecoration(
+        counterStyle: const TextStyle(height: double.minPositive),
+        counterText: '',
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child: _settings.locale.volume.isEmpty ? const Text('Volume') : Text(_settings.locale.volume),
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      maxLength: 5,
+      onChanged: (value) {
+        setState(() {
+          if (_volumeCtrl.text.isEmpty) {
+            _volumeCtrl.text = _initValue.toString();
+            _volumeCtrl.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _volumeCtrl.value.text.length,
+            );
+          }
+
+          if (double.tryParse(value) == null) {
+            _calculator.volume = _initValue;
+          } else {
+            _calculator.volume = double.parse(value);
+          }
+
+          if (_calculator.volume > _volumeLimit) {
+            _calculator.volume = _volumeLimit.toDouble();
+            _volumeCtrl.text = _calculator.volume.toString();
+          }
+
+          _calculator.cCoefficient = _settings.cCoefficient;
+          _calculator.calculate();
+
+          timeFormatter.calculator = _calculator;
+
+          _coolingTimeHours = timeFormatter.getHours().toString();
+          _coolingTimeMinutes = timeFormatter
+              .getMinutes(
+                rFlag: _settings.rFlag,
+                pFlag: _settings.pFlag,
+              )
+              .toString();
+        });
+      },
+      onTap: () {
+        _volumeCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _volumeCtrl.value.text.length,
+        );
+      },
+      style: const TextStyle(fontSize: 20),
+      textAlign: TextAlign.center,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -401,56 +969,14 @@ class _HomeRouteState extends State<HomeRoute> {
                 child: Center(
                   child: Column(
                     children: [
-                      Wrap(
-                        children: [
-                          _settings.locale.hours.isEmpty
-                              ? Text(
-                                  '$_coolingTimeHours h. ',
-                                  textScaleFactor: 4,
-                                ) // Trailing space is intentional. Do not remove!
-                              : Text(
-                                  '$_coolingTimeHours ${_settings.locale.hours}',
-                                  textScaleFactor: 4,
-                                ),
-                          _settings.locale.minutes.isEmpty
-                              ? Text(
-                                  '$_coolingTimeMinutes m.',
-                                  textScaleFactor: 4,
-                                )
-                              : Text(
-                                  '$_coolingTimeMinutes ${_settings.locale.minutes}',
-                                  textScaleFactor: 4,
-                                ),
-                          //
-                          // Nothing to see here...
-                          //
-                          _azFlag && _settings.osFlag
-                              ? const Text(
-                                  '\u{1f480}',
-                                  textScaleFactor: 4,
-                                )
-                              : const Text(''),
-                        ],
-                      ),
+                      getTempOutput(),
                       //
                       // Add an empty space between the form and the text output.
                       //
                       const Padding(
                         padding: EdgeInsets.all(16),
                       ),
-                      FloatingActionButton.extended(
-                        onPressed: () {
-                          setState(() {
-                            _coolingTimeHours = '0';
-                            _coolingTimeMinutes = '0';
-                          });
-
-                          purge(_calculator);
-                        },
-                        label: _settings.locale.clearAll.isEmpty
-                            ? const Text('Clear All')
-                            : Text(_settings.locale.clearAll),
-                      ),
+                      getClearAllButton(),
                       //
                       // Add an empty space between the form and the text output.
                       //
@@ -464,533 +990,31 @@ class _HomeRouteState extends State<HomeRoute> {
                         children: [
                           SizedBox(
                             width: 128,
-                            child: DropdownButtonFormField<int>(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                label: Center(
-                                  child: _settings.locale.voltage.isEmpty
-                                      ? const Text('Voltage')
-                                      : Text(_settings.locale.voltage),
-                                ),
-                                labelStyle: const TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ),
-                              value: _dropdownValue,
-                              items: _voltages.map<DropdownMenuItem<int>>((int value) {
-                                return DropdownMenuItem<int>(
-                                  value: value,
-                                  child: Text(value.toString()),
-                                );
-                              }).toList(),
-                              onChanged: (int? value) {
-                                // This is called when the user selects an item.
-                                setState(() {
-                                  _dropdownValue = value!;
-                                  _calculator.voltage = value.toDouble();
-
-                                  if (_calculator.voltage >= 220 && _calculator.voltage <= 230) {
-                                    _swaFlag = false;
-                                    _twaFlag = false;
-                                  } else {
-                                    _swaFlag = true;
-                                    _twaFlag = true;
-                                  }
-
-                                  _calculator.initialTemp = double.parse(_initTempCtrl.text);
-                                  _calculator.setTemp = double.parse(_setTempCtrl.text);
-                                  _calculator.volume = double.parse(_volumeCtrl.text);
-                                  _calculator.ampsFirstWire = double.parse(_ampsFirstWireCtrl.text);
-                                  _calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
-                                  _calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                            ),
+                            child: getVoltageDropdown(),
                           ),
                           SizedBox(
                             width: 128,
-                            child: TextFormField(
-                              autocorrect: false,
-                              controller: _ampsFirstWireCtrl,
-                              decoration: InputDecoration(
-                                counterStyle: const TextStyle(height: double.minPositive),
-                                counterText: '',
-                                filled: true,
-                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                label: Center(
-                                  child: _settings.locale.ampsFirstWire.isEmpty
-                                      ? const Text('Amperage 1')
-                                      : Text(_settings.locale.ampsFirstWire),
-                                ),
-                              ),
-                              keyboardType: TextInputType.number,
-                              maxLength: 3,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_ampsFirstWireCtrl.value.text.isEmpty) {
-                                    _ampsFirstWireCtrl.text = _initValue.toString();
-                                    _ampsFirstWireCtrl.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _ampsFirstWireCtrl.value.text.length,
-                                    );
-                                  }
-
-                                  //
-                                  // Input field can't be empty. Prevent that by doing the following.
-                                  //
-                                  if (double.tryParse(value) == null) {
-                                    _calculator.ampsFirstWire = _initValue;
-                                  } else {
-                                    _calculator.ampsFirstWire = double.parse(value);
-                                  }
-
-                                  if (_calculator.ampsFirstWire > _ampsLimit) {
-                                    //
-                                    // Set member value to pre-defined amperage limit.
-                                    //
-                                    _calculator.ampsFirstWire = _ampsLimit.toDouble();
-                                    //
-                                    // Assign a new value to the input field.
-                                    //
-                                    _ampsFirstWireCtrl.text = _calculator.ampsFirstWire.toString();
-                                  }
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                              onTap: () {
-                                _ampsFirstWireCtrl.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset: _ampsFirstWireCtrl.value.text.length,
-                                );
-                              },
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                            child: getFirstWireField(),
                           ),
                           SizedBox(
                             width: 128,
-                            child: TextFormField(
-                              autocorrect: false,
-                              controller: _ampsSecondWireCtrl,
-                              decoration: !_swaFlag
-                                  ? InputDecoration(
-                                      counterStyle: const TextStyle(
-                                        height: double.minPositive,
-                                      ),
-                                      counterText: '',
-                                      filled: true,
-                                      fillColor: const Color.fromRGBO(211, 211, 211, 0),
-                                      label: Center(
-                                        child: _settings.locale.ampsSecondWire.isEmpty
-                                            ? const Text('Amperage 2')
-                                            : Text(_settings.locale.ampsSecondWire),
-                                      ),
-                                      labelStyle: const TextStyle(
-                                        color: Color.fromRGBO(211, 211, 211, 0),
-                                      ),
-                                    )
-                                  : InputDecoration(
-                                      counterStyle: const TextStyle(
-                                        height: double.minPositive,
-                                      ),
-                                      counterText: '',
-                                      filled: true,
-                                      fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                      label: Center(
-                                        child: _settings.locale.ampsSecondWire.isEmpty
-                                            ? const Text('Amperage 2')
-                                            : Text(_settings.locale.ampsSecondWire),
-                                      ),
-                                    ),
-                              enabled: _swaFlag,
-                              keyboardType: TextInputType.number,
-                              maxLength: 3,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_ampsSecondWireCtrl.text.isEmpty) {
-                                    _ampsSecondWireCtrl.text = _initValue.toString();
-                                    _ampsSecondWireCtrl.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _ampsSecondWireCtrl.value.text.length,
-                                    );
-                                  }
-
-                                  if (double.tryParse(value) == null) {
-                                    _calculator.ampsSecondWire = _initValue;
-                                  } else {
-                                    _calculator.ampsSecondWire = double.parse(value);
-                                  }
-
-                                  if (_calculator.ampsSecondWire > _ampsLimit) {
-                                    _calculator.ampsSecondWire = _ampsLimit.toDouble();
-                                    _ampsSecondWireCtrl.text = _calculator.ampsSecondWire.toString();
-                                  }
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                              onTap: () {
-                                _ampsSecondWireCtrl.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset: _ampsSecondWireCtrl.value.text.length,
-                                );
-                              },
-                              style: !_swaFlag
-                                  ? const TextStyle(
-                                      color: Color.fromRGBO(211, 211, 211, 0),
-                                      fontSize: 20,
-                                    )
-                                  : const TextStyle(
-                                      fontSize: 20,
-                                    ),
-                              textAlign: TextAlign.center,
-                            ),
+                            child: getSecondWireField(),
                           ),
                           SizedBox(
                             width: 128,
-                            child: TextFormField(
-                              autocorrect: false,
-                              controller: _ampsThirdWireCtrl,
-                              decoration: !_twaFlag
-                                  ? InputDecoration(
-                                      counterStyle: const TextStyle(
-                                        height: double.minPositive,
-                                      ),
-                                      counterText: '',
-                                      filled: true,
-                                      fillColor: Colors.white10,
-                                      label: Center(
-                                        child: _settings.locale.ampsThirdWire.isEmpty
-                                            ? const Text('Amperage 3')
-                                            : Text(_settings.locale.ampsThirdWire),
-                                      ),
-                                      labelStyle: const TextStyle(
-                                        color: Color.fromRGBO(211, 211, 211, 0),
-                                      ),
-                                    )
-                                  : InputDecoration(
-                                      counterStyle: const TextStyle(
-                                        height: double.minPositive,
-                                      ),
-                                      counterText: '',
-                                      filled: true,
-                                      fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                      label: Center(
-                                        child: _settings.locale.ampsThirdWire.isEmpty
-                                            ? const Text('Amperage 3')
-                                            : Text(_settings.locale.ampsThirdWire),
-                                      ),
-                                    ),
-                              enabled: _twaFlag,
-                              keyboardType: TextInputType.number,
-                              maxLength: 3,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_ampsThirdWireCtrl.text.isEmpty) {
-                                    _ampsThirdWireCtrl.text = _initValue.toString();
-                                    _ampsThirdWireCtrl.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _ampsThirdWireCtrl.value.text.length,
-                                    );
-                                  }
-
-                                  if (double.tryParse(value) == null) {
-                                    _calculator.ampsThirdWire = _initValue;
-                                  } else {
-                                    _calculator.ampsThirdWire = double.parse(value);
-                                  }
-
-                                  if (_calculator.ampsThirdWire > _ampsLimit) {
-                                    _calculator.ampsThirdWire = _ampsLimit.toDouble();
-                                    _ampsThirdWireCtrl.text = _calculator.ampsThirdWire.toString();
-                                  }
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                              onTap: () {
-                                _ampsThirdWireCtrl.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset: _ampsThirdWireCtrl.value.text.length,
-                                );
-                              },
-                              style: !_twaFlag
-                                  ? const TextStyle(
-                                      color: Color.fromRGBO(211, 211, 211, 0),
-                                      fontSize: 20,
-                                    )
-                                  : const TextStyle(
-                                      fontSize: 20,
-                                    ),
-                              textAlign: TextAlign.center,
-                            ),
+                            child: getThirdWireField(),
                           ),
                           SizedBox(
                             width: 128,
-                            child: TextFormField(
-                              autocorrect: false,
-                              controller: _initTempCtrl,
-                              //
-                              // Get rid of the counter; do the same thing for
-                              // the other fields as well.
-                              //
-                              decoration: InputDecoration(
-                                counterStyle: const TextStyle(
-                                  height: double.minPositive,
-                                ),
-                                counterText: '',
-                                filled: true,
-                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                label: Center(
-                                  child: _settings.locale.initialTemp.isEmpty
-                                      ? const Text('Initial Temp')
-                                      : Text(_settings.locale.initialTemp),
-                                ),
-                              ),
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                              keyboardType: TextInputType.number,
-                              maxLength: 8,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_initTempCtrl.text.isEmpty) {
-                                    _initTempCtrl.text = _initValue.toString();
-                                    _initTempCtrl.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _initTempCtrl.value.text.length,
-                                    );
-                                  }
-
-                                  if (double.tryParse(value) == null) {
-                                    _calculator.initialTemp = _initValue;
-                                  } else {
-                                    _calculator.initialTemp = double.parse(value);
-                                  }
-
-                                  if (_calculator.initialTemp > _initTempLimit || _calculator.initialTemp < 0) {
-                                    _calculator.initialTemp = _initTempLimit.toDouble();
-                                    _initTempCtrl.text = _calculator.initialTemp.toString();
-                                  }
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                              onTap: () {
-                                _initTempCtrl.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset: _initTempCtrl.value.text.length,
-                                );
-                              },
-                              textAlign: TextAlign.center,
-                            ),
+                            child: getInitTempField(),
                           ),
                           SizedBox(
                             width: 128,
-                            child: TextFormField(
-                              autocorrect: false,
-                              controller: _setTempCtrl,
-                              decoration: InputDecoration(
-                                counterStyle: const TextStyle(height: double.minPositive),
-                                counterText: '',
-                                filled: true,
-                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                label: Center(
-                                  child: _settings.locale.setTemp.isEmpty
-                                      ? const Text('Set Temp')
-                                      : Text(_settings.locale.setTemp),
-                                ),
-                              ),
-                              keyboardType: TextInputType.number,
-                              maxLength: 8,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_setTempCtrl.text.isEmpty) {
-                                    _setTempCtrl.text = _initValue.toString();
-                                    _setTempCtrl.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _setTempCtrl.value.text.length,
-                                    );
-                                  }
-
-                                  if (double.tryParse(value) == null) {
-                                    _calculator.setTemp = _initValue;
-                                  } else {
-                                    _calculator.setTemp = double.parse(value);
-                                  }
-
-                                  //
-                                  // Check whether set temperature is equal to an absolute zero.
-                                  //
-                                  if (_calculator.setTemp == _absoluteZero) {
-                                    setState(() {
-                                      _azFlag = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _azFlag = false;
-                                    });
-                                  }
-
-                                  if (!_azFlag && _calculator.setTemp <= _setTempLimit ||
-                                      _calculator.setTemp > _initTempLimit) {
-                                    _calculator.setTemp = -50.0;
-                                    _setTempCtrl.text = _calculator.setTemp.toString();
-                                  }
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                              onTap: () {
-                                _setTempCtrl.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset: _setTempCtrl.value.text.length,
-                                );
-                              },
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                            child: getSetTempField(),
                           ),
                           SizedBox(
                             width: 128,
-                            child: TextFormField(
-                              autocorrect: false,
-                              controller: _volumeCtrl,
-                              decoration: InputDecoration(
-                                counterStyle: const TextStyle(height: double.minPositive),
-                                counterText: '',
-                                filled: true,
-                                fillColor: const Color.fromRGBO(211, 211, 211, 1),
-                                label: Center(
-                                  child: _settings.locale.volume.isEmpty
-                                      ? const Text('Volume')
-                                      : Text(_settings.locale.volume),
-                                ),
-                              ),
-                              keyboardType: TextInputType.number,
-                              maxLength: 5,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_volumeCtrl.text.isEmpty) {
-                                    _volumeCtrl.text = _initValue.toString();
-                                    _volumeCtrl.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _volumeCtrl.value.text.length,
-                                    );
-                                  }
-
-                                  if (double.tryParse(value) == null) {
-                                    _calculator.volume = _initValue;
-                                  } else {
-                                    _calculator.volume = double.parse(value);
-                                  }
-
-                                  if (_calculator.volume > _volumeLimit) {
-                                    _calculator.volume = _volumeLimit.toDouble();
-                                    _volumeCtrl.text = _calculator.volume.toString();
-                                  }
-
-                                  _calculator.cCoefficient = _settings.cCoefficient;
-                                  _calculator.calculate();
-
-                                  timeFormatter.calculator = _calculator;
-
-                                  _coolingTimeHours = timeFormatter.getHours().toString();
-                                  _coolingTimeMinutes = timeFormatter
-                                      .getMinutes(
-                                        rFlag: _settings.rFlag,
-                                        pFlag: _settings.pFlag,
-                                      )
-                                      .toString();
-                                });
-                              },
-                              onTap: () {
-                                _volumeCtrl.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset: _volumeCtrl.value.text.length,
-                                );
-                              },
-                              style: const TextStyle(fontSize: 20),
-                              textAlign: TextAlign.center,
-                            ),
+                            child: getVolumeField(),
                           ),
                         ],
                       ),
