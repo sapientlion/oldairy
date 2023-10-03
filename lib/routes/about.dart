@@ -21,6 +21,7 @@
 
 */
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 //import 'package:url_launcher/url_launcher.dart';
@@ -64,58 +65,60 @@ class _AboutRouteState extends State<AboutRoute> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                'Oldairy',
-                textScaleFactor: 3,
+        child: SingleChildScrollView(
+          dragStartBehavior: DragStartBehavior.down,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(24),
+                child: Text(
+                  'Oldairy',
+                  textScaleFactor: 3,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                'Version $packageVersion',
-                textScaleFactor: 2,
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Version $packageVersion',
+                  textScaleFactor: 2,
+                ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                'A simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.',
-                textScaleFactor: 2,
-                textAlign: TextAlign.center,
+              const Padding(
+                padding: EdgeInsets.all(24),
+                child: Text(
+                  'A simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.',
+                  textScaleFactor: 2,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: TextField(
-                decoration: const InputDecoration(labelText: 'Development:'),
-                controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy'),
-                readOnly: true,
-                textAlign: TextAlign.center,
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: TextField(
+                  decoration: const InputDecoration(labelText: 'Development:'),
+                  controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy'),
+                  readOnly: true,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: TextField(
-                decoration: const InputDecoration(labelText: 'License: GNU General Public License Version 3'),
-                controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE'),
-                readOnly: true,
-                textAlign: TextAlign.center,
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: TextField(
+                  decoration: const InputDecoration(labelText: 'License: GNU General Public License Version 3'),
+                  controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE'),
+                  readOnly: true,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            // Hopefully, no one would see this, but i'm actually a turtle.
-            const Padding(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                'Oldairy Copyright (C) 2023 Leo `Sapientlion` Markoff',
-                textAlign: TextAlign.center,
+              // Hopefully, no one would see this, but i'm actually a turtle.
+              const Padding(
+                padding: EdgeInsets.all(24),
+                child: Text(
+                  'Oldairy Copyright (C) 2023 Leo `Sapientlion` Markoff',
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            /*Padding(
+              /*Padding(
               padding: const EdgeInsets.all(24),
               child: InkWell(
                 onTap: () {
@@ -127,7 +130,8 @@ class _AboutRouteState extends State<AboutRoute> {
                 ),
               ),
             ),*/
-          ],
+            ],
+          ),
         ),
       ),
     );
