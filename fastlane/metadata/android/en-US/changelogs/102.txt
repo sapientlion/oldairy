@@ -1,0 +1,16 @@
+Oldairy 1.0.2 - Released on <month> <day>, 2023.
+
+Additions:
+
+* Add a visible scrollbar to all pages.
+
+Changes:
+
+* Change the font appearance on some pages;
+* Settings: stick action buttons to the bottom of the screen instead of leaving them
+	at the bottom of the page;
+* Optimize the source code for better maintainability and scalability.
+
+Fixes:
+
+* Fix font sizes on all pages.
