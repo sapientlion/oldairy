@@ -232,20 +232,32 @@ class _HomeRouteState extends State<HomeRoute> {
         _settings.locale.hours.isEmpty
             ? Text(
                 '$_coolingTimeHours h. ',
-                textScaleFactor: 4,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ) // Trailing space is intentional. Do not remove!
             : Text(
                 '$_coolingTimeHours ${_settings.locale.hours}',
-                textScaleFactor: 4,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
         _settings.locale.minutes.isEmpty
             ? Text(
                 '$_coolingTimeMinutes m.',
-                textScaleFactor: 4,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               )
             : Text(
                 '$_coolingTimeMinutes ${_settings.locale.minutes}',
-                textScaleFactor: 4,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
         //
         // Nothing to see here...
@@ -253,7 +265,9 @@ class _HomeRouteState extends State<HomeRoute> {
         _azFlag && _settings.osFlag
             ? const Text(
                 '\u{1f480}',
-                textScaleFactor: 4,
+                style: TextStyle(
+                  fontSize: 24,
+                ),
               )
             : const Text(''),
       ],
@@ -282,13 +296,13 @@ class _HomeRouteState extends State<HomeRoute> {
         label: Center(
           child: _settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(_settings.locale.voltage),
         ),
-        labelStyle: const TextStyle(
+        /*labelStyle: const TextStyle(
           fontSize: 20,
-        ),
+        ),*/
       ),
       style: const TextStyle(
         color: Colors.black,
-        fontSize: 20,
+        //fontSize: 20,
       ),
       value: _dropdownValue,
       items: _voltages.map<DropdownMenuItem<int>>((int value) {
@@ -381,9 +395,9 @@ class _HomeRouteState extends State<HomeRoute> {
           extentOffset: _ampsFirstWireCtrl.value.text.length,
         );
       },
-      style: const TextStyle(
+      /*style: const TextStyle(
         fontSize: 20,
-      ),
+      ),*/
       textAlign: TextAlign.center,
     );
   }
@@ -455,11 +469,11 @@ class _HomeRouteState extends State<HomeRoute> {
       style: !_swaFlag
           ? const TextStyle(
               color: Color.fromRGBO(211, 211, 211, 0),
-              fontSize: 20,
+              //fontSize: 20,
             )
           : const TextStyle(
-              fontSize: 20,
-            ),
+              //fontSize: 20,
+              ),
       textAlign: TextAlign.center,
     );
   }
@@ -531,11 +545,11 @@ class _HomeRouteState extends State<HomeRoute> {
       style: !_twaFlag
           ? const TextStyle(
               color: Color.fromRGBO(211, 211, 211, 0),
-              fontSize: 20,
+              //fontSize: 20,
             )
           : const TextStyle(
-              fontSize: 20,
-            ),
+              //fontSize: 20,
+              ),
       textAlign: TextAlign.center,
     );
   }
@@ -559,9 +573,9 @@ class _HomeRouteState extends State<HomeRoute> {
           child: _settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(_settings.locale.initialTemp),
         ),
       ),
-      style: const TextStyle(
+      /*style: const TextStyle(
         fontSize: 20,
-      ),
+      ),*/
       keyboardType: TextInputType.number,
       maxLength: 8,
       onChanged: (value) {
@@ -651,9 +665,9 @@ class _HomeRouteState extends State<HomeRoute> {
           extentOffset: _setTempCtrl.value.text.length,
         );
       },
-      style: const TextStyle(
+      /*style: const TextStyle(
         fontSize: 20,
-      ),
+      ),*/
       textAlign: TextAlign.center,
     );
   }
@@ -700,7 +714,9 @@ class _HomeRouteState extends State<HomeRoute> {
           extentOffset: _volumeCtrl.value.text.length,
         );
       },
-      style: const TextStyle(fontSize: 20),
+      /*style: const TextStyle(
+        fontSize: 20,
+      ),*/
       textAlign: TextAlign.center,
     );
   }
