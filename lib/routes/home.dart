@@ -753,7 +753,8 @@ class _HomeRouteState extends State<HomeRoute> {
         // Requested locale may be absent from the disk.
         //
         if (!lFlag) {
-          readDefaultLocale();
+          readLocale('en_us.json');
+          //readDefaultLocale();
         }
       });
     });
@@ -768,46 +769,6 @@ class _HomeRouteState extends State<HomeRoute> {
     _ampsSecondWireCtrl.dispose();
     _ampsThirdWireCtrl.dispose();
     super.dispose();
-  }
-
-  //
-  // Get a default locale from a file.
-  //
-  Future<void> readDefaultLocale() async {
-    String response = '';
-
-    try {
-      response = await rootBundle.loadString('assets/locales/en_us.json');
-    } catch (e) {
-      return;
-    }
-
-    final data = await json.decode(response);
-    Map<String, dynamic> locale = data;
-
-    setState(() {
-      _settings.locale.hours = locale['hours'];
-      _settings.locale.minutes = locale['minutes'];
-      _settings.locale.initialTemp = locale['initialTemp'];
-      _settings.locale.setTemp = locale['setTemp'];
-      _settings.locale.volume = locale['volume'];
-      _settings.locale.voltage = locale['voltage'];
-      _settings.locale.ampsFirstWire = locale['ampFirst'];
-      _settings.locale.ampsSecondWire = locale['ampSecond'];
-      _settings.locale.ampsThirdWire = locale['ampThird'];
-      _settings.locale.clearAll = locale['clearAll'];
-      _settings.locale.settings = locale['settings'];
-      _settings.locale.about = locale['about'];
-      _settings.locale.help = locale['help'];
-      _settings.locale.exit = locale['exit'];
-      _settings.locale.general = locale['general'];
-      _settings.locale.language = locale['language'];
-      _settings.locale.oldStandardSupport = locale['oldStandard'];
-      _settings.locale.defaults = locale['defaults'];
-      _settings.locale.apply = locale['apply'];
-    });
-
-    return;
   }
 
   //
@@ -886,7 +847,7 @@ class _HomeRouteState extends State<HomeRoute> {
         {
           _settings.localeName = 'en_us.json';
 
-          readDefaultLocale();
+          readLocale(_settings.localeName);
 
           break;
         }
