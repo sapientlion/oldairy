@@ -64,7 +64,9 @@ class _AboutRouteState extends State<AboutRoute> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Scrollbar(
+        thumbVisibility: true,
+        thickness: 8.0,
         child: SingleChildScrollView(
           dragStartBehavior: DragStartBehavior.down,
           child: Column(

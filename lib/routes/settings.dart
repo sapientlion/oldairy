@@ -72,7 +72,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Scrollbar(
+        thumbVisibility: true,
+        thickness: 8.0,
         child: ListView(
           children: [
             Padding(

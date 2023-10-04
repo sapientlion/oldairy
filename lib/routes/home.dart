@@ -880,63 +880,66 @@ class _HomeRouteState extends State<HomeRoute> {
           getPopupMenuButton(context),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          dragStartBehavior: DragStartBehavior.down,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Form(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    getTempOutput(),
-                    const Padding(
-                      padding: EdgeInsets.all(16),
-                    ),
-                    getClearAllButton(),
-                    const Padding(
-                      padding: EdgeInsets.all(16),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      runSpacing: 32,
-                      spacing: 32,
-                      children: [
-                        SizedBox(
-                          width: 128,
-                          child: getVoltageDropdown(),
-                        ),
-                        SizedBox(
-                          width: 128,
-                          child: getFirstWireField(),
-                        ),
-                        SizedBox(
-                          width: 128,
-                          child: getSecondWireField(),
-                        ),
-                        SizedBox(
-                          width: 128,
-                          child: getThirdWireField(),
-                        ),
-                        SizedBox(
-                          width: 128,
-                          child: getInitTempField(),
-                        ),
-                        SizedBox(
-                          width: 128,
-                          child: getSetTempField(),
-                        ),
-                        SizedBox(
-                          width: 128,
-                          child: getVolumeField(),
-                        ),
-                      ],
-                    ),
-                  ],
+      body: Scrollbar(
+        thumbVisibility: true,
+        thickness: 8.0,
+        child: Center(
+          child: SingleChildScrollView(
+            dragStartBehavior: DragStartBehavior.down,
+            child: Column(
+              children: <Widget>[
+                Form(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      getTempOutput(),
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                      ),
+                      getClearAllButton(),
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                      ),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        runSpacing: 32,
+                        spacing: 32,
+                        children: [
+                          SizedBox(
+                            width: 128,
+                            child: getVoltageDropdown(),
+                          ),
+                          SizedBox(
+                            width: 128,
+                            child: getFirstWireField(),
+                          ),
+                          SizedBox(
+                            width: 128,
+                            child: getSecondWireField(),
+                          ),
+                          SizedBox(
+                            width: 128,
+                            child: getThirdWireField(),
+                          ),
+                          SizedBox(
+                            width: 128,
+                            child: getInitTempField(),
+                          ),
+                          SizedBox(
+                            width: 128,
+                            child: getSetTempField(),
+                          ),
+                          SizedBox(
+                            width: 128,
+                            child: getVolumeField(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
