@@ -80,11 +80,17 @@ class _SettingsRouteState extends State<SettingsRoute> {
               child: _settings.locale.general.isEmpty
                   ? const Text(
                       'General',
-                      textScaleFactor: 2,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     )
                   : Text(
                       _settings.locale.general,
-                      textScaleFactor: 2,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
             ),
             Padding(
@@ -93,13 +99,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 key: _dropdownKey,
                 decoration: InputDecoration(
                   label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
-                  labelStyle: const TextStyle(
+                  /*labelStyle: const TextStyle(
                     fontSize: 20,
-                  ),
+                  ),*/
                 ),
                 style: const TextStyle(
                   color: Colors.black,
-                  fontSize: 16,
+                  //fontSize: 16,
                 ),
                 value: _dropdownValue,
                 items: _locales.map<DropdownMenuItem<String>>((String value) {
@@ -222,9 +228,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
                       extentOffset: _coefficientCtrl.text.length,
                     );
                   },
-                  style: const TextStyle(
+                  /*style: const TextStyle(
                     fontSize: 20,
-                  ),
+                  ),*/
                   textAlign: TextAlign.center,
                 ),
               ),
