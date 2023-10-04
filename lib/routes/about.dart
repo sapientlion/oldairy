@@ -74,29 +74,38 @@ class _AboutRouteState extends State<AboutRoute> {
                 padding: EdgeInsets.all(24),
                 child: Text(
                   'Oldairy',
-                  textScaleFactor: 3,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
                   'Version $packageVersion',
-                  textScaleFactor: 2,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
                   'A simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.',
-                  textScaleFactor: 2,
                   textAlign: TextAlign.center,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: TextField(
-                  decoration: const InputDecoration(labelText: 'Development:'),
-                  controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy'),
+                  decoration: const InputDecoration(
+                    labelText: 'Development:',
+                  ),
+                  controller: TextEditingController(
+                    text: 'https://github.com/sapientlion/oldairy',
+                  ),
                   readOnly: true,
                   textAlign: TextAlign.center,
                 ),
@@ -104,8 +113,12 @@ class _AboutRouteState extends State<AboutRoute> {
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: TextField(
-                  decoration: const InputDecoration(labelText: 'License: GNU General Public License Version 3'),
-                  controller: TextEditingController(text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE'),
+                  decoration: const InputDecoration(
+                    labelText: 'License: GNU General Public License Version 3',
+                  ),
+                  controller: TextEditingController(
+                    text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE',
+                  ),
                   readOnly: true,
                   textAlign: TextAlign.center,
                 ),
@@ -115,6 +128,9 @@ class _AboutRouteState extends State<AboutRoute> {
                 padding: EdgeInsets.all(24),
                 child: Text(
                   'Oldairy Copyright (C) 2023 Leo `Sapientlion` Markoff',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
