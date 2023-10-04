@@ -69,12 +69,6 @@ class _HomeRouteState extends State<HomeRoute> {
   final double _initValue = 0.0;
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
-  final TextEditingController _initTempCtrl = TextEditingController();
-  final TextEditingController _setTempCtrl = TextEditingController();
-  final TextEditingController _volumeCtrl = TextEditingController();
-  final TextEditingController _ampsFirstWireCtrl = TextEditingController();
-  final TextEditingController _ampsSecondWireCtrl = TextEditingController();
-  final TextEditingController _ampsThirdWireCtrl = TextEditingController();
 
   bool _swaFlag = false; // Second wire availability flag.
   bool _twaFlag = false; // Third wire availability flag.
@@ -92,6 +86,12 @@ class _HomeRouteState extends State<HomeRoute> {
     ampsThirdWire: 0.0,
   ));
   Settings _settings = Settings(); // General app settings.
+  TextEditingController _initTempCtrl = TextEditingController();
+  TextEditingController _setTempCtrl = TextEditingController();
+  TextEditingController _volumeCtrl = TextEditingController();
+  TextEditingController _ampsFirstWireCtrl = TextEditingController();
+  TextEditingController _ampsSecondWireCtrl = TextEditingController();
+  TextEditingController _ampsThirdWireCtrl = TextEditingController();
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
   _HomeRouteState() {
@@ -185,6 +185,21 @@ class _HomeRouteState extends State<HomeRoute> {
         .toString();
 
     return;
+  }
+
+  //
+  // Re-initialize `TextEditingController` if empty.
+  //
+  TextEditingController reset(TextEditingController controller) {
+    if (controller.value.text.isEmpty) {
+      controller.text = _initValue.toString();
+      controller.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: controller.value.text.length,
+      );
+    }
+
+    return controller;
   }
 
   PopupMenuButton<int> getPopupMenuButton(BuildContext context) {
@@ -332,13 +347,7 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 3,
       onChanged: (value) {
         setState(() {
-          if (_ampsFirstWireCtrl.value.text.isEmpty) {
-            _ampsFirstWireCtrl.text = _initValue.toString();
-            _ampsFirstWireCtrl.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _ampsFirstWireCtrl.value.text.length,
-            );
-          }
+          _ampsFirstWireCtrl = reset(_ampsFirstWireCtrl);
 
           //
           // Input field can't be empty. Prevent that by doing the following.
@@ -418,13 +427,7 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 3,
       onChanged: (value) {
         setState(() {
-          if (_ampsSecondWireCtrl.text.isEmpty) {
-            _ampsSecondWireCtrl.text = _initValue.toString();
-            _ampsSecondWireCtrl.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _ampsSecondWireCtrl.value.text.length,
-            );
-          }
+          _ampsSecondWireCtrl = reset(_ampsSecondWireCtrl);
 
           if (double.tryParse(value) == null) {
             timeFormatter.calculator.ampsSecondWire = _initValue;
@@ -500,13 +503,7 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 3,
       onChanged: (value) {
         setState(() {
-          if (_ampsThirdWireCtrl.text.isEmpty) {
-            _ampsThirdWireCtrl.text = _initValue.toString();
-            _ampsThirdWireCtrl.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _ampsThirdWireCtrl.value.text.length,
-            );
-          }
+          _ampsThirdWireCtrl = reset(_ampsThirdWireCtrl);
 
           if (double.tryParse(value) == null) {
             timeFormatter.calculator.ampsThirdWire = _initValue;
@@ -569,13 +566,7 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 8,
       onChanged: (value) {
         setState(() {
-          if (_initTempCtrl.text.isEmpty) {
-            _initTempCtrl.text = _initValue.toString();
-            _initTempCtrl.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _initTempCtrl.value.text.length,
-            );
-          }
+          _initTempCtrl = reset(_initTempCtrl);
 
           if (double.tryParse(value) == null) {
             timeFormatter.calculator.initialTemp = _initValue;
@@ -621,13 +612,7 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 8,
       onChanged: (value) {
         setState(() {
-          if (_setTempCtrl.text.isEmpty) {
-            _setTempCtrl.text = _initValue.toString();
-            _setTempCtrl.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _setTempCtrl.value.text.length,
-            );
-          }
+          _setTempCtrl = reset(_setTempCtrl);
 
           if (double.tryParse(value) == null) {
             timeFormatter.calculator.setTemp = _initValue;
@@ -690,13 +675,7 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 5,
       onChanged: (value) {
         setState(() {
-          if (_volumeCtrl.text.isEmpty) {
-            _volumeCtrl.text = _initValue.toString();
-            _volumeCtrl.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _volumeCtrl.value.text.length,
-            );
-          }
+          _volumeCtrl = reset(_volumeCtrl);
 
           if (double.tryParse(value) == null) {
             timeFormatter.calculator.volume = _initValue;
@@ -754,7 +733,6 @@ class _HomeRouteState extends State<HomeRoute> {
         //
         if (!lFlag) {
           readLocale('en_us.json');
-          //readDefaultLocale();
         }
       });
     });
