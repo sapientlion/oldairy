@@ -2,11 +2,11 @@ Oldairy 1.0.1 - Released on September 11th, 2023.
 
 Additions:
 
-* Three new settings in the settings menu:
+* Three new settings on the settings page:
  * `Allow Use of Precise Minutes` - force minutes to be more precise by rounding them;
  * `Enable Time Rounding` - convert raw cooling time value to a human-readable form;
  * `Cooling Coefficient` - although an experimental feature, allow change of default cooling coefficient value to something more situation-appropriate;
-* `TimeFormatter` class which can be used for extracting hours and minutes from raw cooling time.
+* Implement a `TimeFormatter` class which can be used for extracting hours and minutes from raw cooling time value.
 
 Changes:
 
@@ -17,4 +17,4 @@ Changes:
 
 Fixes:
 
-* A critical bug that caused cooling time to be completely imprecise upon a calculation due to missing hour reset routine.
+* Fix a critical bug that causes cooling time to be completely imprecise upon a calculation due to missing hour reset routine.
