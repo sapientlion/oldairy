@@ -45,7 +45,7 @@ class Calculator implements ICalculator {
 
   double _coolingTime = 0.0;
 
-  double cCoefficient = 0.685;
+  double kWatts = 0.685;
   double initialTemp = 0.0;
   double setTemp = 0.0;
   double volume = 0.0;
@@ -62,7 +62,7 @@ class Calculator implements ICalculator {
     required this.ampsFirstWire,
     required this.ampsSecondWire,
     required this.ampsThirdWire,
-    this.cCoefficient = 0.685,
+    this.kWatts = 0.685,
   });
 
   @override
@@ -119,11 +119,11 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-    if (cCoefficient < 0.1 && cCoefficient > 2.0) {
-      cCoefficient = _cCoefficientDefault;
+    if (kWatts < 0.1 && kWatts > 2.0) {
+      kWatts = _cCoefficientDefault;
     }
 
-    _coolingTime = cCoefficient * _coolingTime;
+    _coolingTime = kWatts * _coolingTime;
     _coolingTime = volume * _coolingTime;
 
     //

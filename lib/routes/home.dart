@@ -70,17 +70,6 @@ class _HomeRouteState extends State<HomeRoute> {
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
 
-  final TimeFormatter _timeFormatter = TimeFormatter(
-      calculator: Calculator(
-    initialTemp: 0.0,
-    setTemp: 0.0,
-    volume: 0.0,
-    voltage: 0.0,
-    ampsFirstWire: 0.0,
-    ampsSecondWire: 0.0,
-    ampsThirdWire: 0.0,
-  ));
-
   bool _swaFlag = false; // Second wire availability flag.
   bool _twaFlag = false; // Third wire availability flag.
   int _dropdownValue = 0; // Current dropdown button value.
@@ -94,6 +83,17 @@ class _HomeRouteState extends State<HomeRoute> {
   TextEditingController _ampsSecondWireCtrl = TextEditingController();
   TextEditingController _ampsThirdWireCtrl = TextEditingController();
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
+
+  TimeFormatter _timeFormatter = TimeFormatter(
+      calculator: Calculator(
+    initialTemp: 0.0,
+    setTemp: 0.0,
+    volume: 0.0,
+    voltage: 0.0,
+    ampsFirstWire: 0.0,
+    ampsSecondWire: 0.0,
+    ampsThirdWire: 0.0,
+  ));
 
   _HomeRouteState() {
     _dropdownValue = _voltages.first;
@@ -149,7 +149,7 @@ class _HomeRouteState extends State<HomeRoute> {
           //
           // Do calculate after applying the app settings.
           //
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -348,7 +348,7 @@ class _HomeRouteState extends State<HomeRoute> {
           _timeFormatter.calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
           _timeFormatter.calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -397,7 +397,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _ampsFirstWireCtrl.text = _timeFormatter.calculator.ampsFirstWire.toString();
           }
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -468,7 +468,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _ampsSecondWireCtrl.text = _timeFormatter.calculator.ampsSecondWire.toString();
           }
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -544,7 +544,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _ampsThirdWireCtrl.text = _timeFormatter.calculator.ampsThirdWire.toString();
           }
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -607,7 +607,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _initTempCtrl.text = _timeFormatter.calculator.initialTemp.toString();
           }
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -667,7 +667,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _setTempCtrl.text = _timeFormatter.calculator.setTemp.toString();
           }
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -716,7 +716,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _volumeCtrl.text = _timeFormatter.calculator.volume.toString();
           }
 
-          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -868,12 +868,15 @@ class _HomeRouteState extends State<HomeRoute> {
   // Purge all fields from data.
   //
   Calculator purge(Calculator calculator) {
-    _timeFormatter.calculator.initialTemp = 0.0;
-    _timeFormatter.calculator.setTemp = 0.0;
-    _timeFormatter.calculator.volume = 0.0;
-    _timeFormatter.calculator.ampsFirstWire = 0.0;
-    _timeFormatter.calculator.ampsSecondWire = 0.0;
-    _timeFormatter.calculator.ampsThirdWire = 0.0;
+    _timeFormatter = TimeFormatter(
+        calculator: Calculator(
+            initialTemp: 0.0,
+            setTemp: 0.0,
+            volume: 0.0,
+            voltage: _dropdownValue.toDouble(),
+            ampsFirstWire: 0.0,
+            ampsSecondWire: 0.0,
+            ampsThirdWire: 0.0));
 
     _initTempCtrl.text = _initValue.toString();
     _setTempCtrl.text = _initValue.toString();
