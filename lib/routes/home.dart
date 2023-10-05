@@ -70,12 +70,7 @@ class _HomeRouteState extends State<HomeRoute> {
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
 
-  bool _swaFlag = false; // Second wire availability flag.
-  bool _twaFlag = false; // Third wire availability flag.
-  int _dropdownValue = 0; // Current dropdown button value.
-  String _coolingTimeHours = '0'; // Cooling time: hours.
-  String _coolingTimeMinutes = '0'; // Cooling time: minutes.
-  TimeFormatter timeFormatter = TimeFormatter(
+  final TimeFormatter _timeFormatter = TimeFormatter(
       calculator: Calculator(
     initialTemp: 0.0,
     setTemp: 0.0,
@@ -85,6 +80,12 @@ class _HomeRouteState extends State<HomeRoute> {
     ampsSecondWire: 0.0,
     ampsThirdWire: 0.0,
   ));
+
+  bool _swaFlag = false; // Second wire availability flag.
+  bool _twaFlag = false; // Third wire availability flag.
+  int _dropdownValue = 0; // Current dropdown button value.
+  String _coolingTimeHours = '0'; // Cooling time: hours.
+  String _coolingTimeMinutes = '0'; // Cooling time: minutes.
   Settings _settings = Settings(); // General app settings.
   TextEditingController _initTempCtrl = TextEditingController();
   TextEditingController _setTempCtrl = TextEditingController();
@@ -95,6 +96,8 @@ class _HomeRouteState extends State<HomeRoute> {
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
   _HomeRouteState() {
+    _dropdownValue = _voltages.first;
+
     _initTempCtrl.text = _initValue.toString();
     _setTempCtrl.text = _initValue.toString();
     _volumeCtrl.text = _initValue.toString();
@@ -102,7 +105,10 @@ class _HomeRouteState extends State<HomeRoute> {
     _ampsSecondWireCtrl.text = _initValue.toString();
     _ampsThirdWireCtrl.text = _initValue.toString();
 
-    _dropdownValue = _voltages.first;
+    //
+    // Don't forget to initialize the voltage located inside of the calculator object.
+    //
+    _timeFormatter.calculator.voltage = _voltages.first.toDouble();
   }
 
   //
@@ -140,6 +146,14 @@ class _HomeRouteState extends State<HomeRoute> {
 
           switchLocale(_settings.currentLocale);
 
+          //
+          // Do calculate after applying the app settings.
+          //
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
+
+          set();
+
           return;
         }
       //
@@ -176,8 +190,8 @@ class _HomeRouteState extends State<HomeRoute> {
   // Set cooling time hours and minutes.
   //
   void set() {
-    _coolingTimeHours = timeFormatter.getHours().toString();
-    _coolingTimeMinutes = timeFormatter
+    _coolingTimeHours = _timeFormatter.getHours().toString();
+    _coolingTimeMinutes = _timeFormatter
         .getMinutes(
           rFlag: _settings.rFlag,
           pFlag: _settings.pFlag,
@@ -282,7 +296,7 @@ class _HomeRouteState extends State<HomeRoute> {
           _coolingTimeMinutes = '0';
         });
 
-        purge(timeFormatter.calculator);
+        purge(_timeFormatter.calculator);
       },
       label: _settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(_settings.locale.clearAll),
     );
@@ -317,9 +331,9 @@ class _HomeRouteState extends State<HomeRoute> {
         //
         setState(() {
           _dropdownValue = value!;
-          timeFormatter.calculator.voltage = value.toDouble();
+          _timeFormatter.calculator.voltage = value.toDouble();
 
-          if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
+          if (_timeFormatter.calculator.voltage >= 220 && _timeFormatter.calculator.voltage <= 230) {
             _swaFlag = false;
             _twaFlag = false;
           } else {
@@ -327,15 +341,15 @@ class _HomeRouteState extends State<HomeRoute> {
             _twaFlag = true;
           }
 
-          timeFormatter.calculator.initialTemp = double.parse(_initTempCtrl.text);
-          timeFormatter.calculator.setTemp = double.parse(_setTempCtrl.text);
-          timeFormatter.calculator.volume = double.parse(_volumeCtrl.text);
-          timeFormatter.calculator.ampsFirstWire = double.parse(_ampsFirstWireCtrl.text);
-          timeFormatter.calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
-          timeFormatter.calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
+          _timeFormatter.calculator.initialTemp = double.parse(_initTempCtrl.text);
+          _timeFormatter.calculator.setTemp = double.parse(_setTempCtrl.text);
+          _timeFormatter.calculator.volume = double.parse(_volumeCtrl.text);
+          _timeFormatter.calculator.ampsFirstWire = double.parse(_ampsFirstWireCtrl.text);
+          _timeFormatter.calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
+          _timeFormatter.calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -367,24 +381,24 @@ class _HomeRouteState extends State<HomeRoute> {
           // Input field can't be empty. Prevent that by doing the following.
           //
           if (double.tryParse(value) == null) {
-            timeFormatter.calculator.ampsFirstWire = _initValue;
+            _timeFormatter.calculator.ampsFirstWire = _initValue;
           } else {
-            timeFormatter.calculator.ampsFirstWire = double.parse(value);
+            _timeFormatter.calculator.ampsFirstWire = double.parse(value);
           }
 
-          if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
+          if (_timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
             //
             // Set member value to pre-defined amperage limit.
             //
-            timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
+            _timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
             //
             // Assign a new value to the input field.
             //
-            _ampsFirstWireCtrl.text = timeFormatter.calculator.ampsFirstWire.toString();
+            _ampsFirstWireCtrl.text = _timeFormatter.calculator.ampsFirstWire.toString();
           }
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -444,18 +458,18 @@ class _HomeRouteState extends State<HomeRoute> {
           _ampsSecondWireCtrl = reset(_ampsSecondWireCtrl);
 
           if (double.tryParse(value) == null) {
-            timeFormatter.calculator.ampsSecondWire = _initValue;
+            _timeFormatter.calculator.ampsSecondWire = _initValue;
           } else {
-            timeFormatter.calculator.ampsSecondWire = double.parse(value);
+            _timeFormatter.calculator.ampsSecondWire = double.parse(value);
           }
 
-          if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
-            timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
-            _ampsSecondWireCtrl.text = timeFormatter.calculator.ampsSecondWire.toString();
+          if (_timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
+            _timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
+            _ampsSecondWireCtrl.text = _timeFormatter.calculator.ampsSecondWire.toString();
           }
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -520,18 +534,18 @@ class _HomeRouteState extends State<HomeRoute> {
           _ampsThirdWireCtrl = reset(_ampsThirdWireCtrl);
 
           if (double.tryParse(value) == null) {
-            timeFormatter.calculator.ampsThirdWire = _initValue;
+            _timeFormatter.calculator.ampsThirdWire = _initValue;
           } else {
-            timeFormatter.calculator.ampsThirdWire = double.parse(value);
+            _timeFormatter.calculator.ampsThirdWire = double.parse(value);
           }
 
-          if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
-            timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
-            _ampsThirdWireCtrl.text = timeFormatter.calculator.ampsThirdWire.toString();
+          if (_timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
+            _timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
+            _ampsThirdWireCtrl.text = _timeFormatter.calculator.ampsThirdWire.toString();
           }
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -583,18 +597,18 @@ class _HomeRouteState extends State<HomeRoute> {
           _initTempCtrl = reset(_initTempCtrl);
 
           if (double.tryParse(value) == null) {
-            timeFormatter.calculator.initialTemp = _initValue;
+            _timeFormatter.calculator.initialTemp = _initValue;
           } else {
-            timeFormatter.calculator.initialTemp = double.parse(value);
+            _timeFormatter.calculator.initialTemp = double.parse(value);
           }
 
-          if (timeFormatter.calculator.initialTemp > _initTempLimit || timeFormatter.calculator.initialTemp < 0) {
-            timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
-            _initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
+          if (_timeFormatter.calculator.initialTemp > _initTempLimit || _timeFormatter.calculator.initialTemp < 0) {
+            _timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
+            _initTempCtrl.text = _timeFormatter.calculator.initialTemp.toString();
           }
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -629,15 +643,15 @@ class _HomeRouteState extends State<HomeRoute> {
           _setTempCtrl = reset(_setTempCtrl);
 
           if (double.tryParse(value) == null) {
-            timeFormatter.calculator.setTemp = _initValue;
+            _timeFormatter.calculator.setTemp = _initValue;
           } else {
-            timeFormatter.calculator.setTemp = double.parse(value);
+            _timeFormatter.calculator.setTemp = double.parse(value);
           }
 
           //
           // Check whether set temperature is equal to an absolute zero.
           //
-          if (timeFormatter.calculator.setTemp == _absoluteZero) {
+          if (_timeFormatter.calculator.setTemp == _absoluteZero) {
             setState(() {
               _azFlag = true;
             });
@@ -647,14 +661,14 @@ class _HomeRouteState extends State<HomeRoute> {
             });
           }
 
-          if (!_azFlag && timeFormatter.calculator.setTemp <= _setTempLimit ||
-              timeFormatter.calculator.setTemp > _initTempLimit) {
-            timeFormatter.calculator.setTemp = -50.0;
-            _setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+          if (!_azFlag && _timeFormatter.calculator.setTemp <= _setTempLimit ||
+              _timeFormatter.calculator.setTemp > _initTempLimit) {
+            _timeFormatter.calculator.setTemp = -50.0;
+            _setTempCtrl.text = _timeFormatter.calculator.setTemp.toString();
           }
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -692,18 +706,18 @@ class _HomeRouteState extends State<HomeRoute> {
           _volumeCtrl = reset(_volumeCtrl);
 
           if (double.tryParse(value) == null) {
-            timeFormatter.calculator.volume = _initValue;
+            _timeFormatter.calculator.volume = _initValue;
           } else {
-            timeFormatter.calculator.volume = double.parse(value);
+            _timeFormatter.calculator.volume = double.parse(value);
           }
 
-          if (timeFormatter.calculator.volume > _volumeLimit) {
-            timeFormatter.calculator.volume = _volumeLimit.toDouble();
-            _volumeCtrl.text = timeFormatter.calculator.volume.toString();
+          if (_timeFormatter.calculator.volume > _volumeLimit) {
+            _timeFormatter.calculator.volume = _volumeLimit.toDouble();
+            _volumeCtrl.text = _timeFormatter.calculator.volume.toString();
           }
 
-          timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
-          timeFormatter.calculator.calculate();
+          _timeFormatter.calculator.cCoefficient = _settings.cCoefficient;
+          _timeFormatter.calculator.calculate();
 
           set();
         });
@@ -854,12 +868,12 @@ class _HomeRouteState extends State<HomeRoute> {
   // Purge all fields from data.
   //
   Calculator purge(Calculator calculator) {
-    timeFormatter.calculator.initialTemp = 0.0;
-    timeFormatter.calculator.setTemp = 0.0;
-    timeFormatter.calculator.volume = 0.0;
-    timeFormatter.calculator.ampsFirstWire = 0.0;
-    timeFormatter.calculator.ampsSecondWire = 0.0;
-    timeFormatter.calculator.ampsThirdWire = 0.0;
+    _timeFormatter.calculator.initialTemp = 0.0;
+    _timeFormatter.calculator.setTemp = 0.0;
+    _timeFormatter.calculator.volume = 0.0;
+    _timeFormatter.calculator.ampsFirstWire = 0.0;
+    _timeFormatter.calculator.ampsSecondWire = 0.0;
+    _timeFormatter.calculator.ampsThirdWire = 0.0;
 
     _initTempCtrl.text = _initValue.toString();
     _setTempCtrl.text = _initValue.toString();

@@ -112,50 +112,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  BottomAppBar getBottomBar(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.transparent,
-      padding: const EdgeInsets.all(16.0),
-      shadowColor: Colors.transparent,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(
-            width: 128,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                setState(() {
-                  _settings.osFlag = false;
-                  _settings.pFlag = false;
-                  _settings.rFlag = false;
-                  _settings.cCoefficient = 0.685;
-                  _settings.currentLocale = _dropdownValue = _locales.first;
-
-                  _coefficientCtrl.text = _settings.cCoefficient.toString();
-                  _dropdownKey.currentState!.reset();
-                });
-              },
-              label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
-            ),
-          ),
-          //
-          // Apply current app settings.
-          //
-          SizedBox(
-            width: 128,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                _settings.write(_settings);
-                Navigator.pop(context, _settings);
-              },
-              label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   CheckboxListTile getStandardCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -215,6 +171,50 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   fontSize: 20,
                 ),*/
       textAlign: TextAlign.center,
+    );
+  }
+
+  BottomAppBar getBottomBar(BuildContext context) {
+    return BottomAppBar(
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(16.0),
+      shadowColor: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(
+            width: 128,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                setState(() {
+                  _settings.osFlag = false;
+                  _settings.pFlag = false;
+                  _settings.rFlag = false;
+                  _settings.cCoefficient = 0.685;
+                  _settings.currentLocale = _dropdownValue = _locales.first;
+
+                  _coefficientCtrl.text = _settings.cCoefficient.toString();
+                  _dropdownKey.currentState!.reset();
+                });
+              },
+              label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
+            ),
+          ),
+          //
+          // Apply current app settings.
+          //
+          SizedBox(
+            width: 128,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                _settings.write(_settings);
+                Navigator.pop(context, _settings);
+              },
+              label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
