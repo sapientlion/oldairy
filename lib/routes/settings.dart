@@ -47,6 +47,177 @@ class _SettingsRouteState extends State<SettingsRoute> {
   String _dropdownValue = '';
   Settings _settings = Settings();
 
+  DropdownButtonFormField<String> getLanguageChanger() {
+    return DropdownButtonFormField<String>(
+      key: _dropdownKey,
+      decoration: InputDecoration(
+        label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
+        /*labelStyle: const TextStyle(
+                  fontSize: 20,
+                ),*/
+      ),
+      style: const TextStyle(
+        color: Colors.black,
+        //fontSize: 16,
+      ),
+      value: _dropdownValue,
+      items: _locales.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value.toString()),
+        );
+      }).toList(),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          _settings.currentLocale = value!;
+        });
+      },
+    );
+  }
+
+  CheckboxListTile getRoundingCheckbox() {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      tileColor: const Color.fromRGBO(211, 211, 211, 0),
+      title: const Text('Enable Time Rounding'),
+      value: _settings.rFlag,
+      onChanged: (bool? value) {
+        setState(() {
+          if (!_settings.rFlag) {
+            _settings.rFlag = true;
+          } else {
+            _settings.rFlag = false;
+          }
+        });
+      },
+    );
+  }
+
+  CheckboxListTile getPreciseCheckbox() {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      tileColor: const Color.fromRGBO(211, 211, 211, 0),
+      title: const Text('Allow Use of Precise Minutes'),
+      value: _settings.pFlag,
+      onChanged: (bool? value) {
+        setState(() {
+          if (!_settings.pFlag) {
+            _settings.pFlag = true;
+          } else {
+            _settings.pFlag = false;
+          }
+        });
+      },
+    );
+  }
+
+  BottomAppBar getBottomBar(BuildContext context) {
+    return BottomAppBar(
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(16.0),
+      shadowColor: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(
+            width: 128,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                setState(() {
+                  _settings.osFlag = false;
+                  _settings.pFlag = false;
+                  _settings.rFlag = false;
+                  _settings.cCoefficient = 0.685;
+                  _settings.currentLocale = _dropdownValue = _locales.first;
+
+                  _coefficientCtrl.text = _settings.cCoefficient.toString();
+                  _dropdownKey.currentState!.reset();
+                });
+              },
+              label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
+            ),
+          ),
+          //
+          // Apply current app settings.
+          //
+          SizedBox(
+            width: 128,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                _settings.write(_settings);
+                Navigator.pop(context, _settings);
+              },
+              label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  CheckboxListTile getStandardCheckbox() {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      tileColor: const Color.fromRGBO(211, 211, 211, 0),
+      title: _settings.locale.oldStandardSupport.isEmpty
+          ? const Text('Enable 220V/380V Support')
+          : Text(_settings.locale.oldStandardSupport),
+      value: _settings.osFlag,
+      onChanged: (bool? value) {
+        setState(() {
+          if (!_settings.osFlag) {
+            _settings.osFlag = true;
+          } else {
+            _settings.osFlag = false;
+          }
+        });
+      },
+    );
+  }
+
+  TextField getWattsField() {
+    return TextField(
+      autocorrect: false,
+      controller: _coefficientCtrl,
+      decoration: const InputDecoration(
+        counterStyle: TextStyle(height: double.minPositive),
+        counterText: '',
+        filled: true,
+        fillColor: Color.fromRGBO(211, 211, 211, 1),
+        hintText: '0.0',
+        label: Center(
+          child: Text('Cooling Coefficient (TEST)'),
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      maxLength: 5,
+      onChanged: (value) {
+        setState(() {
+          if (double.tryParse(value) == null) {
+            _settings.cCoefficient = 0.685;
+          } else {
+            if (double.parse(value) < 0.1 || double.parse(value) > 2.0) {
+              _coefficientCtrl.text = '0.685';
+            }
+
+            _settings.cCoefficient = double.parse(_coefficientCtrl.text);
+          }
+        });
+      },
+      onTap: () {
+        _coefficientCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _coefficientCtrl.text.length,
+        );
+      },
+      /*style: const TextStyle(
+                  fontSize: 20,
+                ),*/
+      textAlign: TextAlign.center,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -97,97 +268,28 @@ class _SettingsRouteState extends State<SettingsRoute> {
             ),
             Padding(
               padding: const EdgeInsets.all(32),
-              child: DropdownButtonFormField<String>(
-                key: _dropdownKey,
-                decoration: InputDecoration(
-                  label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
-                  /*labelStyle: const TextStyle(
-                    fontSize: 20,
-                  ),*/
-                ),
-                style: const TextStyle(
-                  color: Colors.black,
-                  //fontSize: 16,
-                ),
-                value: _dropdownValue,
-                items: _locales.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value.toString()),
-                  );
-                }).toList(),
-                onChanged: (String? value) {
-                  // This is called when the user selects an item.
-                  setState(() {
-                    _settings.currentLocale = value!;
-                  });
-                },
-              ),
+              child: getLanguageChanger(),
             ),
             //
             // More precise minutes setting.
             //
             Padding(
               padding: const EdgeInsets.all(32),
-              child: CheckboxListTile(
-                controlAffinity: ListTileControlAffinity.leading,
-                tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: const Text('Allow Use of Precise Minutes'),
-                value: _settings.pFlag,
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (!_settings.pFlag) {
-                      _settings.pFlag = true;
-                    } else {
-                      _settings.pFlag = false;
-                    }
-                  });
-                },
-              ),
+              child: getPreciseCheckbox(),
             ),
             //
             // Time rounding setting.
             //
             Padding(
               padding: const EdgeInsets.all(32),
-              child: CheckboxListTile(
-                controlAffinity: ListTileControlAffinity.leading,
-                tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: const Text('Enable Time Rounding'),
-                value: _settings.rFlag,
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (!_settings.rFlag) {
-                      _settings.rFlag = true;
-                    } else {
-                      _settings.rFlag = false;
-                    }
-                  });
-                },
-              ),
+              child: getRoundingCheckbox(),
             ),
             //
             // Support previous ISO standard via checkbox interaction.
             //
             Padding(
               padding: const EdgeInsets.all(32),
-              child: CheckboxListTile(
-                controlAffinity: ListTileControlAffinity.leading,
-                tileColor: const Color.fromRGBO(211, 211, 211, 0),
-                title: _settings.locale.oldStandardSupport.isEmpty
-                    ? const Text('Enable 220V/380V Support')
-                    : Text(_settings.locale.oldStandardSupport),
-                value: _settings.osFlag,
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (!_settings.osFlag) {
-                      _settings.osFlag = true;
-                    } else {
-                      _settings.osFlag = false;
-                    }
-                  });
-                },
-              ),
+              child: getStandardCheckbox(),
             ),
             //
             // The following is an experimental feature. It might end up being removed in the next release.
@@ -196,91 +298,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
               padding: const EdgeInsets.all(32),
               child: SizedBox(
                 width: 128,
-                child: TextField(
-                  autocorrect: false,
-                  controller: _coefficientCtrl,
-                  decoration: const InputDecoration(
-                    counterStyle: TextStyle(height: double.minPositive),
-                    counterText: '',
-                    filled: true,
-                    fillColor: Color.fromRGBO(211, 211, 211, 1),
-                    hintText: '0.0',
-                    label: Center(
-                      child: Text('Cooling Coefficient (TEST)'),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  maxLength: 5,
-                  onChanged: (value) {
-                    setState(() {
-                      if (double.tryParse(value) == null) {
-                        _settings.cCoefficient = 0.685;
-                      } else {
-                        if (double.parse(value) < 0.1 || double.parse(value) > 2.0) {
-                          _coefficientCtrl.text = '0.685';
-                        }
-
-                        _settings.cCoefficient = double.parse(_coefficientCtrl.text);
-                      }
-                    });
-                  },
-                  onTap: () {
-                    _coefficientCtrl.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: _coefficientCtrl.text.length,
-                    );
-                  },
-                  /*style: const TextStyle(
-                    fontSize: 20,
-                  ),*/
-                  textAlign: TextAlign.center,
-                ),
+                child: getWattsField(),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        padding: const EdgeInsets.all(16.0),
-        shadowColor: Colors.transparent,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: 128,
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  setState(() {
-                    _settings.osFlag = false;
-                    _settings.pFlag = false;
-                    _settings.rFlag = false;
-                    _settings.cCoefficient = 0.685;
-                    _settings.currentLocale = _dropdownValue = _locales.first;
-
-                    _coefficientCtrl.text = _settings.cCoefficient.toString();
-                    _dropdownKey.currentState!.reset();
-                  });
-                },
-                label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
-              ),
-            ),
-            //
-            // Apply current app settings.
-            //
-            SizedBox(
-              width: 128,
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  _settings.write(_settings);
-                  Navigator.pop(context, _settings);
-                },
-                label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: getBottomBar(context),
     );
   }
 }
