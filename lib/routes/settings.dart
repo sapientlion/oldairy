@@ -185,6 +185,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           SizedBox(
             width: 128,
             child: FloatingActionButton.extended(
+              heroTag: null,
               onPressed: () {
                 setState(() {
                   _settings.osFlag = false;
@@ -206,6 +207,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           SizedBox(
             width: 128,
             child: FloatingActionButton.extended(
+              heroTag: null,
               onPressed: () {
                 _settings.write(_settings);
                 Navigator.pop(context, _settings);
