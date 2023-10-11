@@ -1,4 +1,4 @@
-Oldairy 1.0.2 - Released on <month> <day>, 2023.
+Oldairy 1.0.2 - Released on October 12th, 2023.
 
 Additions:
 
@@ -14,3 +14,5 @@ Changes:
 Fixes:
 
 * Fix font sizes on all pages.
+* Fix a bug that causes app to crash due to the missing voltage values when switching back from the older standard to
+	the newest one.
