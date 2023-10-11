@@ -133,15 +133,6 @@ class _HomeRouteState extends State<HomeRoute> {
 
           setState(() {
             _settings = result;
-
-            //
-            // Switch voltage standards.
-            //
-            if (!_settings.osFlag) {
-              _voltages = <int>[230, 400];
-            } else {
-              _voltages = <int>[220, 230, 380, 400];
-            }
           });
 
           switchLocale(_settings.currentLocale);
@@ -303,6 +294,17 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   DropdownButtonFormField<int> getVoltageDropdown() {
+    //
+    // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
+    // values.
+    //
+    if (!_settings.osFlag) {
+      _voltages = <int>[230, 400];
+      _dropdownValue = _voltages.first;
+    } else {
+      _voltages = <int>[220, 230, 380, 400];
+    }
+
     return DropdownButtonFormField<int>(
       decoration: InputDecoration(
         filled: true,
