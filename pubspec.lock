@@ -83,27 +83,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_plugins:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.5"
-  http_parser:
-    dependency: transitive
-    description:
-      name: http_parser
-      sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.2"
   js:
     dependency: transitive
     description:
@@ -144,22 +123,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  package_info_plus:
-    dependency: "direct main"
-    description:
-      name: package_info_plus
-      sha256: "8df5ab0a481d7dc20c0e63809e90a588e496d276ba53358afc4c4443d0a00697"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.3"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   path:
     dependency: transitive
     description:
@@ -180,10 +143,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider_android
-      sha256: "7623b7d4be0f0f7d9a8b5ee6879fc13e4522d4c875ab86801dee4af32b54b83e"
+      sha256: "034bdf99ee7d1396695fb66ba81cc6d0a5b11c9de3fd497fadc62e70a7a6adb6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.23"
+    version: "2.0.7"
   path_provider_ios:
     dependency: transitive
     description:
@@ -293,14 +256,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
-  typed_data:
-    dependency: transitive
-    description:
-      name: typed_data
-      sha256: facc8d6582f16042dd49f2463ff1bd6e2c9ef9f3d5da3d9b087e244a7b564b3c
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.2"
   vector_math:
     dependency: transitive
     description:
@@ -313,10 +268,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "5a751eddf9db89b3e5f9d50c20ab8612296e4e8db69009788d6c8b060a84191c"
+      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.4"
+    version: "3.1.4"
   xdg_directories:
     dependency: transitive
     description:

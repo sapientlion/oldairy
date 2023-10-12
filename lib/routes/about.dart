@@ -23,7 +23,7 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+//import 'package:package_info_plus/package_info_plus.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
 class AboutRoute extends StatefulWidget {
@@ -36,7 +36,7 @@ class AboutRoute extends StatefulWidget {
 }
 
 class _AboutRouteState extends State<AboutRoute> {
-  String packageVersion = '';
+  String packageVersion = '3.0.3';
 
   /*Future<void> tryUrl() async {
     Uri url = Uri.parse('https://github.com/sapientlion/oldairy/blob/master/LICENSE');
@@ -51,11 +51,11 @@ class _AboutRouteState extends State<AboutRoute> {
   void initState() {
     super.initState();
 
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    /*PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       setState(() {
         packageVersion = packageInfo.version;
       });
-    });
+    });*/
   }
 
   @override
