@@ -21,7 +21,7 @@ It's not a precise number and it will never be like that. It is completely depen
 
 ## :iphone: System requirements
 
-* Android 10 and higher.
+* Android 8.1 and higher.
 
 ## :hammer_and_wrench: Installation
 
