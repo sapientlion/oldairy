@@ -1,0 +1,13 @@
+Oldairy 1.0.3 - Released on October 18th, 2023.
+
+Additions:
+
+* N/a.
+
+Changes:
+
+* Add support for older versions of Android (8.1 and higher).
+
+Fixes:
+
+* Address an issue where a git submodule is pointing to the incorrect version of Flutter.
