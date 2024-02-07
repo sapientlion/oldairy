@@ -32,7 +32,7 @@ class Settings implements ISettings {
   bool osFlag = false; // Old standard support flag.
   bool pFlag = true; // Precision flag.
   bool rFlag = true; // Time rounding flag.
-  double cCoefficient = 0.685;
+  double cCoefficient = 0.350;
   String currentLocale = 'English (US)';
   String localeName = '';
   OldairyLocale locale = OldairyLocale();
@@ -41,7 +41,7 @@ class Settings implements ISettings {
     this.osFlag = false,
     this.pFlag = false,
     this.rFlag = false,
-    this.cCoefficient = 0.685,
+    this.cCoefficient = 0.350,
     this.currentLocale = 'English (US)',
   });
 

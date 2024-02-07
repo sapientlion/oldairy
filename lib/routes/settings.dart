@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-	Description: the settings route.
+	Description: settings route.
 
 */
 
@@ -44,14 +44,20 @@ class _SettingsRouteState extends State<SettingsRoute> {
     'Swedish',
   ];
 
+  bool _coolingCoefficientLimitFlag = true;
   String _dropdownValue = '';
   Settings _settings = Settings();
 
+  //
+  // Get language switcher.
+  //
   DropdownButtonFormField<String> getLanguageChanger() {
     return DropdownButtonFormField<String>(
       key: _dropdownKey,
       decoration: InputDecoration(
-        label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
+        label: _settings.locale.language.isEmpty
+            ? const Text('Language')
+            : Text(_settings.locale.language),
         /*labelStyle: const TextStyle(
                   fontSize: 20,
                 ),*/
@@ -76,6 +82,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
+  //
+  // Get time rounding checkbox.
+  //
   CheckboxListTile getRoundingCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -94,7 +103,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  CheckboxListTile getPreciseCheckbox() {
+  //
+  // Get time precision checkbox.
+  //
+  CheckboxListTile getPrecisionCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
@@ -112,6 +124,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
+  //
+  // Get voltage standard checkbox.
+  //
   CheckboxListTile getStandardCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -132,6 +147,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
+  //
+  // Get cooling coefficient field.
+  //
   TextField getWattsField() {
     return TextField(
       autocorrect: false,
@@ -151,10 +169,14 @@ class _SettingsRouteState extends State<SettingsRoute> {
       onChanged: (value) {
         setState(() {
           if (double.tryParse(value) == null) {
-            _settings.cCoefficient = 0.685;
+            _settings.cCoefficient = 0.350;
           } else {
-            if (double.parse(value) < 0.1 || double.parse(value) > 2.0) {
-              _coefficientCtrl.text = '0.685';
+            double temporaryValue = double.tryParse(value)!;
+
+            if (temporaryValue < 0.350 || temporaryValue > 2.0) {
+              _coolingCoefficientLimitFlag = false;
+            } else {
+              _coolingCoefficientLimitFlag = true;
             }
 
             _settings.cCoefficient = double.parse(_coefficientCtrl.text);
@@ -174,7 +196,47 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  BottomAppBar getBottomBar(BuildContext context) {
+  //
+  // Summon AlertDialog on validation fail.
+  //
+  //
+  // TODO use this feature for other options as well.
+  //
+  Future<void> getAlertBox() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Given cooling coefficient value has either underceeded or exceeded the limits.\n'),
+                Text('The value must be between 0.350 and 2.0.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                return;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //
+  // Get a control panel that is responsible for managing the app settings.
+  //
+  BottomAppBar getControlPanel(BuildContext context) {
     return BottomAppBar(
       color: Colors.transparent,
       padding: const EdgeInsets.all(16.0),
@@ -191,14 +253,17 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   _settings.osFlag = false;
                   _settings.pFlag = false;
                   _settings.rFlag = false;
-                  _settings.cCoefficient = 0.685;
+                  _settings.cCoefficient = 0.350;
                   _settings.currentLocale = _dropdownValue = _locales.first;
 
+                  _coolingCoefficientLimitFlag = true;
                   _coefficientCtrl.text = _settings.cCoefficient.toString();
                   _dropdownKey.currentState!.reset();
                 });
               },
-              label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
+              label: _settings.locale.defaults.isEmpty
+                  ? const Text('Defaults')
+                  : Text(_settings.locale.defaults),
             ),
           ),
           //
@@ -209,10 +274,20 @@ class _SettingsRouteState extends State<SettingsRoute> {
             child: FloatingActionButton.extended(
               heroTag: null,
               onPressed: () {
+                if (!_coolingCoefficientLimitFlag) {
+                  getAlertBox();
+
+                  return;
+                }
+
                 _settings.write(_settings);
                 Navigator.pop(context, _settings);
+
+                return;
               },
-              label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
+              label: _settings.locale.apply.isEmpty
+                  ? const Text('Apply')
+                  : Text(_settings.locale.apply),
             ),
           ),
         ],
@@ -272,30 +347,18 @@ class _SettingsRouteState extends State<SettingsRoute> {
               padding: const EdgeInsets.all(32),
               child: getLanguageChanger(),
             ),
-            //
-            // More precise minutes setting.
-            //
             Padding(
               padding: const EdgeInsets.all(32),
-              child: getPreciseCheckbox(),
+              child: getPrecisionCheckbox(),
             ),
-            //
-            // Time rounding setting.
-            //
             Padding(
               padding: const EdgeInsets.all(32),
               child: getRoundingCheckbox(),
             ),
-            //
-            // Support previous ISO standard via checkbox interaction.
-            //
             Padding(
               padding: const EdgeInsets.all(32),
               child: getStandardCheckbox(),
             ),
-            //
-            // The following is an experimental feature. It might end up being removed in the next release.
-            //
             Padding(
               padding: const EdgeInsets.all(32),
               child: SizedBox(
@@ -306,7 +369,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           ],
         ),
       ),
-      bottomNavigationBar: getBottomBar(context),
+      bottomNavigationBar: getControlPanel(context),
     );
   }
 }
