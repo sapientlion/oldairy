@@ -169,17 +169,17 @@ class _SettingsRouteState extends State<SettingsRoute> {
       onChanged: (value) {
         setState(() {
           if (double.tryParse(value) == null) {
-            _settings.cCoefficient = 0.350;
+            _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
           } else {
             double temporaryValue = double.tryParse(value)!;
 
-            if (temporaryValue < 0.350 || temporaryValue > 2.0) {
+            if (temporaryValue < _settings.coolingCoefficientLowerLimit || temporaryValue > _settings.coolingCoefficientUpperLimit) {
               _coolingCoefficientLimitFlag = false;
             } else {
               _coolingCoefficientLimitFlag = true;
             }
 
-            _settings.cCoefficient = double.parse(_coefficientCtrl.text);
+            _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
           }
         });
       },
@@ -203,18 +203,21 @@ class _SettingsRouteState extends State<SettingsRoute> {
   // TODO use this feature for other options as well.
   //
   Future<void> getAlertBox() async {
+	double coolingCoefficientLowerLimit = _settings.coolingCoefficientLowerLimit;
+	double coolingCoefficientUpperLimit = _settings.coolingCoefficientUpperLimit;
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Error'),
-          content: const SingleChildScrollView(
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
+                const Text(
                     'Given cooling coefficient value has either underceeded or exceeded the limits.\n'),
-                Text('The value must be between 0.350 and 2.0.'),
+                Text('The value must be between $coolingCoefficientLowerLimit and $coolingCoefficientUpperLimit.'),
               ],
             ),
           ),
@@ -253,11 +256,11 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   _settings.osFlag = false;
                   _settings.pFlag = false;
                   _settings.rFlag = false;
-                  _settings.cCoefficient = 0.350;
+                  _settings.coolingCoefficientCurrent = 0.350;
                   _settings.currentLocale = _dropdownValue = _locales.first;
 
                   _coolingCoefficientLimitFlag = true;
-                  _coefficientCtrl.text = _settings.cCoefficient.toString();
+                  _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
                   _dropdownKey.currentState!.reset();
                 });
               },
@@ -301,7 +304,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
     setState(() {
       _settings = widget.settings;
-      _coefficientCtrl.text = widget.settings.cCoefficient.toString();
+      _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
       _dropdownValue = widget.settings.currentLocale;
     });
   }

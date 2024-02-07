@@ -1,0 +1,5 @@
+{
+	"appVersion": "1.0.4",
+	"coolingCoefficientLowerLimit": "0.350",
+	"coolingCoefficientUpperLimit": "2.0"
+}

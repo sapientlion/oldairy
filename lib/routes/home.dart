@@ -140,7 +140,7 @@ class _HomeRouteState extends State<HomeRoute> {
           //
           // Do calculate after applying the app settings.
           //
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -350,7 +350,7 @@ class _HomeRouteState extends State<HomeRoute> {
           _timeFormatter.calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
           _timeFormatter.calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -399,7 +399,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _ampsFirstWireCtrl.text = _timeFormatter.calculator.ampsFirstWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -470,7 +470,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _ampsSecondWireCtrl.text = _timeFormatter.calculator.ampsSecondWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -546,7 +546,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _ampsThirdWireCtrl.text = _timeFormatter.calculator.ampsThirdWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -609,7 +609,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _initTempCtrl.text = _timeFormatter.calculator.initialTemp.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -669,7 +669,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _setTempCtrl.text = _timeFormatter.calculator.setTemp.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -718,7 +718,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _volumeCtrl.text = _timeFormatter.calculator.volume.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.cCoefficient;
+          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -752,7 +752,7 @@ class _HomeRouteState extends State<HomeRoute> {
         _settings.osFlag = json['isOldStandardEnabled'];
         _settings.rFlag = json['isTimeRoundingEnabled'];
         _settings.pFlag = json['areAbsoluteValuesAllowed'];
-        _settings.cCoefficient = json['coefficient'];
+        _settings.coolingCoefficientCurrent = json['coefficient'];
         _settings.currentLocale = json['currentLocale'];
         _settings.localeName = json['localeFile'];
 

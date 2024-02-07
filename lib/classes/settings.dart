@@ -24,26 +24,35 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:oldairy/classes/locale.dart';
 import 'package:oldairy/interfaces/isettings.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Settings implements ISettings {
   bool osFlag = false; // Old standard support flag.
-  bool pFlag = true; // Precision flag.
-  bool rFlag = true; // Time rounding flag.
-  double cCoefficient = 0.350;
+  bool pFlag = false; // Precision flag.
+  bool rFlag = false; // Time rounding flag.
+
+  double coolingCoefficientLowerLimit = 0.0;
+  double coolingCoefficientUpperLimit = 0.0;
+  double coolingCoefficientCurrent = 0.350;
+
   String currentLocale = 'English (US)';
   String localeName = '';
   OldairyLocale locale = OldairyLocale();
 
-  Settings({
-    this.osFlag = false,
-    this.pFlag = false,
-    this.rFlag = false,
-    this.cCoefficient = 0.350,
-    this.currentLocale = 'English (US)',
-  });
+  Future<void> readDefaults() async {
+    final String response = await rootBundle.loadString('assets/defaults.json');
+    final data = await json.decode(response);
+
+	coolingCoefficientLowerLimit = double.parse(data["coolingCoefficientLowerLimit"]);
+	coolingCoefficientUpperLimit = double.parse(data["coolingCoefficientUpperLimit"]);
+  }
+
+  Settings() {
+    readDefaults();
+  }
 
   //
   // Get app data location path.
@@ -67,7 +76,7 @@ class Settings implements ISettings {
         'isOldStandardEnabled': osFlag,
         'isTimeRoundingEnabled': rFlag,
         'areAbsoluteValuesAllowed': pFlag,
-        'coefficient': cCoefficient,
+        'coefficient': coolingCoefficientCurrent,
         'currentLocale': currentLocale,
         'localeFile': localeName,
       };

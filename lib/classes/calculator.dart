@@ -36,16 +36,16 @@
 
 import 'dart:math';
 
+import 'package:oldairy/classes/settings.dart';
 import 'package:oldairy/interfaces/icalculator.dart';
 
 class Calculator implements ICalculator {
   final int _ampsLimits = 125;
-  final double _cCoefficientDefault = 0.685;
-  //final double _coefficient = 0.685;
+  final Settings _settings = Settings();
 
   double _coolingTime = 0.0;
 
-  double kWatts = 0.685;
+  double kWatts = 0.0;
   double initialTemp = 0.0;
   double setTemp = 0.0;
   double volume = 0.0;
@@ -62,7 +62,7 @@ class Calculator implements ICalculator {
     required this.ampsFirstWire,
     required this.ampsSecondWire,
     required this.ampsThirdWire,
-    this.kWatts = 0.685,
+    this.kWatts = 0.350,
   });
 
   @override
@@ -119,8 +119,8 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-    if (kWatts < 0.1 && kWatts > 2.0) {
-      kWatts = _cCoefficientDefault;
+	if (kWatts < _settings.coolingCoefficientLowerLimit || kWatts > _settings.coolingCoefficientUpperLimit) {
+      kWatts = _settings.coolingCoefficientLowerLimit;
     }
 
     _coolingTime = kWatts * _coolingTime;
