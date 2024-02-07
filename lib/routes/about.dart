@@ -23,11 +23,15 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+
+import '../classes/settings.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
 class AboutRoute extends StatefulWidget {
-  const AboutRoute({super.key, required this.title});
+  const AboutRoute({
+    super.key,
+    required this.title,
+  });
 
   final String title;
 
@@ -36,8 +40,6 @@ class AboutRoute extends StatefulWidget {
 }
 
 class _AboutRouteState extends State<AboutRoute> {
-  String packageVersion = '';
-
   /*Future<void> tryUrl() async {
     Uri url = Uri.parse('https://github.com/sapientlion/oldairy/blob/master/LICENSE');
     if (await launchUrl(url)) {
@@ -46,17 +48,6 @@ class _AboutRouteState extends State<AboutRoute> {
       throw 'Could not launch $url';
     }
   }*/
-
-  @override
-  void initState() {
-    super.initState();
-
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      setState(() {
-        packageVersion = packageInfo.version;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +76,10 @@ class _AboutRouteState extends State<AboutRoute> {
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Version $packageVersion',
+                  //
+                  // TODO don't forget to add app's build number in here.
+                  //
+                  'Version N/a',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -119,7 +113,8 @@ class _AboutRouteState extends State<AboutRoute> {
                     labelText: 'License: GNU General Public License Version 3',
                   ),
                   controller: TextEditingController(
-                    text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE',
+                    text:
+                        'https://github.com/sapientlion/oldairy/blob/master/LICENSE',
                   ),
                   readOnly: true,
                   textAlign: TextAlign.center,
@@ -129,7 +124,7 @@ class _AboutRouteState extends State<AboutRoute> {
               const Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
-                  'Oldairy Copyright (C) 2023 Leo `Sapientlion` Markoff',
+                  'Oldairy Copyright (C) 2023 - 2024 Leo `Sapientlion` Markoff',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),

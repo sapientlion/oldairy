@@ -135,7 +135,7 @@ class _HomeRouteState extends State<HomeRoute> {
             _settings = result;
           });
 
-          switchLocale(_settings.currentLocale);
+          switchLocale(_settings.localeCurrent);
 
           //
           // Do calculate after applying the app settings.
@@ -753,7 +753,7 @@ class _HomeRouteState extends State<HomeRoute> {
         _settings.rFlag = json['isTimeRoundingEnabled'];
         _settings.pFlag = json['areAbsoluteValuesAllowed'];
         _settings.coolingCoefficientCurrent = json['coefficient'];
-        _settings.currentLocale = json['currentLocale'];
+        _settings.localeCurrent = json['currentLocale'];
         _settings.localeName = json['localeFile'];
 
         readLocale(_settings.localeName).then((value) {

@@ -38,7 +38,8 @@ class Settings implements ISettings {
   double coolingCoefficientUpperLimit = 0.0;
   double coolingCoefficientCurrent = 0.350;
 
-  String currentLocale = 'English (US)';
+  String packageVersion = '';
+  String localeCurrent = 'English (US)';
   String localeName = '';
   OldairyLocale locale = OldairyLocale();
 
@@ -46,8 +47,13 @@ class Settings implements ISettings {
     final String response = await rootBundle.loadString('assets/defaults.json');
     final data = await json.decode(response);
 
-	coolingCoefficientLowerLimit = double.parse(data["coolingCoefficientLowerLimit"]);
-	coolingCoefficientUpperLimit = double.parse(data["coolingCoefficientUpperLimit"]);
+    packageVersion = data['packageVersion'];
+    coolingCoefficientLowerLimit =
+        double.parse(data['coolingCoefficientLowerLimit']);
+    coolingCoefficientUpperLimit =
+        double.parse(data['coolingCoefficientUpperLimit']);
+
+    return;
   }
 
   Settings() {
@@ -77,7 +83,7 @@ class Settings implements ISettings {
         'isTimeRoundingEnabled': rFlag,
         'areAbsoluteValuesAllowed': pFlag,
         'coefficient': coolingCoefficientCurrent,
-        'currentLocale': currentLocale,
+        'currentLocale': localeCurrent,
         'localeFile': localeName,
       };
 

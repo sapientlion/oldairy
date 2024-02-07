@@ -76,7 +76,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
       onChanged: (String? value) {
         // This is called when the user selects an item.
         setState(() {
-          _settings.currentLocale = value!;
+          _settings.localeCurrent = value!;
         });
       },
     );
@@ -257,7 +257,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   _settings.pFlag = false;
                   _settings.rFlag = false;
                   _settings.coolingCoefficientCurrent = 0.350;
-                  _settings.currentLocale = _dropdownValue = _locales.first;
+                  _settings.localeCurrent = _dropdownValue = _locales.first;
 
                   _coolingCoefficientLimitFlag = true;
                   _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
@@ -305,7 +305,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     setState(() {
       _settings = widget.settings;
       _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
-      _dropdownValue = widget.settings.currentLocale;
+      _dropdownValue = widget.settings.localeCurrent;
     });
   }
 
