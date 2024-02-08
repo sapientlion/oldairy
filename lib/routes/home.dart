@@ -1,21 +1,21 @@
 /*
 
-    Oldairy - a simple calculator for finding out the approximate
-	cooling time of a typical industrial-sized milk tank.
-    Copyright (C) 2023  Leo "SapientLion" Markoff
+  Oldairy - a simple calculator for finding out the approximate
+  cooling time of a typical industrial-sized milk tank.
+  Copyright (C) 2023  Leo "SapientLion" Markoff
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 	Description: the home route.
 
@@ -27,10 +27,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:oldairy/classes/calculator.dart';
-import 'package:oldairy/classes/settings.dart';
-import 'package:oldairy/classes/tformatter.dart';
 import 'package:oldairy/routes/about.dart';
+import 'package:oldairy/routes/home_manager.dart';
 import 'package:oldairy/routes/settings.dart';
 
 class HomeRoute extends StatefulWidget {
@@ -42,69 +40,33 @@ class HomeRoute extends StatefulWidget {
   State<HomeRoute> createState() => _HomeRouteState();
 }
 
-class _HomeRouteState extends State<HomeRoute> {
+class _HomeRouteState extends HomeRouteStateManager {
   bool _azFlag = false; // Absolute zero flag.
   final int _initTempLimit = 50;
   final int _volumeLimit = 30000;
   final int _ampsLimit = 125;
-  final double _initValue = 0.0;
+
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
 
   bool _swaFlag = false; // Second wire availability flag.
   bool _twaFlag = false; // Third wire availability flag.
-  int _dropdownValue = 0; // Current dropdown button value.
-  String _coolingTimeHours = '0'; // Cooling time: hours.
-  String _coolingTimeMinutes = '0'; // Cooling time: minutes.
-  Settings _settings = Settings(); // General app settings.
-  TextEditingController _initTempCtrl = TextEditingController();
-  TextEditingController _setTempCtrl = TextEditingController();
-  TextEditingController _volumeCtrl = TextEditingController();
-  TextEditingController _ampsFirstWireCtrl = TextEditingController();
-  TextEditingController _ampsSecondWireCtrl = TextEditingController();
-  TextEditingController _ampsThirdWireCtrl = TextEditingController();
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
-  TimeFormatter _timeFormatter = TimeFormatter(
-      calculator: Calculator(
-    initialTemp: 0.0,
-    setTemp: 0.0,
-    volume: 0.0,
-    voltage: 0.0,
-    ampsFirstWire: 0.0,
-    ampsSecondWire: 0.0,
-    ampsThirdWire: 0.0,
-  ));
-
   _HomeRouteState() {
-    _dropdownValue = _voltages.first;
+    dropdownValue = _voltages.first;
 
-    _initTempCtrl.text = _initValue.toString();
-    _setTempCtrl.text = _initValue.toString();
-    _volumeCtrl.text = _initValue.toString();
-    _ampsFirstWireCtrl.text = _initValue.toString();
-    _ampsSecondWireCtrl.text = _initValue.toString();
-    _ampsThirdWireCtrl.text = _initValue.toString();
+    initTempCtrl.text = initValue.toString();
+    setTempCtrl.text = initValue.toString();
+    volumeCtrl.text = initValue.toString();
+    ampsFirstWireCtrl.text = initValue.toString();
+    ampsSecondWireCtrl.text = initValue.toString();
+    ampsThirdWireCtrl.text = initValue.toString();
 
     //
     // Don't forget to initialize the voltage located inside of the calculator object.
     //
-    _timeFormatter.calculator.voltage = _voltages.first.toDouble();
-  }
-
-  //
-  // Set cooling time hours and minutes.
-  //
-  void set() {
-    _coolingTimeHours = _timeFormatter.getHours().toString();
-    _coolingTimeMinutes = _timeFormatter
-        .getMinutes(
-          rFlag: _settings.rFlag,
-          pFlag: _settings.pFlag,
-        )
-        .toString();
-
-    return;
+    timeFormatter.calculator.voltage = _voltages.first.toDouble();
   }
 
   //
@@ -116,7 +78,7 @@ class _HomeRouteState extends State<HomeRoute> {
       MaterialPageRoute(
         builder: (context) => SettingsRoute(
           title: widget.title,
-          settings: _settings,
+          settings: settings,
         ),
       ),
     );
@@ -125,19 +87,19 @@ class _HomeRouteState extends State<HomeRoute> {
     // Transfer newly applied settings from settings route to home route.
     //
     setState(() {
-      _settings = result;
+      settings = result;
     });
 
     //
     // Change UI language.
     //
-    switchLocale(_settings.localeCurrent);
+    switchLocale(settings.localeCurrent);
 
     //
     // Do calculate after applying the app settings.
     //
-    _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
-    _timeFormatter.calculator.calculate();
+    timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+    timeFormatter.calculator.calculate();
 
     //
     // Show final results on screen.
@@ -156,7 +118,7 @@ class _HomeRouteState extends State<HomeRoute> {
       MaterialPageRoute(
         builder: (context) => AboutRoute(
           title: widget.title,
-          settings: _settings,
+          settings: settings,
         ),
       ),
     );
@@ -201,42 +163,27 @@ class _HomeRouteState extends State<HomeRoute> {
     return;
   }
 
-  //
-  // Re-initialize `TextEditingController` if empty.
-  //
-  TextEditingController reset(TextEditingController controller) {
-    if (controller.value.text.isEmpty) {
-      controller.text = _initValue.toString();
-      controller.selection = TextSelection(
-        baseOffset: 0,
-        extentOffset: controller.value.text.length,
-      );
-    }
-
-    return controller;
-  }
-
   PopupMenuButton<int> getPopupMenuButton(BuildContext context) {
     return PopupMenuButton(
       itemBuilder: (context) {
         return [
           PopupMenuItem<int>(
             value: 1,
-            child: _settings.locale.settings.isEmpty
+            child: settings.locale.settings.isEmpty
                 ? const Text("Settings")
-                : Text(_settings.locale.settings),
+                : Text(settings.locale.settings),
           ),
           PopupMenuItem<int>(
             value: 2,
-            child: _settings.locale.about.isEmpty
+            child: settings.locale.about.isEmpty
                 ? const Text("About")
-                : Text(_settings.locale.about),
+                : Text(settings.locale.about),
           ),
           PopupMenuItem<int>(
             value: 3,
-            child: _settings.locale.exit.isEmpty
+            child: settings.locale.exit.isEmpty
                 ? const Text("Exit")
-                : Text(_settings.locale.exit),
+                : Text(settings.locale.exit),
           ),
         ];
       },
@@ -249,31 +196,31 @@ class _HomeRouteState extends State<HomeRoute> {
   Wrap getTempOutput() {
     return Wrap(
       children: [
-        _settings.locale.hours.isEmpty
+        settings.locale.hours.isEmpty
             ? Text(
-                '$_coolingTimeHours h. ',
+                '$coolingTimeHours h. ',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ) // Trailing space is intentional. Do not remove!
             : Text(
-                '$_coolingTimeHours ${_settings.locale.hours}',
+                '$coolingTimeHours ${settings.locale.hours}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-        _settings.locale.minutes.isEmpty
+        settings.locale.minutes.isEmpty
             ? Text(
-                '$_coolingTimeMinutes m.',
+                '$coolingTimeMinutes m.',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               )
             : Text(
-                '$_coolingTimeMinutes ${_settings.locale.minutes}',
+                '$coolingTimeMinutes ${settings.locale.minutes}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -282,7 +229,7 @@ class _HomeRouteState extends State<HomeRoute> {
         //
         // Nothing to see here...
         //
-        _azFlag && _settings.osFlag
+        _azFlag && settings.osFlag
             ? const Text(
                 '\u{1f480}',
                 style: TextStyle(
@@ -298,15 +245,15 @@ class _HomeRouteState extends State<HomeRoute> {
     return FloatingActionButton.extended(
       onPressed: () {
         setState(() {
-          _coolingTimeHours = '0';
-          _coolingTimeMinutes = '0';
+          coolingTimeHours = '0';
+          coolingTimeMinutes = '0';
         });
 
-        purge(_timeFormatter.calculator);
+        purge(timeFormatter.calculator);
       },
-      label: _settings.locale.clearAll.isEmpty
+      label: settings.locale.clearAll.isEmpty
           ? const Text('Clear All')
-          : Text(_settings.locale.clearAll),
+          : Text(settings.locale.clearAll),
     );
   }
 
@@ -315,9 +262,9 @@ class _HomeRouteState extends State<HomeRoute> {
     // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
     // values.
     //
-    if (!_settings.osFlag) {
+    if (!settings.osFlag) {
       _voltages = <int>[230, 400];
-      _dropdownValue = _voltages.first;
+      dropdownValue = _voltages.first;
     } else {
       _voltages = <int>[220, 230, 380, 400];
     }
@@ -327,9 +274,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.voltage.isEmpty
+          child: settings.locale.voltage.isEmpty
               ? const Text('Voltage')
-              : Text(_settings.locale.voltage),
+              : Text(settings.locale.voltage),
         ),
         /*labelStyle: const TextStyle(
           fontSize: 20,
@@ -339,7 +286,7 @@ class _HomeRouteState extends State<HomeRoute> {
         color: Colors.black,
         //fontSize: 20,
       ),
-      value: _dropdownValue,
+      value: dropdownValue,
       items: _voltages.map<DropdownMenuItem<int>>((int value) {
         return DropdownMenuItem<int>(
           value: value,
@@ -351,11 +298,11 @@ class _HomeRouteState extends State<HomeRoute> {
         // This is called when the user selects an item.
         //
         setState(() {
-          _dropdownValue = value!;
-          _timeFormatter.calculator.voltage = value.toDouble();
+          dropdownValue = value!;
+          timeFormatter.calculator.voltage = value.toDouble();
 
-          if (_timeFormatter.calculator.voltage >= 220 &&
-              _timeFormatter.calculator.voltage <= 230) {
+          if (timeFormatter.calculator.voltage >= 220 &&
+              timeFormatter.calculator.voltage <= 230) {
             _swaFlag = false;
             _twaFlag = false;
           } else {
@@ -363,20 +310,19 @@ class _HomeRouteState extends State<HomeRoute> {
             _twaFlag = true;
           }
 
-          _timeFormatter.calculator.initialTemp =
-              double.parse(_initTempCtrl.text);
-          _timeFormatter.calculator.setTemp = double.parse(_setTempCtrl.text);
-          _timeFormatter.calculator.volume = double.parse(_volumeCtrl.text);
-          _timeFormatter.calculator.ampsFirstWire =
-              double.parse(_ampsFirstWireCtrl.text);
-          _timeFormatter.calculator.ampsSecondWire =
-              double.parse(_ampsSecondWireCtrl.text);
-          _timeFormatter.calculator.ampsThirdWire =
-              double.parse(_ampsThirdWireCtrl.text);
+          timeFormatter.calculator.initialTemp =
+              double.parse(initTempCtrl.text);
+          timeFormatter.calculator.setTemp = double.parse(setTempCtrl.text);
+          timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
+          timeFormatter.calculator.ampsFirstWire =
+              double.parse(ampsFirstWireCtrl.text);
+          timeFormatter.calculator.ampsSecondWire =
+              double.parse(ampsSecondWireCtrl.text);
+          timeFormatter.calculator.ampsThirdWire =
+              double.parse(ampsThirdWireCtrl.text);
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
@@ -387,56 +333,55 @@ class _HomeRouteState extends State<HomeRoute> {
   TextFormField getFirstWireField() {
     return TextFormField(
       autocorrect: false,
-      controller: _ampsFirstWireCtrl,
+      controller: ampsFirstWireCtrl,
       decoration: InputDecoration(
         counterStyle: const TextStyle(height: double.minPositive),
         counterText: '',
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.ampsFirstWire.isEmpty
+          child: settings.locale.ampsFirstWire.isEmpty
               ? const Text('Amperage 1')
-              : Text(_settings.locale.ampsFirstWire),
+              : Text(settings.locale.ampsFirstWire),
         ),
       ),
       keyboardType: TextInputType.number,
       maxLength: 3,
       onChanged: (value) {
         setState(() {
-          _ampsFirstWireCtrl = reset(_ampsFirstWireCtrl);
+          ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
 
           //
           // Input field can't be empty. Prevent that by doing the following.
           //
           if (double.tryParse(value) == null) {
-            _timeFormatter.calculator.ampsFirstWire = _initValue;
+            timeFormatter.calculator.ampsFirstWire = initValue;
           } else {
-            _timeFormatter.calculator.ampsFirstWire = double.parse(value);
+            timeFormatter.calculator.ampsFirstWire = double.parse(value);
           }
 
-          if (_timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
+          if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
             //
             // Set member value to pre-defined amperage limit.
             //
-            _timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
+            timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
             //
             // Assign a new value to the input field.
             //
-            _ampsFirstWireCtrl.text =
-                _timeFormatter.calculator.ampsFirstWire.toString();
+            ampsFirstWireCtrl.text =
+                timeFormatter.calculator.ampsFirstWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
       },
       onTap: () {
-        _ampsFirstWireCtrl.selection = TextSelection(
+        ampsFirstWireCtrl.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _ampsFirstWireCtrl.value.text.length,
+          extentOffset: ampsFirstWireCtrl.value.text.length,
         );
       },
       /*style: const TextStyle(
@@ -449,7 +394,7 @@ class _HomeRouteState extends State<HomeRoute> {
   TextFormField getSecondWireField() {
     return TextFormField(
       autocorrect: false,
-      controller: _ampsSecondWireCtrl,
+      controller: ampsSecondWireCtrl,
       decoration: !_swaFlag
           ? InputDecoration(
               counterStyle: const TextStyle(
@@ -459,9 +404,9 @@ class _HomeRouteState extends State<HomeRoute> {
               filled: true,
               fillColor: const Color.fromRGBO(211, 211, 211, 0),
               label: Center(
-                child: _settings.locale.ampsSecondWire.isEmpty
+                child: settings.locale.ampsSecondWire.isEmpty
                     ? const Text('Amperage 2')
-                    : Text(_settings.locale.ampsSecondWire),
+                    : Text(settings.locale.ampsSecondWire),
               ),
               labelStyle: const TextStyle(
                 color: Color.fromRGBO(211, 211, 211, 0),
@@ -475,9 +420,9 @@ class _HomeRouteState extends State<HomeRoute> {
               filled: true,
               fillColor: const Color.fromRGBO(211, 211, 211, 1),
               label: Center(
-                child: _settings.locale.ampsSecondWire.isEmpty
+                child: settings.locale.ampsSecondWire.isEmpty
                     ? const Text('Amperage 2')
-                    : Text(_settings.locale.ampsSecondWire),
+                    : Text(settings.locale.ampsSecondWire),
               ),
             ),
       enabled: _swaFlag,
@@ -485,31 +430,30 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 3,
       onChanged: (value) {
         setState(() {
-          _ampsSecondWireCtrl = reset(_ampsSecondWireCtrl);
+          ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
 
           if (double.tryParse(value) == null) {
-            _timeFormatter.calculator.ampsSecondWire = _initValue;
+            timeFormatter.calculator.ampsSecondWire = initValue;
           } else {
-            _timeFormatter.calculator.ampsSecondWire = double.parse(value);
+            timeFormatter.calculator.ampsSecondWire = double.parse(value);
           }
 
-          if (_timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
-            _timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
-            _ampsSecondWireCtrl.text =
-                _timeFormatter.calculator.ampsSecondWire.toString();
+          if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
+            timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
+            ampsSecondWireCtrl.text =
+                timeFormatter.calculator.ampsSecondWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
       },
       onTap: () {
-        _ampsSecondWireCtrl.selection = TextSelection(
+        ampsSecondWireCtrl.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _ampsSecondWireCtrl.value.text.length,
+          extentOffset: ampsSecondWireCtrl.value.text.length,
         );
       },
       style: !_swaFlag
@@ -527,7 +471,7 @@ class _HomeRouteState extends State<HomeRoute> {
   TextFormField getThirdWireField() {
     return TextFormField(
       autocorrect: false,
-      controller: _ampsThirdWireCtrl,
+      controller: ampsThirdWireCtrl,
       decoration: !_twaFlag
           ? InputDecoration(
               counterStyle: const TextStyle(
@@ -537,9 +481,9 @@ class _HomeRouteState extends State<HomeRoute> {
               filled: true,
               fillColor: Colors.white10,
               label: Center(
-                child: _settings.locale.ampsThirdWire.isEmpty
+                child: settings.locale.ampsThirdWire.isEmpty
                     ? const Text('Amperage 3')
-                    : Text(_settings.locale.ampsThirdWire),
+                    : Text(settings.locale.ampsThirdWire),
               ),
               labelStyle: const TextStyle(
                 color: Color.fromRGBO(211, 211, 211, 0),
@@ -553,9 +497,9 @@ class _HomeRouteState extends State<HomeRoute> {
               filled: true,
               fillColor: const Color.fromRGBO(211, 211, 211, 1),
               label: Center(
-                child: _settings.locale.ampsThirdWire.isEmpty
+                child: settings.locale.ampsThirdWire.isEmpty
                     ? const Text('Amperage 3')
-                    : Text(_settings.locale.ampsThirdWire),
+                    : Text(settings.locale.ampsThirdWire),
               ),
             ),
       enabled: _twaFlag,
@@ -563,31 +507,30 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 3,
       onChanged: (value) {
         setState(() {
-          _ampsThirdWireCtrl = reset(_ampsThirdWireCtrl);
+          ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
 
           if (double.tryParse(value) == null) {
-            _timeFormatter.calculator.ampsThirdWire = _initValue;
+            timeFormatter.calculator.ampsThirdWire = initValue;
           } else {
-            _timeFormatter.calculator.ampsThirdWire = double.parse(value);
+            timeFormatter.calculator.ampsThirdWire = double.parse(value);
           }
 
-          if (_timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
-            _timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
-            _ampsThirdWireCtrl.text =
-                _timeFormatter.calculator.ampsThirdWire.toString();
+          if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
+            timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
+            ampsThirdWireCtrl.text =
+                timeFormatter.calculator.ampsThirdWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
       },
       onTap: () {
-        _ampsThirdWireCtrl.selection = TextSelection(
+        ampsThirdWireCtrl.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _ampsThirdWireCtrl.value.text.length,
+          extentOffset: ampsThirdWireCtrl.value.text.length,
         );
       },
       style: !_twaFlag
@@ -605,7 +548,7 @@ class _HomeRouteState extends State<HomeRoute> {
   TextFormField getInitTempField() {
     return TextFormField(
       autocorrect: false,
-      controller: _initTempCtrl,
+      controller: initTempCtrl,
       //
       // Get rid of the counter; do the same thing for
       // the other fields as well.
@@ -618,9 +561,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.initialTemp.isEmpty
+          child: settings.locale.initialTemp.isEmpty
               ? const Text('Initial Temp')
-              : Text(_settings.locale.initialTemp),
+              : Text(settings.locale.initialTemp),
         ),
       ),
       /*style: const TextStyle(
@@ -630,32 +573,30 @@ class _HomeRouteState extends State<HomeRoute> {
       maxLength: 8,
       onChanged: (value) {
         setState(() {
-          _initTempCtrl = reset(_initTempCtrl);
+          initTempCtrl = reset(initTempCtrl);
 
           if (double.tryParse(value) == null) {
-            _timeFormatter.calculator.initialTemp = _initValue;
+            timeFormatter.calculator.initialTemp = initValue;
           } else {
-            _timeFormatter.calculator.initialTemp = double.parse(value);
+            timeFormatter.calculator.initialTemp = double.parse(value);
           }
 
-          if (_timeFormatter.calculator.initialTemp > _initTempLimit ||
-              _timeFormatter.calculator.initialTemp < 0) {
-            _timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
-            _initTempCtrl.text =
-                _timeFormatter.calculator.initialTemp.toString();
+          if (timeFormatter.calculator.initialTemp > _initTempLimit ||
+              timeFormatter.calculator.initialTemp < 0) {
+            timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
+            initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
           }
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
       },
       onTap: () {
-        _initTempCtrl.selection = TextSelection(
+        initTempCtrl.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _initTempCtrl.value.text.length,
+          extentOffset: initTempCtrl.value.text.length,
         );
       },
       textAlign: TextAlign.center,
@@ -665,34 +606,34 @@ class _HomeRouteState extends State<HomeRoute> {
   TextFormField getSetTempField() {
     return TextFormField(
       autocorrect: false,
-      controller: _setTempCtrl,
+      controller: setTempCtrl,
       decoration: InputDecoration(
         counterStyle: const TextStyle(height: double.minPositive),
         counterText: '',
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.setTemp.isEmpty
+          child: settings.locale.setTemp.isEmpty
               ? const Text('Set Temp')
-              : Text(_settings.locale.setTemp),
+              : Text(settings.locale.setTemp),
         ),
       ),
       keyboardType: TextInputType.number,
       maxLength: 8,
       onChanged: (value) {
         setState(() {
-          _setTempCtrl = reset(_setTempCtrl);
+          setTempCtrl = reset(setTempCtrl);
 
           if (double.tryParse(value) == null) {
-            _timeFormatter.calculator.setTemp = _initValue;
+            timeFormatter.calculator.setTemp = initValue;
           } else {
-            _timeFormatter.calculator.setTemp = double.parse(value);
+            timeFormatter.calculator.setTemp = double.parse(value);
           }
 
           //
           // Check whether set temperature is equal to an absolute zero.
           //
-          if (_timeFormatter.calculator.setTemp == _absoluteZero) {
+          if (timeFormatter.calculator.setTemp == _absoluteZero) {
             setState(() {
               _azFlag = true;
             });
@@ -702,23 +643,22 @@ class _HomeRouteState extends State<HomeRoute> {
             });
           }
 
-          if (!_azFlag && _timeFormatter.calculator.setTemp <= _setTempLimit ||
-              _timeFormatter.calculator.setTemp > _initTempLimit) {
-            _timeFormatter.calculator.setTemp = -50.0;
-            _setTempCtrl.text = _timeFormatter.calculator.setTemp.toString();
+          if (!_azFlag && timeFormatter.calculator.setTemp <= _setTempLimit ||
+              timeFormatter.calculator.setTemp > _initTempLimit) {
+            timeFormatter.calculator.setTemp = -50.0;
+            setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
           }
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
       },
       onTap: () {
-        _setTempCtrl.selection = TextSelection(
+        setTempCtrl.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _setTempCtrl.value.text.length,
+          extentOffset: setTempCtrl.value.text.length,
         );
       },
       /*style: const TextStyle(
@@ -731,46 +671,45 @@ class _HomeRouteState extends State<HomeRoute> {
   TextFormField getVolumeField() {
     return TextFormField(
       autocorrect: false,
-      controller: _volumeCtrl,
+      controller: volumeCtrl,
       decoration: InputDecoration(
         counterStyle: const TextStyle(height: double.minPositive),
         counterText: '',
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.volume.isEmpty
+          child: settings.locale.volume.isEmpty
               ? const Text('Volume')
-              : Text(_settings.locale.volume),
+              : Text(settings.locale.volume),
         ),
       ),
       keyboardType: TextInputType.number,
       maxLength: 5,
       onChanged: (value) {
         setState(() {
-          _volumeCtrl = reset(_volumeCtrl);
+          volumeCtrl = reset(volumeCtrl);
 
           if (double.tryParse(value) == null) {
-            _timeFormatter.calculator.volume = _initValue;
+            timeFormatter.calculator.volume = initValue;
           } else {
-            _timeFormatter.calculator.volume = double.parse(value);
+            timeFormatter.calculator.volume = double.parse(value);
           }
 
-          if (_timeFormatter.calculator.volume > _volumeLimit) {
-            _timeFormatter.calculator.volume = _volumeLimit.toDouble();
-            _volumeCtrl.text = _timeFormatter.calculator.volume.toString();
+          if (timeFormatter.calculator.volume > _volumeLimit) {
+            timeFormatter.calculator.volume = _volumeLimit.toDouble();
+            volumeCtrl.text = timeFormatter.calculator.volume.toString();
           }
 
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
+          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+          timeFormatter.calculator.calculate();
 
           set();
         });
       },
       onTap: () {
-        _volumeCtrl.selection = TextSelection(
+        volumeCtrl.selection = TextSelection(
           baseOffset: 0,
-          extentOffset: _volumeCtrl.value.text.length,
+          extentOffset: volumeCtrl.value.text.length,
         );
       },
       /*style: const TextStyle(
@@ -784,7 +723,7 @@ class _HomeRouteState extends State<HomeRoute> {
   void initState() {
     super.initState();
 
-    _settings.read().then((value) {
+    settings.read().then((value) {
       setState(() {
         bool lFlag = true;
         Map<String, dynamic> json = jsonDecode(value);
@@ -792,14 +731,14 @@ class _HomeRouteState extends State<HomeRoute> {
         //
         // Load app settings from a map.
         //
-        _settings.osFlag = json['isOldStandardEnabled'];
-        _settings.rFlag = json['isTimeRoundingEnabled'];
-        _settings.pFlag = json['areAbsoluteValuesAllowed'];
-        _settings.coolingCoefficientCurrent = json['coefficient'];
-        _settings.localeCurrent = json['currentLocale'];
-        _settings.localeName = json['localeFile'];
+        settings.osFlag = json['isOldStandardEnabled'];
+        settings.rFlag = json['isTimeRoundingEnabled'];
+        settings.pFlag = json['areAbsoluteValuesAllowed'];
+        settings.coolingCoefficientCurrent = json['coefficient'];
+        settings.localeCurrent = json['currentLocale'];
+        settings.localeName = json['localeFile'];
 
-        readLocale(_settings.localeName).then((value) {
+        readLocale(settings.localeName).then((value) {
           lFlag = value;
         });
 
@@ -815,122 +754,13 @@ class _HomeRouteState extends State<HomeRoute> {
 
   @override
   void dispose() {
-    _initTempCtrl.dispose();
-    _setTempCtrl.dispose();
-    _volumeCtrl.dispose();
-    _ampsFirstWireCtrl.dispose();
-    _ampsSecondWireCtrl.dispose();
-    _ampsThirdWireCtrl.dispose();
+    initTempCtrl.dispose();
+    setTempCtrl.dispose();
+    volumeCtrl.dispose();
+    ampsFirstWireCtrl.dispose();
+    ampsSecondWireCtrl.dispose();
+    ampsThirdWireCtrl.dispose();
     super.dispose();
-  }
-
-  //
-  // Get specific locale from a file.
-  //
-  Future<bool> readLocale(String name) async {
-    String response = '';
-
-    try {
-      response = await rootBundle.loadString('assets/locales/$name');
-    } catch (e) {
-      return false;
-    }
-
-    final data = await json.decode(response);
-    Map<String, dynamic> locale = data;
-
-    setState(() {
-      _settings.locale.hours = locale['hours'];
-      _settings.locale.minutes = locale['minutes'];
-      _settings.locale.initialTemp = locale['initialTemp'];
-      _settings.locale.setTemp = locale['setTemp'];
-      _settings.locale.volume = locale['volume'];
-      _settings.locale.voltage = locale['voltage'];
-      _settings.locale.ampsFirstWire = locale['ampFirst'];
-      _settings.locale.ampsSecondWire = locale['ampSecond'];
-      _settings.locale.ampsThirdWire = locale['ampThird'];
-      _settings.locale.clearAll = locale['clearAll'];
-      _settings.locale.settings = locale['settings'];
-      _settings.locale.about = locale['about'];
-      _settings.locale.help = locale['help'];
-      _settings.locale.exit = locale['exit'];
-      _settings.locale.general = locale['general'];
-      _settings.locale.language = locale['language'];
-      _settings.locale.oldStandardSupport = locale['oldStandard'];
-      _settings.locale.defaults = locale['defaults'];
-      _settings.locale.apply = locale['apply'];
-    });
-
-    return true;
-  }
-
-  //
-  // Switch GUI's language to specific locale.
-  //
-  //
-  // TODO find another way for storing locale names and locale file names.
-  //
-  String switchLocale(String locale) {
-    switch (locale) {
-      case 'Serbian (Cyrillic)':
-        {
-          _settings.localeName = 'rs_cyrillic.json';
-
-          readLocale(_settings.localeName);
-
-          break;
-        }
-      case 'Serbian (Latin)':
-        {
-          _settings.localeName = 'rs_latin.json';
-
-          readLocale(_settings.localeName);
-
-          break;
-        }
-      case 'Swedish':
-        {
-          _settings.localeName = 'sv_se.json';
-
-          readLocale(_settings.localeName);
-
-          break;
-        }
-      default:
-        {
-          _settings.localeName = 'en_us.json';
-
-          readLocale(_settings.localeName);
-
-          break;
-        }
-    }
-
-    return locale;
-  }
-
-  //
-  // Purge all fields from data.
-  //
-  Calculator purge(Calculator calculator) {
-    _timeFormatter = TimeFormatter(
-        calculator: Calculator(
-            initialTemp: 0.0,
-            setTemp: 0.0,
-            volume: 0.0,
-            voltage: _dropdownValue.toDouble(),
-            ampsFirstWire: 0.0,
-            ampsSecondWire: 0.0,
-            ampsThirdWire: 0.0));
-
-    _initTempCtrl.text = _initValue.toString();
-    _setTempCtrl.text = _initValue.toString();
-    _volumeCtrl.text = _initValue.toString();
-    _ampsFirstWireCtrl.text = _initValue.toString();
-    _ampsSecondWireCtrl.text = _initValue.toString();
-    _ampsThirdWireCtrl.text = _initValue.toString();
-
-    return calculator;
   }
 
   @override
