@@ -33,25 +33,6 @@ import 'package:oldairy/classes/tformatter.dart';
 import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/settings.dart';
 
-class Oldairy extends StatelessWidget {
-  const Oldairy({super.key});
-
-  final String _appTitle = 'Oldairy';
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _appTitle,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: HomeRoute(
-        title: _appTitle,
-      ),
-    );
-  }
-}
-
 class HomeRoute extends StatefulWidget {
   const HomeRoute({super.key, required this.title});
 
@@ -118,9 +99,9 @@ class _HomeRouteState extends State<HomeRoute> {
     _coolingTimeHours = _timeFormatter.getHours().toString();
     _coolingTimeMinutes = _timeFormatter
         .getMinutes(
-      rFlag: _settings.rFlag,
-      pFlag: _settings.pFlag,
-    )
+          rFlag: _settings.rFlag,
+          pFlag: _settings.pFlag,
+        )
         .toString();
 
     return;

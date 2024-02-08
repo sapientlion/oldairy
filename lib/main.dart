@@ -24,6 +24,25 @@
 import 'package:flutter/material.dart';
 import 'package:oldairy/routes/home.dart';
 
+class Oldairy extends StatelessWidget {
+  const Oldairy({super.key});
+
+  final String _appTitle = 'Oldairy';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: _appTitle,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: HomeRoute(
+        title: _appTitle,
+      ),
+    );
+  }
+}
+
 void main() {
   runApp(
     const Oldairy(),
