@@ -158,6 +158,7 @@ class _HomeRouteState extends State<HomeRoute> {
             MaterialPageRoute(
               builder: (context) => AboutRoute(
                 title: widget.title,
+                settings: _settings,
               ),
             ),
           );

@@ -17,37 +17,111 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-	Description: the about route.
+	Description: general app information located within a single route.
 
 */
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import '../classes/settings.dart';
-//import 'package:url_launcher/url_launcher.dart';
+import 'package:oldairy/classes/settings.dart';
 
 class AboutRoute extends StatefulWidget {
   const AboutRoute({
     super.key,
     required this.title,
+    required this.settings,
   });
 
   final String title;
+  final Settings settings;
 
   @override
   State<AboutRoute> createState() => _AboutRouteState();
 }
 
 class _AboutRouteState extends State<AboutRoute> {
-  /*Future<void> tryUrl() async {
-    Uri url = Uri.parse('https://github.com/sapientlion/oldairy/blob/master/LICENSE');
-    if (await launchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }*/
+  final double edgeInsetsSize = 25;
+
+  Padding getPackageName() {
+    return Padding(
+      padding: EdgeInsets.all(edgeInsetsSize),
+      child: const Text(
+        'Oldairy',
+        style: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Padding getPackageVersion() {
+    return Padding(
+      padding: EdgeInsets.all(edgeInsetsSize),
+      child: Text(
+        'Version ${widget.settings.packageVersion}',
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Padding getPackageDescription() {
+    return Padding(
+      padding: EdgeInsets.all(edgeInsetsSize),
+      child: const Text(
+        'A simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.',
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Padding getPackageAddress() {
+    return Padding(
+      padding: EdgeInsets.all(edgeInsetsSize),
+      child: TextField(
+        decoration: const InputDecoration(
+          labelText: 'Development:',
+        ),
+        controller: TextEditingController(
+          text: 'https://github.com/sapientlion/oldairy',
+        ),
+        readOnly: true,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Padding getPackageLicense() {
+    return Padding(
+      padding: EdgeInsets.all(edgeInsetsSize),
+      child: TextField(
+        decoration: const InputDecoration(
+          labelText: 'License: GNU General Public License Version 3',
+        ),
+        controller: TextEditingController(
+          text: 'https://github.com/sapientlion/oldairy/blob/master/LICENSE',
+        ),
+        readOnly: true,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Padding getPackageCopyrightNotice() {
+    return Padding(
+      padding: EdgeInsets.all(edgeInsetsSize),
+      child: const Text(
+        'Oldairy Copyright (C) 2023 - 2024 Leo `SapientLion` Markoff',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,86 +137,13 @@ class _AboutRouteState extends State<AboutRoute> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'Oldairy',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text(
-                  //
-                  // TODO don't forget to add app's build number in here.
-                  //
-                  'Version N/a',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'A simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Development:',
-                  ),
-                  controller: TextEditingController(
-                    text: 'https://github.com/sapientlion/oldairy',
-                  ),
-                  readOnly: true,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'License: GNU General Public License Version 3',
-                  ),
-                  controller: TextEditingController(
-                    text:
-                        'https://github.com/sapientlion/oldairy/blob/master/LICENSE',
-                  ),
-                  readOnly: true,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              getPackageName(),
+              getPackageVersion(),
+              getPackageDescription(),
+              getPackageAddress(),
+              getPackageLicense(),
               // Hopefully, no one would see this, but i'm actually a turtle.
-              const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'Oldairy Copyright (C) 2023 - 2024 Leo `Sapientlion` Markoff',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              /*Padding(
-              padding: const EdgeInsets.all(24),
-              child: InkWell(
-                onTap: () {
-                  tryUrl();
-                },
-                child: const Text(
-                  'License: GNU General Public License Version 3',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),*/
+              getPackageCopyrightNotice(),
             ],
           ),
         ),
