@@ -112,6 +112,78 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   //
+  // Set cooling time hours and minutes.
+  //
+  void set() {
+    _coolingTimeHours = _timeFormatter.getHours().toString();
+    _coolingTimeMinutes = _timeFormatter
+        .getMinutes(
+      rFlag: _settings.rFlag,
+      pFlag: _settings.pFlag,
+    )
+        .toString();
+
+    return;
+  }
+
+  //
+  // Get settings route on screen.
+  //
+  void getSettingsRoute() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SettingsRoute(
+          title: widget.title,
+          settings: _settings,
+        ),
+      ),
+    );
+
+    //
+    // Transfer newly applied settings from settings route to home route.
+    //
+    setState(() {
+      _settings = result;
+    });
+
+    //
+    // Change UI language.
+    //
+    switchLocale(_settings.localeCurrent);
+
+    //
+    // Do calculate after applying the app settings.
+    //
+    _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+    _timeFormatter.calculator.calculate();
+
+    //
+    // Show final results on screen.
+    //
+    set();
+
+    return;
+  }
+
+  //
+  // Get about route on screen.
+  //
+  void getAboutRoute() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AboutRoute(
+          title: widget.title,
+          settings: _settings,
+        ),
+      ),
+    );
+
+    return;
+  }
+
+  //
   // React to popup menu button presses.
   //
   void doPopupAction(int value) async {
@@ -121,52 +193,21 @@ class _HomeRouteState extends State<HomeRoute> {
       //
       case 1:
         {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SettingsRoute(
-                title: widget.title,
-                settings: _settings,
-              ),
-            ),
-          );
-
-          setState(() {
-            _settings = result;
-          });
-
-          switchLocale(_settings.localeCurrent);
-
-          //
-          // Do calculate after applying the app settings.
-          //
-          _timeFormatter.calculator.kWatts =
-              _settings.coolingCoefficientCurrent;
-          _timeFormatter.calculator.calculate();
-
-          set();
+          getSettingsRoute();
 
           return;
         }
       //
-      // Terminate the application.
+      // Open the about route.
       //
       case 2:
         {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AboutRoute(
-                title: widget.title,
-                settings: _settings,
-              ),
-            ),
-          );
+          getAboutRoute();
 
           return;
         }
       //
-      // Exit app.
+      // Terminate app altogether.
       //
       case 3:
         {
@@ -175,21 +216,6 @@ class _HomeRouteState extends State<HomeRoute> {
           return;
         }
     }
-
-    return;
-  }
-
-  //
-  // Set cooling time hours and minutes.
-  //
-  void set() {
-    _coolingTimeHours = _timeFormatter.getHours().toString();
-    _coolingTimeMinutes = _timeFormatter
-        .getMinutes(
-          rFlag: _settings.rFlag,
-          pFlag: _settings.pFlag,
-        )
-        .toString();
 
     return;
   }
