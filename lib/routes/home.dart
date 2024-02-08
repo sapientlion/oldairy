@@ -140,7 +140,8 @@ class _HomeRouteState extends State<HomeRoute> {
           //
           // Do calculate after applying the app settings.
           //
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -213,15 +214,21 @@ class _HomeRouteState extends State<HomeRoute> {
         return [
           PopupMenuItem<int>(
             value: 1,
-            child: _settings.locale.settings.isEmpty ? const Text("Settings") : Text(_settings.locale.settings),
+            child: _settings.locale.settings.isEmpty
+                ? const Text("Settings")
+                : Text(_settings.locale.settings),
           ),
           PopupMenuItem<int>(
             value: 2,
-            child: _settings.locale.about.isEmpty ? const Text("About") : Text(_settings.locale.about),
+            child: _settings.locale.about.isEmpty
+                ? const Text("About")
+                : Text(_settings.locale.about),
           ),
           PopupMenuItem<int>(
             value: 3,
-            child: _settings.locale.exit.isEmpty ? const Text("Exit") : Text(_settings.locale.exit),
+            child: _settings.locale.exit.isEmpty
+                ? const Text("Exit")
+                : Text(_settings.locale.exit),
           ),
         ];
       },
@@ -289,7 +296,9 @@ class _HomeRouteState extends State<HomeRoute> {
 
         purge(_timeFormatter.calculator);
       },
-      label: _settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(_settings.locale.clearAll),
+      label: _settings.locale.clearAll.isEmpty
+          ? const Text('Clear All')
+          : Text(_settings.locale.clearAll),
     );
   }
 
@@ -310,7 +319,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(_settings.locale.voltage),
+          child: _settings.locale.voltage.isEmpty
+              ? const Text('Voltage')
+              : Text(_settings.locale.voltage),
         ),
         /*labelStyle: const TextStyle(
           fontSize: 20,
@@ -335,7 +346,8 @@ class _HomeRouteState extends State<HomeRoute> {
           _dropdownValue = value!;
           _timeFormatter.calculator.voltage = value.toDouble();
 
-          if (_timeFormatter.calculator.voltage >= 220 && _timeFormatter.calculator.voltage <= 230) {
+          if (_timeFormatter.calculator.voltage >= 220 &&
+              _timeFormatter.calculator.voltage <= 230) {
             _swaFlag = false;
             _twaFlag = false;
           } else {
@@ -343,14 +355,19 @@ class _HomeRouteState extends State<HomeRoute> {
             _twaFlag = true;
           }
 
-          _timeFormatter.calculator.initialTemp = double.parse(_initTempCtrl.text);
+          _timeFormatter.calculator.initialTemp =
+              double.parse(_initTempCtrl.text);
           _timeFormatter.calculator.setTemp = double.parse(_setTempCtrl.text);
           _timeFormatter.calculator.volume = double.parse(_volumeCtrl.text);
-          _timeFormatter.calculator.ampsFirstWire = double.parse(_ampsFirstWireCtrl.text);
-          _timeFormatter.calculator.ampsSecondWire = double.parse(_ampsSecondWireCtrl.text);
-          _timeFormatter.calculator.ampsThirdWire = double.parse(_ampsThirdWireCtrl.text);
+          _timeFormatter.calculator.ampsFirstWire =
+              double.parse(_ampsFirstWireCtrl.text);
+          _timeFormatter.calculator.ampsSecondWire =
+              double.parse(_ampsSecondWireCtrl.text);
+          _timeFormatter.calculator.ampsThirdWire =
+              double.parse(_ampsThirdWireCtrl.text);
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -369,8 +386,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child:
-              _settings.locale.ampsFirstWire.isEmpty ? const Text('Amperage 1') : Text(_settings.locale.ampsFirstWire),
+          child: _settings.locale.ampsFirstWire.isEmpty
+              ? const Text('Amperage 1')
+              : Text(_settings.locale.ampsFirstWire),
         ),
       ),
       keyboardType: TextInputType.number,
@@ -396,10 +414,12 @@ class _HomeRouteState extends State<HomeRoute> {
             //
             // Assign a new value to the input field.
             //
-            _ampsFirstWireCtrl.text = _timeFormatter.calculator.ampsFirstWire.toString();
+            _ampsFirstWireCtrl.text =
+                _timeFormatter.calculator.ampsFirstWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -467,10 +487,12 @@ class _HomeRouteState extends State<HomeRoute> {
 
           if (_timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
             _timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
-            _ampsSecondWireCtrl.text = _timeFormatter.calculator.ampsSecondWire.toString();
+            _ampsSecondWireCtrl.text =
+                _timeFormatter.calculator.ampsSecondWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -543,10 +565,12 @@ class _HomeRouteState extends State<HomeRoute> {
 
           if (_timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
             _timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
-            _ampsThirdWireCtrl.text = _timeFormatter.calculator.ampsThirdWire.toString();
+            _ampsThirdWireCtrl.text =
+                _timeFormatter.calculator.ampsThirdWire.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -586,7 +610,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(_settings.locale.initialTemp),
+          child: _settings.locale.initialTemp.isEmpty
+              ? const Text('Initial Temp')
+              : Text(_settings.locale.initialTemp),
         ),
       ),
       /*style: const TextStyle(
@@ -604,12 +630,15 @@ class _HomeRouteState extends State<HomeRoute> {
             _timeFormatter.calculator.initialTemp = double.parse(value);
           }
 
-          if (_timeFormatter.calculator.initialTemp > _initTempLimit || _timeFormatter.calculator.initialTemp < 0) {
+          if (_timeFormatter.calculator.initialTemp > _initTempLimit ||
+              _timeFormatter.calculator.initialTemp < 0) {
             _timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
-            _initTempCtrl.text = _timeFormatter.calculator.initialTemp.toString();
+            _initTempCtrl.text =
+                _timeFormatter.calculator.initialTemp.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -635,7 +664,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.setTemp.isEmpty ? const Text('Set Temp') : Text(_settings.locale.setTemp),
+          child: _settings.locale.setTemp.isEmpty
+              ? const Text('Set Temp')
+              : Text(_settings.locale.setTemp),
         ),
       ),
       keyboardType: TextInputType.number,
@@ -669,7 +700,8 @@ class _HomeRouteState extends State<HomeRoute> {
             _setTempCtrl.text = _timeFormatter.calculator.setTemp.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();
@@ -698,7 +730,9 @@ class _HomeRouteState extends State<HomeRoute> {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: _settings.locale.volume.isEmpty ? const Text('Volume') : Text(_settings.locale.volume),
+          child: _settings.locale.volume.isEmpty
+              ? const Text('Volume')
+              : Text(_settings.locale.volume),
         ),
       ),
       keyboardType: TextInputType.number,
@@ -718,7 +752,8 @@ class _HomeRouteState extends State<HomeRoute> {
             _volumeCtrl.text = _timeFormatter.calculator.volume.toString();
           }
 
-          _timeFormatter.calculator.kWatts = _settings.coolingCoefficientCurrent;
+          _timeFormatter.calculator.kWatts =
+              _settings.coolingCoefficientCurrent;
           _timeFormatter.calculator.calculate();
 
           set();

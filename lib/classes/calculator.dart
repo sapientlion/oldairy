@@ -119,7 +119,8 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-	if (kWatts < _settings.coolingCoefficientLowerLimit || kWatts > _settings.coolingCoefficientUpperLimit) {
+    if (kWatts < _settings.coolingCoefficientLowerLimit ||
+        kWatts > _settings.coolingCoefficientUpperLimit) {
       kWatts = _settings.coolingCoefficientLowerLimit;
     }
 
