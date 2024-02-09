@@ -49,8 +49,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
 
-  bool _swaFlag = false; // Second wire availability flag.
-  bool _twaFlag = false; // Third wire availability flag.
+  bool _phaseAvailabilityFlag = false;   // Three-phase electricity switch.
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
   _HomeRouteState() {
@@ -303,11 +302,9 @@ class _HomeRouteState extends HomeRouteStateManager {
 
           if (timeFormatter.calculator.voltage >= 220 &&
               timeFormatter.calculator.voltage <= 230) {
-            _swaFlag = false;
-            _twaFlag = false;
+            _phaseAvailabilityFlag = false;
           } else {
-            _swaFlag = true;
-            _twaFlag = true;
+            _phaseAvailabilityFlag = true;
           }
 
           timeFormatter.calculator.initialTemp =
@@ -395,7 +392,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     return TextFormField(
       autocorrect: false,
       controller: ampsSecondWireCtrl,
-      decoration: !_swaFlag
+      decoration: !_phaseAvailabilityFlag
           ? InputDecoration(
               counterStyle: const TextStyle(
                 height: double.minPositive,
@@ -425,7 +422,7 @@ class _HomeRouteState extends HomeRouteStateManager {
                     : Text(settings.locale.ampsSecondWire),
               ),
             ),
-      enabled: _swaFlag,
+      enabled: _phaseAvailabilityFlag,
       keyboardType: TextInputType.number,
       maxLength: 3,
       onChanged: (value) {
@@ -456,7 +453,7 @@ class _HomeRouteState extends HomeRouteStateManager {
           extentOffset: ampsSecondWireCtrl.value.text.length,
         );
       },
-      style: !_swaFlag
+      style: !_phaseAvailabilityFlag
           ? const TextStyle(
               color: Color.fromRGBO(211, 211, 211, 0),
               //fontSize: 20,
@@ -472,7 +469,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     return TextFormField(
       autocorrect: false,
       controller: ampsThirdWireCtrl,
-      decoration: !_twaFlag
+      decoration: !_phaseAvailabilityFlag
           ? InputDecoration(
               counterStyle: const TextStyle(
                 height: double.minPositive,
@@ -502,7 +499,7 @@ class _HomeRouteState extends HomeRouteStateManager {
                     : Text(settings.locale.ampsThirdWire),
               ),
             ),
-      enabled: _twaFlag,
+      enabled: _phaseAvailabilityFlag,
       keyboardType: TextInputType.number,
       maxLength: 3,
       onChanged: (value) {
@@ -533,7 +530,7 @@ class _HomeRouteState extends HomeRouteStateManager {
           extentOffset: ampsThirdWireCtrl.value.text.length,
         );
       },
-      style: !_twaFlag
+      style: !_phaseAvailabilityFlag
           ? const TextStyle(
               color: Color.fromRGBO(211, 211, 211, 0),
               //fontSize: 20,
