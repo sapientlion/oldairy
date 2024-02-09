@@ -15,7 +15,7 @@
     "exit": "Exit",
     "general": "General",
     "language": "Language",
-    "oldStandard": "Enable 230V/380V Support",
+    "oldStandard": "Enable 220V/380V Support",
     "defaults": "Defaults",
     "apply": "Apply"
 }
