@@ -35,6 +35,7 @@ class SettingsRoute extends StatefulWidget {
 }
 
 class _SettingsRouteState extends State<SettingsRoute> {
+  final double _edgeInsetsSize = 30.0;
   final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
   final TextEditingController _coefficientCtrl = TextEditingController();
   final List<String> _locales = <String>[
@@ -147,6 +148,30 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
+  void onWattsFieldChange(String value)
+  {
+    setState(() {
+      if (double.tryParse(value) == null) {
+        _settings.coolingCoefficientCurrent =
+            _settings.coolingCoefficientLowerLimit;
+      } else {
+        double temporaryValue = double.tryParse(value)!;
+
+        if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
+            temporaryValue > _settings.coolingCoefficientUpperLimit) {
+          _coolingCoefficientLimitFlag = false;
+        } else {
+          _coolingCoefficientLimitFlag = true;
+        }
+
+        _settings.coolingCoefficientCurrent =
+            double.parse(_coefficientCtrl.text);
+      }
+    });
+
+    return;
+  }
+
   //
   // Get cooling coefficient field.
   //
@@ -167,24 +192,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
       keyboardType: TextInputType.number,
       maxLength: 5,
       onChanged: (value) {
-        setState(() {
-          if (double.tryParse(value) == null) {
-            _settings.coolingCoefficientCurrent =
-                _settings.coolingCoefficientLowerLimit;
-          } else {
-            double temporaryValue = double.tryParse(value)!;
-
-            if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
-                temporaryValue > _settings.coolingCoefficientUpperLimit) {
-              _coolingCoefficientLimitFlag = false;
-            } else {
-              _coolingCoefficientLimitFlag = true;
-            }
-
-            _settings.coolingCoefficientCurrent =
-                double.parse(_coefficientCtrl.text);
-          }
-        });
+        onWattsFieldChange(value);
       },
       onTap: () {
         _coefficientCtrl.selection = TextSelection(
@@ -338,7 +346,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
         child: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(_edgeInsetsSize),
               child: _settings.locale.general.isEmpty
                   ? const Text(
                       'General',
@@ -356,23 +364,23 @@ class _SettingsRouteState extends State<SettingsRoute> {
                     ),
             ),
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(_edgeInsetsSize),
               child: getLanguageChanger(),
             ),
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(_edgeInsetsSize),
               child: getPrecisionCheckbox(),
             ),
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(_edgeInsetsSize),
               child: getRoundingCheckbox(),
             ),
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(_edgeInsetsSize),
               child: getStandardCheckbox(),
             ),
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(_edgeInsetsSize),
               child: SizedBox(
                 width: 128,
                 child: getWattsField(),
