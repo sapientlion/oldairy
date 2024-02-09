@@ -26,10 +26,9 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:oldairy/classes/locale.dart';
-import 'package:oldairy/interfaces/isettings.dart';
 import 'package:path_provider/path_provider.dart';
 
-class Settings implements ISettings {
+class Settings {
   bool osFlag = false; // Old standard support flag.
   bool pFlag = false; // Precision flag.
   bool rFlag = false; // Time rounding flag.
@@ -75,7 +74,6 @@ class Settings implements ISettings {
     return File('$path/settings.json');
   }
 
-  @override
   Map<String, dynamic> toJson() => {
         'isOldStandardEnabled': osFlag,
         'isTimeRoundingEnabled': rFlag,
@@ -85,7 +83,6 @@ class Settings implements ISettings {
         'localeFile': localeName,
       };
 
-  @override
   Future<File> write(Settings settings) async {
     final file = await _settingsFile;
 
@@ -97,7 +94,6 @@ class Settings implements ISettings {
     return file.writeAsString(encodedSettings);
   }
 
-  @override
   Future<String> read() async {
     try {
       final file = await _settingsFile;

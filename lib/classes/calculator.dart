@@ -37,9 +37,8 @@
 import 'dart:math';
 
 import 'package:oldairy/classes/settings.dart';
-import 'package:oldairy/interfaces/icalculator.dart';
 
-class Calculator implements ICalculator {
+class Calculator {
   final int _ampsLimits = 125;
   final Settings _settings = Settings();
 
@@ -65,12 +64,10 @@ class Calculator implements ICalculator {
     this.kWatts = 0.350,
   });
 
-  @override
   double get() {
     return _coolingTime;
   }
 
-  @override
   double calculateLow() {
     if (voltage < 220 || voltage > 230) {
       return _coolingTime = 0.0;
@@ -79,7 +76,6 @@ class Calculator implements ICalculator {
     return _coolingTime /= ampsFirstWire;
   }
 
-  @override
   double calculateHigh() {
     if (voltage < 380 || voltage > 400) {
       return _coolingTime = 0.0;
@@ -107,7 +103,6 @@ class Calculator implements ICalculator {
     return _coolingTime /= combinedAmperage;
   }
 
-  @override
   double calculate() {
     _coolingTime = initialTemp - setTemp;
 

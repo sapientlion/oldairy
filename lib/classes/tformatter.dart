@@ -21,11 +21,9 @@
 
 */
 
-import 'package:oldairy/interfaces/itformatter.dart';
-
 import 'calculator.dart';
 
-class TimeFormatter implements ITimeFormatter {
+class TimeFormatter {
   final int _minutesInOneHour = 60;
 
   int _cTimeHours = 0;
@@ -50,7 +48,6 @@ class TimeFormatter implements ITimeFormatter {
     _cTime = calculator.get();
   }
 
-  @override
   int getFraction(String value) {
     if (value.isEmpty) {
       return 0;
@@ -78,7 +75,6 @@ class TimeFormatter implements ITimeFormatter {
     return int.parse(resValue);
   }
 
-  @override
   double get(bool rFlag) {
     if (_cTime <= 0) {
       return _cTime;
@@ -91,14 +87,12 @@ class TimeFormatter implements ITimeFormatter {
     return _cTime;
   }
 
-  @override
   int getHours() {
     _cTime = calculator.get();
 
     return _cTimeHours = _cTime.toInt();
   }
 
-  @override
   int getMinutes({
     bool rFlag = true, // Time rounding flag.
     bool pFlag = true, // Precision flag.
