@@ -46,7 +46,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   final int _ampsLimit = 125;
   final double _tempOutputFontSize = 25;
   final double _absoluteZero = -273.15;
-  final double _setTempLimit = -273.15;
+  final double _setTempLimit = -50.0;
   final double _fieldWidth = 125.0;
   final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
 
@@ -367,9 +367,14 @@ class _HomeRouteState extends HomeRouteStateManager {
         ),
       ),
       keyboardType: TextInputType.number,
-      maxLength: 3,
       onChanged: (value) {
         onFirstWireFieldChange(value);
+
+        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsFirstWireCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         ampsFirstWireCtrl.selection = TextSelection(
@@ -433,9 +438,14 @@ class _HomeRouteState extends HomeRouteStateManager {
       ),
       enabled: _phaseAvailabilityFlag,
       keyboardType: TextInputType.number,
-      maxLength: 3,
       onChanged: (value) {
         onSecondWireFieldChange(value);
+
+        ampsSecondWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsSecondWireCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         ampsSecondWireCtrl.selection = TextSelection(
@@ -495,9 +505,14 @@ class _HomeRouteState extends HomeRouteStateManager {
       ),
       enabled: _phaseAvailabilityFlag,
       keyboardType: TextInputType.number,
-      maxLength: 3,
       onChanged: (value) {
         onThirdWireChange(value);
+
+        ampsThirdWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsThirdWireCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         ampsThirdWireCtrl.selection = TextSelection(
@@ -556,9 +571,14 @@ class _HomeRouteState extends HomeRouteStateManager {
         fontSize: 20,
       ),*/
       keyboardType: TextInputType.number,
-      maxLength: 8,
       onChanged: (value) {
         onInitTempFieldChange(value);
+
+        initTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: initTempCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         initTempCtrl.selection = TextSelection(
@@ -593,10 +613,11 @@ class _HomeRouteState extends HomeRouteStateManager {
         });
       }
 
-      if (!_azFlag && timeFormatter.calculator.setTemp <= _setTempLimit ||
-          timeFormatter.calculator.setTemp > _initTempLimit) {
-        timeFormatter.calculator.setTemp = -50.0;
-        setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+      if (!_azFlag) {
+        if (timeFormatter.calculator.setTemp < _setTempLimit || timeFormatter.calculator.setTemp > _initTempLimit) {
+          timeFormatter.calculator.setTemp = _setTempLimit;
+          setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+        }
       }
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
@@ -622,9 +643,14 @@ class _HomeRouteState extends HomeRouteStateManager {
         ),
       ),
       keyboardType: TextInputType.number,
-      maxLength: 8,
       onChanged: (value) {
         onSetTempFieldChange(value);
+
+        setTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: setTempCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         setTempCtrl.selection = TextSelection(
@@ -677,9 +703,14 @@ class _HomeRouteState extends HomeRouteStateManager {
         ),
       ),
       keyboardType: TextInputType.number,
-      maxLength: 5,
       onChanged: (value) {
         onVolumeFieldChange(value);
+
+        volumeCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: volumeCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         volumeCtrl.selection = TextSelection(
