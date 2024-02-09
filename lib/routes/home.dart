@@ -26,7 +26,6 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:oldairy/classes/locale.dart';
 
 import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/home_manager.dart';
@@ -42,15 +41,16 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends HomeRouteStateManager {
-  bool _azFlag = false; // Absolute zero flag.
   final int _initTempLimit = 50;
   final int _volumeLimit = 30000;
   final int _ampsLimit = 125;
-
+  final double _tempOutputFontSize = 25;
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
+  final double _fieldWidth = 125.0;
   final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
 
+  bool _azFlag = false; // Absolute zero flag.
   bool _phaseAvailabilityFlag = false; // Three-phase electricity switch.
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
@@ -200,30 +200,30 @@ class _HomeRouteState extends HomeRouteStateManager {
         settings.locale.hours.isEmpty
             ? Text(
                 '$coolingTimeHours h. ',
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: _tempOutputFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ) // Trailing space is intentional. Do not remove!
             : Text(
                 '$coolingTimeHours ${settings.locale.hours}',
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: _tempOutputFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
         settings.locale.minutes.isEmpty
             ? Text(
                 '$coolingTimeMinutes m.',
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: _tempOutputFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               )
             : Text(
                 '$coolingTimeMinutes ${settings.locale.minutes}',
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: _tempOutputFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -231,10 +231,10 @@ class _HomeRouteState extends HomeRouteStateManager {
         // Nothing to see here...
         //
         _azFlag && settings.osFlag
-            ? const Text(
+            ? Text(
                 '\u{1f480}',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: _tempOutputFontSize,
                 ),
               )
             : const Text(''),
@@ -258,8 +258,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onVoltageDropdownSelection(int? value)
-  {
+  void onVoltageDropdownSelection(int? value) {
     setState(() {
       dropdownValue = value!;
       timeFormatter.calculator.voltage = value.toDouble();
@@ -271,8 +270,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         _phaseAvailabilityFlag = true;
       }
 
-      timeFormatter.calculator.initialTemp =
-          double.parse(initTempCtrl.text);
+      timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
       timeFormatter.calculator.setTemp = double.parse(setTempCtrl.text);
       timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
       timeFormatter.calculator.ampsFirstWire =
@@ -336,8 +334,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onFirstWireFieldChange(String value)
-  {
+  void onFirstWireFieldChange(String value) {
     setState(() {
       ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
 
@@ -404,8 +401,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onSecondWireFieldChange(String value)
-  {
+  void onSecondWireFieldChange(String value) {
     setState(() {
       ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
 
@@ -470,8 +466,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onThirdWireChange(String value)
-  {
+  void onThirdWireChange(String value) {
     setState(() {
       ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
 
@@ -536,8 +531,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onInitTempFieldChange(String value)
-  {
+  void onInitTempFieldChange(String value) {
     setState(() {
       initTempCtrl = reset(initTempCtrl);
 
@@ -601,8 +595,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onSetTempFieldChange(String value)
-  {
+  void onSetTempFieldChange(String value) {
     setState(() {
       setTempCtrl = reset(setTempCtrl);
 
@@ -673,8 +666,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onVolumeFieldChange(String value)
-  {
+  void onVolumeFieldChange(String value) {
     setState(() {
       volumeCtrl = reset(volumeCtrl);
 
@@ -810,31 +802,31 @@ class _HomeRouteState extends HomeRouteStateManager {
                         spacing: 32,
                         children: [
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getVoltageDropdown(),
                           ),
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getFirstWireField(),
                           ),
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getSecondWireField(),
                           ),
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getThirdWireField(),
                           ),
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getInitTempField(),
                           ),
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getSetTempField(),
                           ),
                           SizedBox(
-                            width: 128,
+                            width: _fieldWidth,
                             child: getVolumeField(),
                           ),
                         ],
