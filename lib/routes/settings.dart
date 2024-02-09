@@ -148,8 +148,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  void onWattsFieldChange(String value)
-  {
+  void onWattsFieldChange(String value) {
     setState(() {
       if (double.tryParse(value) == null) {
         _settings.coolingCoefficientCurrent =
@@ -255,7 +254,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   //
   BottomAppBar getControlPanel(BuildContext context) {
     return BottomAppBar(
-      color: Colors.transparent,
+      color: Colors.green,
       padding: const EdgeInsets.all(16.0),
       shadowColor: Colors.transparent,
       child: Row(
@@ -264,6 +263,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
           SizedBox(
             width: 128,
             child: FloatingActionButton.extended(
+              backgroundColor: Colors.greenAccent,
+              foregroundColor: Colors.black,
               heroTag: null,
               onPressed: () {
                 setState(() {
@@ -291,6 +292,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
           SizedBox(
             width: 128,
             child: FloatingActionButton.extended(
+              backgroundColor: Colors.greenAccent,
+              foregroundColor: Colors.black,
               heroTag: null,
               onPressed: () {
                 if (!_coolingCoefficientLimitFlag) {
