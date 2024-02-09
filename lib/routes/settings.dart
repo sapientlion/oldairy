@@ -262,7 +262,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   _settings.osFlag = false;
                   _settings.pFlag = false;
                   _settings.rFlag = false;
-                  _settings.coolingCoefficientCurrent = 0.350;
+                  _settings.coolingCoefficientCurrent =
+                      _settings.coolingCoefficientLowerLimit;
                   _settings.localeCurrent = _dropdownValue = _locales.first;
 
                   _coolingCoefficientLimitFlag = true;

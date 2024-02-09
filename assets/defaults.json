@@ -1,5 +1,5 @@
 {
-    "coolingCoefficientLowerLimit": "0.350",
+    "coolingCoefficientLowerLimit": "0.2",
     "coolingCoefficientUpperLimit": "2.0",
     "packageVersion": "1.0.4"
 }
