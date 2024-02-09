@@ -258,6 +258,39 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
+  void onVoltageDropdownSelection(int? value)
+  {
+    setState(() {
+      dropdownValue = value!;
+      timeFormatter.calculator.voltage = value.toDouble();
+
+      if (timeFormatter.calculator.voltage >= 220 &&
+          timeFormatter.calculator.voltage <= 230) {
+        _phaseAvailabilityFlag = false;
+      } else {
+        _phaseAvailabilityFlag = true;
+      }
+
+      timeFormatter.calculator.initialTemp =
+          double.parse(initTempCtrl.text);
+      timeFormatter.calculator.setTemp = double.parse(setTempCtrl.text);
+      timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
+      timeFormatter.calculator.ampsFirstWire =
+          double.parse(ampsFirstWireCtrl.text);
+      timeFormatter.calculator.ampsSecondWire =
+          double.parse(ampsSecondWireCtrl.text);
+      timeFormatter.calculator.ampsThirdWire =
+          double.parse(ampsThirdWireCtrl.text);
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
   DropdownButtonFormField<int> getVoltageDropdown() {
     //
     // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
@@ -298,35 +331,44 @@ class _HomeRouteState extends HomeRouteStateManager {
         //
         // This is called when the user selects an item.
         //
-        setState(() {
-          dropdownValue = value!;
-          timeFormatter.calculator.voltage = value.toDouble();
-
-          if (timeFormatter.calculator.voltage >= 220 &&
-              timeFormatter.calculator.voltage <= 230) {
-            _phaseAvailabilityFlag = false;
-          } else {
-            _phaseAvailabilityFlag = true;
-          }
-
-          timeFormatter.calculator.initialTemp =
-              double.parse(initTempCtrl.text);
-          timeFormatter.calculator.setTemp = double.parse(setTempCtrl.text);
-          timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
-          timeFormatter.calculator.ampsFirstWire =
-              double.parse(ampsFirstWireCtrl.text);
-          timeFormatter.calculator.ampsSecondWire =
-              double.parse(ampsSecondWireCtrl.text);
-          timeFormatter.calculator.ampsThirdWire =
-              double.parse(ampsThirdWireCtrl.text);
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onVoltageDropdownSelection(value);
       },
     );
+  }
+
+  void onFirstWireFieldChange(String value)
+  {
+    setState(() {
+      ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
+
+      //
+      // Input field can't be empty. Prevent that by doing the following.
+      //
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.ampsFirstWire = initValue;
+      } else {
+        timeFormatter.calculator.ampsFirstWire = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
+        //
+        // Set member value to pre-defined amperage limit.
+        //
+        timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
+        //
+        // Assign a new value to the input field.
+        //
+        ampsFirstWireCtrl.text =
+            timeFormatter.calculator.ampsFirstWire.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 
   TextFormField getFirstWireField() {
@@ -347,35 +389,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       keyboardType: TextInputType.number,
       maxLength: 3,
       onChanged: (value) {
-        setState(() {
-          ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
-
-          //
-          // Input field can't be empty. Prevent that by doing the following.
-          //
-          if (double.tryParse(value) == null) {
-            timeFormatter.calculator.ampsFirstWire = initValue;
-          } else {
-            timeFormatter.calculator.ampsFirstWire = double.parse(value);
-          }
-
-          if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
-            //
-            // Set member value to pre-defined amperage limit.
-            //
-            timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
-            //
-            // Assign a new value to the input field.
-            //
-            ampsFirstWireCtrl.text =
-                timeFormatter.calculator.ampsFirstWire.toString();
-          }
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onFirstWireFieldChange(value);
       },
       onTap: () {
         ampsFirstWireCtrl.selection = TextSelection(
@@ -388,6 +402,32 @@ class _HomeRouteState extends HomeRouteStateManager {
       ),*/
       textAlign: TextAlign.center,
     );
+  }
+
+  void onSecondWireFieldChange(String value)
+  {
+    setState(() {
+      ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.ampsSecondWire = initValue;
+      } else {
+        timeFormatter.calculator.ampsSecondWire = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
+        timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
+        ampsSecondWireCtrl.text =
+            timeFormatter.calculator.ampsSecondWire.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 
   TextFormField? getSecondWireField() {
@@ -418,26 +458,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       keyboardType: TextInputType.number,
       maxLength: 3,
       onChanged: (value) {
-        setState(() {
-          ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
-
-          if (double.tryParse(value) == null) {
-            timeFormatter.calculator.ampsSecondWire = initValue;
-          } else {
-            timeFormatter.calculator.ampsSecondWire = double.parse(value);
-          }
-
-          if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
-            timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
-            ampsSecondWireCtrl.text =
-                timeFormatter.calculator.ampsSecondWire.toString();
-          }
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onSecondWireFieldChange(value);
       },
       onTap: () {
         ampsSecondWireCtrl.selection = TextSelection(
@@ -447,6 +468,32 @@ class _HomeRouteState extends HomeRouteStateManager {
       },
       textAlign: TextAlign.center,
     );
+  }
+
+  void onThirdWireChange(String value)
+  {
+    setState(() {
+      ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.ampsThirdWire = initValue;
+      } else {
+        timeFormatter.calculator.ampsThirdWire = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
+        timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
+        ampsThirdWireCtrl.text =
+            timeFormatter.calculator.ampsThirdWire.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 
   TextFormField? getThirdWireField() {
@@ -477,26 +524,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       keyboardType: TextInputType.number,
       maxLength: 3,
       onChanged: (value) {
-        setState(() {
-          ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
-
-          if (double.tryParse(value) == null) {
-            timeFormatter.calculator.ampsThirdWire = initValue;
-          } else {
-            timeFormatter.calculator.ampsThirdWire = double.parse(value);
-          }
-
-          if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
-            timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
-            ampsThirdWireCtrl.text =
-                timeFormatter.calculator.ampsThirdWire.toString();
-          }
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onThirdWireChange(value);
       },
       onTap: () {
         ampsThirdWireCtrl.selection = TextSelection(
@@ -506,6 +534,32 @@ class _HomeRouteState extends HomeRouteStateManager {
       },
       textAlign: TextAlign.center,
     );
+  }
+
+  void onInitTempFieldChange(String value)
+  {
+    setState(() {
+      initTempCtrl = reset(initTempCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.initialTemp = initValue;
+      } else {
+        timeFormatter.calculator.initialTemp = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.initialTemp > _initTempLimit ||
+          timeFormatter.calculator.initialTemp < 0) {
+        timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
+        initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 
   TextFormField getInitTempField() {
@@ -535,26 +589,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       keyboardType: TextInputType.number,
       maxLength: 8,
       onChanged: (value) {
-        setState(() {
-          initTempCtrl = reset(initTempCtrl);
-
-          if (double.tryParse(value) == null) {
-            timeFormatter.calculator.initialTemp = initValue;
-          } else {
-            timeFormatter.calculator.initialTemp = double.parse(value);
-          }
-
-          if (timeFormatter.calculator.initialTemp > _initTempLimit ||
-              timeFormatter.calculator.initialTemp < 0) {
-            timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
-            initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
-          }
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onInitTempFieldChange(value);
       },
       onTap: () {
         initTempCtrl.selection = TextSelection(
@@ -564,6 +599,45 @@ class _HomeRouteState extends HomeRouteStateManager {
       },
       textAlign: TextAlign.center,
     );
+  }
+
+  void onSetTempFieldChange(String value)
+  {
+    setState(() {
+      setTempCtrl = reset(setTempCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.setTemp = initValue;
+      } else {
+        timeFormatter.calculator.setTemp = double.parse(value);
+      }
+
+      //
+      // Check whether set temperature is equal to an absolute zero.
+      //
+      if (timeFormatter.calculator.setTemp == _absoluteZero) {
+        setState(() {
+          _azFlag = true;
+        });
+      } else {
+        setState(() {
+          _azFlag = false;
+        });
+      }
+
+      if (!_azFlag && timeFormatter.calculator.setTemp <= _setTempLimit ||
+          timeFormatter.calculator.setTemp > _initTempLimit) {
+        timeFormatter.calculator.setTemp = -50.0;
+        setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 
   TextFormField getSetTempField() {
@@ -584,39 +658,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       keyboardType: TextInputType.number,
       maxLength: 8,
       onChanged: (value) {
-        setState(() {
-          setTempCtrl = reset(setTempCtrl);
-
-          if (double.tryParse(value) == null) {
-            timeFormatter.calculator.setTemp = initValue;
-          } else {
-            timeFormatter.calculator.setTemp = double.parse(value);
-          }
-
-          //
-          // Check whether set temperature is equal to an absolute zero.
-          //
-          if (timeFormatter.calculator.setTemp == _absoluteZero) {
-            setState(() {
-              _azFlag = true;
-            });
-          } else {
-            setState(() {
-              _azFlag = false;
-            });
-          }
-
-          if (!_azFlag && timeFormatter.calculator.setTemp <= _setTempLimit ||
-              timeFormatter.calculator.setTemp > _initTempLimit) {
-            timeFormatter.calculator.setTemp = -50.0;
-            setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
-          }
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onSetTempFieldChange(value);
       },
       onTap: () {
         setTempCtrl.selection = TextSelection(
@@ -629,6 +671,31 @@ class _HomeRouteState extends HomeRouteStateManager {
       ),*/
       textAlign: TextAlign.center,
     );
+  }
+
+  void onVolumeFieldChange(String value)
+  {
+    setState(() {
+      volumeCtrl = reset(volumeCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.volume = initValue;
+      } else {
+        timeFormatter.calculator.volume = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.volume > _volumeLimit) {
+        timeFormatter.calculator.volume = _volumeLimit.toDouble();
+        volumeCtrl.text = timeFormatter.calculator.volume.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 
   TextFormField getVolumeField() {
@@ -649,25 +716,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       keyboardType: TextInputType.number,
       maxLength: 5,
       onChanged: (value) {
-        setState(() {
-          volumeCtrl = reset(volumeCtrl);
-
-          if (double.tryParse(value) == null) {
-            timeFormatter.calculator.volume = initValue;
-          } else {
-            timeFormatter.calculator.volume = double.parse(value);
-          }
-
-          if (timeFormatter.calculator.volume > _volumeLimit) {
-            timeFormatter.calculator.volume = _volumeLimit.toDouble();
-            volumeCtrl.text = timeFormatter.calculator.volume.toString();
-          }
-
-          timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-          timeFormatter.calculator.calculate();
-
-          set();
-        });
+        onVolumeFieldChange(value);
       },
       onTap: () {
         volumeCtrl.selection = TextSelection(
