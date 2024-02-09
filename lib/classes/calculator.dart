@@ -1,7 +1,7 @@
 /*
 
     Oldairy - a simple calculator for finding out the approximate
-	cooling time of a typical industrial-sized milk tank.
+	  cooling time of a typical industrial-sized milk tank.
     Copyright (C) 2023  Leo "SapientLion" Markoff
 
     This program is free software: you can redistribute it and/or modify
@@ -17,20 +17,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-	Description: the main component of the app - the calculator. It
-	utilizes the following formula for achieving the desirable results:
+	  Description: the main component of the app - the calculator. It
+	  utilizes the following formula for achieving the desirable results:
 
-	tcooling = (((0.685 x (tinitial - tset)) x Vtank) / U) / I.
+	  tcooling = (((0.685 x (tinitial - tset)) x Vtank) / U) / I.
 
-	The included constant is used for the cow/goat milk only. In theory,
-	it can be used for similar substances as well.
+	  The included constant is used for the cow/goat milk only. In theory,
+	  it can be used for similar substances as well.
 
-	It's not a precise number and it will never be like that. It is
-	completely dependent on the current state of equipment and environmental
-	factors such as temperature and air pressure. What is used here is the
-	optimal number for such formula which was found out by pure observation
-	during the series of practices in the field (milk tank service and
-	maintenance).
+	  It's not a precise number and it will never be like that. It is
+	  completely dependent on the current state of equipment and environmental
+	  factors such as temperature and air pressure. What is used here is the
+	  optimal number for such formula which was found out by pure observation
+	  during the series of practices in the field (milk tank service and
+	  maintenance).
 
 */
 
@@ -119,8 +119,7 @@ class Calculator implements ICalculator {
       return _coolingTime = 0.0;
     }
 
-    if (kWatts < _settings.coolingCoefficientLowerLimit ||
-        kWatts > _settings.coolingCoefficientUpperLimit) {
+    if (kWatts < _settings.coolingCoefficientLowerLimit || kWatts > _settings.coolingCoefficientUpperLimit) {
       kWatts = _settings.coolingCoefficientLowerLimit;
     }
 

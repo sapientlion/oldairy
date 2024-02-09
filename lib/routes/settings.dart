@@ -1,7 +1,7 @@
 /*
 
     Oldairy - a simple calculator for finding out the approximate
-	cooling time of a typical industrial-sized milk tank.
+	  cooling time of a typical industrial-sized milk tank.
     Copyright (C) 2023  Leo "SapientLion" Markoff
 
     This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-	Description: settings route.
+	  Description: settings route.
 
 */
 
@@ -56,9 +56,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     return DropdownButtonFormField<String>(
       key: _dropdownKey,
       decoration: InputDecoration(
-        label: _settings.locale.language.isEmpty
-            ? const Text('Language')
-            : Text(_settings.locale.language),
+        label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
         /*labelStyle: const TextStyle(
                   fontSize: 20,
                 ),*/
@@ -151,8 +149,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   void onWattsFieldChange(String value) {
     setState(() {
       if (double.tryParse(value) == null) {
-        _settings.coolingCoefficientCurrent =
-            _settings.coolingCoefficientLowerLimit;
+        _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
       } else {
         double temporaryValue = double.tryParse(value)!;
 
@@ -163,8 +160,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           _coolingCoefficientLimitFlag = true;
         }
 
-        _settings.coolingCoefficientCurrent =
-            double.parse(_coefficientCtrl.text);
+        _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
       }
     });
 
@@ -213,10 +209,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
   // TODO use this feature for other options as well.
   //
   Future<void> getAlertBox() async {
-    double coolingCoefficientLowerLimit =
-        _settings.coolingCoefficientLowerLimit;
-    double coolingCoefficientUpperLimit =
-        _settings.coolingCoefficientUpperLimit;
+    double coolingCoefficientLowerLimit = _settings.coolingCoefficientLowerLimit;
+    double coolingCoefficientUpperLimit = _settings.coolingCoefficientUpperLimit;
 
     return showDialog<void>(
       context: context,
@@ -227,10 +221,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                const Text(
-                    'Given cooling coefficient value has either underceeded or exceeded the limits.\n'),
-                Text(
-                    'The value must be between $coolingCoefficientLowerLimit and $coolingCoefficientUpperLimit.'),
+                const Text('Given cooling coefficient value has either underceeded or exceeded the limits.\n'),
+                Text('The value must be between $coolingCoefficientLowerLimit and $coolingCoefficientUpperLimit.'),
               ],
             ),
           ),
@@ -271,19 +263,15 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   _settings.osFlag = false;
                   _settings.pFlag = false;
                   _settings.rFlag = false;
-                  _settings.coolingCoefficientCurrent =
-                      _settings.coolingCoefficientLowerLimit;
+                  _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
                   _settings.localeCurrent = _dropdownValue = _locales.first;
 
                   _coolingCoefficientLimitFlag = true;
-                  _coefficientCtrl.text =
-                      _settings.coolingCoefficientCurrent.toString();
+                  _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
                   _dropdownKey.currentState!.reset();
                 });
               },
-              label: _settings.locale.defaults.isEmpty
-                  ? const Text('Defaults')
-                  : Text(_settings.locale.defaults),
+              label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
             ),
           ),
           //
@@ -307,9 +295,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
                 return;
               },
-              label: _settings.locale.apply.isEmpty
-                  ? const Text('Apply')
-                  : Text(_settings.locale.apply),
+              label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
             ),
           ),
         ],
@@ -323,8 +309,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
     setState(() {
       _settings = widget.settings;
-      _coefficientCtrl.text =
-          widget.settings.coolingCoefficientCurrent.toString();
+      _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
       _dropdownValue = widget.settings.localeCurrent;
     });
   }

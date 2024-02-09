@@ -1,23 +1,23 @@
 /*
 
-  Oldairy - a simple calculator for finding out the approximate
-  cooling time of a typical industrial-sized milk tank.
-  Copyright (C) 2023  Leo "SapientLion" Markoff
+    Oldairy - a simple calculator for finding out the approximate
+	  cooling time of a typical industrial-sized milk tank.
+    Copyright (C) 2023  Leo "SapientLion" Markoff
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-	Description: the home route.
+    Description: the home route.
 
 */
 
@@ -170,21 +170,15 @@ class _HomeRouteState extends HomeRouteStateManager {
         return [
           PopupMenuItem<int>(
             value: 1,
-            child: settings.locale.settings.isEmpty
-                ? const Text("Settings")
-                : Text(settings.locale.settings),
+            child: settings.locale.settings.isEmpty ? const Text("Settings") : Text(settings.locale.settings),
           ),
           PopupMenuItem<int>(
             value: 2,
-            child: settings.locale.about.isEmpty
-                ? const Text("About")
-                : Text(settings.locale.about),
+            child: settings.locale.about.isEmpty ? const Text("About") : Text(settings.locale.about),
           ),
           PopupMenuItem<int>(
             value: 3,
-            child: settings.locale.exit.isEmpty
-                ? const Text("Exit")
-                : Text(settings.locale.exit),
+            child: settings.locale.exit.isEmpty ? const Text("Exit") : Text(settings.locale.exit),
           ),
         ];
       },
@@ -252,9 +246,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         purge(timeFormatter.calculator);
       },
-      label: settings.locale.clearAll.isEmpty
-          ? const Text('Clear All')
-          : Text(settings.locale.clearAll),
+      label: settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(settings.locale.clearAll),
     );
   }
 
@@ -263,8 +255,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       dropdownValue = value!;
       timeFormatter.calculator.voltage = value.toDouble();
 
-      if (timeFormatter.calculator.voltage >= 220 &&
-          timeFormatter.calculator.voltage <= 230) {
+      if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
         _phaseAvailabilityFlag = false;
       } else {
         _phaseAvailabilityFlag = true;
@@ -273,12 +264,9 @@ class _HomeRouteState extends HomeRouteStateManager {
       timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
       timeFormatter.calculator.setTemp = double.parse(setTempCtrl.text);
       timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
-      timeFormatter.calculator.ampsFirstWire =
-          double.parse(ampsFirstWireCtrl.text);
-      timeFormatter.calculator.ampsSecondWire =
-          double.parse(ampsSecondWireCtrl.text);
-      timeFormatter.calculator.ampsThirdWire =
-          double.parse(ampsThirdWireCtrl.text);
+      timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
+      timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
+      timeFormatter.calculator.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
       timeFormatter.calculator.calculate();
@@ -306,9 +294,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.voltage.isEmpty
-              ? const Text('Voltage')
-              : Text(settings.locale.voltage),
+          child: settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(settings.locale.voltage),
         ),
         /*labelStyle: const TextStyle(
           fontSize: 20,
@@ -355,8 +341,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         //
         // Assign a new value to the input field.
         //
-        ampsFirstWireCtrl.text =
-            timeFormatter.calculator.ampsFirstWire.toString();
+        ampsFirstWireCtrl.text = timeFormatter.calculator.ampsFirstWire.toString();
       }
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
@@ -378,9 +363,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.ampsFirstWire.isEmpty
-              ? const Text('Amperage 1')
-              : Text(settings.locale.ampsFirstWire),
+          child: settings.locale.ampsFirstWire.isEmpty ? const Text('Amperage 1') : Text(settings.locale.ampsFirstWire),
         ),
       ),
       keyboardType: TextInputType.number,
@@ -413,8 +396,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
       if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
         timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
-        ampsSecondWireCtrl.text =
-            timeFormatter.calculator.ampsSecondWire.toString();
+        ampsSecondWireCtrl.text = timeFormatter.calculator.ampsSecondWire.toString();
       }
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
@@ -442,9 +424,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.ampsSecondWire.isEmpty
-              ? const Text('Amperage 2')
-              : Text(settings.locale.ampsSecondWire),
+          child:
+              settings.locale.ampsSecondWire.isEmpty ? const Text('Amperage 2') : Text(settings.locale.ampsSecondWire),
         ),
         labelStyle: TextStyle(
           color: _fontColor,
@@ -478,8 +459,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
       if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
         timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
-        ampsThirdWireCtrl.text =
-            timeFormatter.calculator.ampsThirdWire.toString();
+        ampsThirdWireCtrl.text = timeFormatter.calculator.ampsThirdWire.toString();
       }
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
@@ -507,9 +487,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.ampsThirdWire.isEmpty
-              ? const Text('Amperage 3')
-              : Text(settings.locale.ampsThirdWire),
+          child: settings.locale.ampsThirdWire.isEmpty ? const Text('Amperage 3') : Text(settings.locale.ampsThirdWire),
         ),
         labelStyle: TextStyle(
           color: _fontColor,
@@ -541,8 +519,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         timeFormatter.calculator.initialTemp = double.parse(value);
       }
 
-      if (timeFormatter.calculator.initialTemp > _initTempLimit ||
-          timeFormatter.calculator.initialTemp < 0) {
+      if (timeFormatter.calculator.initialTemp > _initTempLimit || timeFormatter.calculator.initialTemp < 0) {
         timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
         initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
       }
@@ -572,9 +549,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.initialTemp.isEmpty
-              ? const Text('Initial Temp')
-              : Text(settings.locale.initialTemp),
+          child: settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(settings.locale.initialTemp),
         ),
       ),
       /*style: const TextStyle(
@@ -643,9 +618,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.setTemp.isEmpty
-              ? const Text('Set Temp')
-              : Text(settings.locale.setTemp),
+          child: settings.locale.setTemp.isEmpty ? const Text('Set Temp') : Text(settings.locale.setTemp),
         ),
       ),
       keyboardType: TextInputType.number,
@@ -700,9 +673,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         filled: true,
         fillColor: const Color.fromRGBO(211, 211, 211, 1),
         label: Center(
-          child: settings.locale.volume.isEmpty
-              ? const Text('Volume')
-              : Text(settings.locale.volume),
+          child: settings.locale.volume.isEmpty ? const Text('Volume') : Text(settings.locale.volume),
         ),
       ),
       keyboardType: TextInputType.number,
