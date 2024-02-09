@@ -26,6 +26,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:oldairy/classes/locale.dart';
 
 import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/home_manager.dart';
@@ -48,8 +49,9 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -273.15;
+  final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
 
-  bool _phaseAvailabilityFlag = false;   // Three-phase electricity switch.
+  bool _phaseAvailabilityFlag = false; // Three-phase electricity switch.
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
   _HomeRouteState() {
@@ -388,40 +390,30 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  TextFormField getSecondWireField() {
+  TextFormField? getSecondWireField() {
+    if (!_phaseAvailabilityFlag) {
+      return null;
+    }
+
     return TextFormField(
       autocorrect: false,
       controller: ampsSecondWireCtrl,
-      decoration: !_phaseAvailabilityFlag
-          ? InputDecoration(
-              counterStyle: const TextStyle(
-                height: double.minPositive,
-              ),
-              counterText: '',
-              filled: true,
-              fillColor: const Color.fromRGBO(211, 211, 211, 0),
-              label: Center(
-                child: settings.locale.ampsSecondWire.isEmpty
-                    ? const Text('Amperage 2')
-                    : Text(settings.locale.ampsSecondWire),
-              ),
-              labelStyle: const TextStyle(
-                color: Color.fromRGBO(211, 211, 211, 0),
-              ),
-            )
-          : InputDecoration(
-              counterStyle: const TextStyle(
-                height: double.minPositive,
-              ),
-              counterText: '',
-              filled: true,
-              fillColor: const Color.fromRGBO(211, 211, 211, 1),
-              label: Center(
-                child: settings.locale.ampsSecondWire.isEmpty
-                    ? const Text('Amperage 2')
-                    : Text(settings.locale.ampsSecondWire),
-              ),
-            ),
+      decoration: InputDecoration(
+        counterStyle: const TextStyle(
+          height: double.minPositive,
+        ),
+        counterText: '',
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child: settings.locale.ampsSecondWire.isEmpty
+              ? const Text('Amperage 2')
+              : Text(settings.locale.ampsSecondWire),
+        ),
+        labelStyle: TextStyle(
+          color: _fontColor,
+        ),
+      ),
       enabled: _phaseAvailabilityFlag,
       keyboardType: TextInputType.number,
       maxLength: 3,
@@ -453,52 +445,34 @@ class _HomeRouteState extends HomeRouteStateManager {
           extentOffset: ampsSecondWireCtrl.value.text.length,
         );
       },
-      style: !_phaseAvailabilityFlag
-          ? const TextStyle(
-              color: Color.fromRGBO(211, 211, 211, 0),
-              //fontSize: 20,
-            )
-          : const TextStyle(
-              //fontSize: 20,
-              ),
       textAlign: TextAlign.center,
     );
   }
 
-  TextFormField getThirdWireField() {
+  TextFormField? getThirdWireField() {
+    if (!_phaseAvailabilityFlag) {
+      return null;
+    }
+
     return TextFormField(
       autocorrect: false,
       controller: ampsThirdWireCtrl,
-      decoration: !_phaseAvailabilityFlag
-          ? InputDecoration(
-              counterStyle: const TextStyle(
-                height: double.minPositive,
-              ),
-              counterText: '',
-              filled: true,
-              fillColor: Colors.white10,
-              label: Center(
-                child: settings.locale.ampsThirdWire.isEmpty
-                    ? const Text('Amperage 3')
-                    : Text(settings.locale.ampsThirdWire),
-              ),
-              labelStyle: const TextStyle(
-                color: Color.fromRGBO(211, 211, 211, 0),
-              ),
-            )
-          : InputDecoration(
-              counterStyle: const TextStyle(
-                height: double.minPositive,
-              ),
-              counterText: '',
-              filled: true,
-              fillColor: const Color.fromRGBO(211, 211, 211, 1),
-              label: Center(
-                child: settings.locale.ampsThirdWire.isEmpty
-                    ? const Text('Amperage 3')
-                    : Text(settings.locale.ampsThirdWire),
-              ),
-            ),
+      decoration: InputDecoration(
+        counterStyle: const TextStyle(
+          height: double.minPositive,
+        ),
+        counterText: '',
+        filled: true,
+        fillColor: const Color.fromRGBO(211, 211, 211, 1),
+        label: Center(
+          child: settings.locale.ampsThirdWire.isEmpty
+              ? const Text('Amperage 3')
+              : Text(settings.locale.ampsThirdWire),
+        ),
+        labelStyle: TextStyle(
+          color: _fontColor,
+        ),
+      ),
       enabled: _phaseAvailabilityFlag,
       keyboardType: TextInputType.number,
       maxLength: 3,
@@ -530,14 +504,6 @@ class _HomeRouteState extends HomeRouteStateManager {
           extentOffset: ampsThirdWireCtrl.value.text.length,
         );
       },
-      style: !_phaseAvailabilityFlag
-          ? const TextStyle(
-              color: Color.fromRGBO(211, 211, 211, 0),
-              //fontSize: 20,
-            )
-          : const TextStyle(
-              //fontSize: 20,
-              ),
       textAlign: TextAlign.center,
     );
   }
@@ -548,7 +514,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       controller: initTempCtrl,
       //
       // Get rid of the counter; do the same thing for
-      // the other fields as well.
+      // other fields as well.
       //
       decoration: InputDecoration(
         counterStyle: const TextStyle(
