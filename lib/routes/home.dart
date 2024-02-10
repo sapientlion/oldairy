@@ -417,47 +417,47 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  TextFormField? getSecondWireField() {
-    if (!_phaseAvailabilityFlag) {
-      return null;
-    }
-
-    return TextFormField(
-      autocorrect: false,
-      controller: ampsSecondWireCtrl,
-      decoration: InputDecoration(
-        counterStyle: const TextStyle(
-          height: double.minPositive,
-        ),
-        counterText: '',
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child:
-              settings.locale.ampsSecondWire.isEmpty ? const Text('Amperage 2') : Text(settings.locale.ampsSecondWire),
-        ),
-        labelStyle: TextStyle(
-          color: _fontColor,
-        ),
-      ),
-      enabled: _phaseAvailabilityFlag,
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        onSecondWireFieldChange(value);
-
-        ampsSecondWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsSecondWireCtrl.text.length,
+  Visibility getSecondWireField() {
+    return Visibility(
+      visible: _phaseAvailabilityFlag,
+      child: TextFormField(
+        autocorrect: false,
+        controller: ampsSecondWireCtrl,
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(
+            height: double.minPositive,
           ),
-        );
-      },
-      onTap: () {
-        ampsSecondWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsSecondWireCtrl.value.text.length,
-        );
-      },
-      textAlign: TextAlign.center,
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: settings.locale.ampsSecondWire.isEmpty
+                ? const Text('Amperage 2')
+                : Text(settings.locale.ampsSecondWire),
+          ),
+          labelStyle: TextStyle(
+            color: _fontColor,
+          ),
+        ),
+        enabled: _phaseAvailabilityFlag,
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onSecondWireFieldChange(value);
+
+          ampsSecondWireCtrl.selection = TextSelection.fromPosition(
+            TextPosition(
+              offset: ampsSecondWireCtrl.text.length,
+            ),
+          );
+        },
+        onTap: () {
+          ampsSecondWireCtrl.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: ampsSecondWireCtrl.value.text.length,
+          );
+        },
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -485,46 +485,46 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  TextFormField? getThirdWireField() {
-    if (!_phaseAvailabilityFlag) {
-      return null;
-    }
-
-    return TextFormField(
-      autocorrect: false,
-      controller: ampsThirdWireCtrl,
-      decoration: InputDecoration(
-        counterStyle: const TextStyle(
-          height: double.minPositive,
-        ),
-        counterText: '',
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: settings.locale.ampsThirdWire.isEmpty ? const Text('Amperage 3') : Text(settings.locale.ampsThirdWire),
-        ),
-        labelStyle: TextStyle(
-          color: _fontColor,
-        ),
-      ),
-      enabled: _phaseAvailabilityFlag,
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        onThirdWireChange(value);
-
-        ampsThirdWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsThirdWireCtrl.text.length,
+  Visibility getThirdWireField() {
+    return Visibility(
+      visible: _phaseAvailabilityFlag,
+      child: TextFormField(
+        autocorrect: false,
+        controller: ampsThirdWireCtrl,
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(
+            height: double.minPositive,
           ),
-        );
-      },
-      onTap: () {
-        ampsThirdWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsThirdWireCtrl.value.text.length,
-        );
-      },
-      textAlign: TextAlign.center,
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child:
+                settings.locale.ampsThirdWire.isEmpty ? const Text('Amperage 3') : Text(settings.locale.ampsThirdWire),
+          ),
+          labelStyle: TextStyle(
+            color: _fontColor,
+          ),
+        ),
+        enabled: _phaseAvailabilityFlag,
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onThirdWireChange(value);
+
+          ampsThirdWireCtrl.selection = TextSelection.fromPosition(
+            TextPosition(
+              offset: ampsThirdWireCtrl.text.length,
+            ),
+          );
+        },
+        onTap: () {
+          ampsThirdWireCtrl.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: ampsThirdWireCtrl.value.text.length,
+          );
+        },
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
