@@ -57,9 +57,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
       key: _dropdownKey,
       decoration: InputDecoration(
         label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
-        /*labelStyle: const TextStyle(
-                  fontSize: 20,
-                ),*/
       ),
       style: const TextStyle(
         color: Colors.black,
@@ -153,14 +150,16 @@ class _SettingsRouteState extends State<SettingsRoute> {
       } else {
         double temporaryValue = double.tryParse(value)!;
 
+        //
+        // Don't save current state of the settings on cooling coefficient validation error.
+        //
         if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
             temporaryValue > _settings.coolingCoefficientUpperLimit) {
           _coolingCoefficientLimitFlag = false;
         } else {
           _coolingCoefficientLimitFlag = true;
+          _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
         }
-
-        _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
       }
     });
 
@@ -188,6 +187,12 @@ class _SettingsRouteState extends State<SettingsRoute> {
       maxLength: 5,
       onChanged: (value) {
         onWattsFieldChange(value);
+
+        _coefficientCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: _coefficientCtrl.text.length,
+          ),
+        );
       },
       onTap: () {
         _coefficientCtrl.selection = TextSelection(
@@ -195,9 +200,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
           extentOffset: _coefficientCtrl.text.length,
         );
       },
-      /*style: const TextStyle(
-                  fontSize: 20,
-                ),*/
       textAlign: TextAlign.center,
     );
   }
