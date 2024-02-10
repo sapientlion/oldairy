@@ -296,19 +296,23 @@ class _HomeRouteState extends HomeRouteStateManager {
         label: Center(
           child: settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(settings.locale.voltage),
         ),
-        /*labelStyle: const TextStyle(
-          fontSize: 20,
-        ),*/
       ),
       style: const TextStyle(
         color: Colors.black,
         //fontSize: 20,
       ),
       value: dropdownValue,
+      icon: const Visibility(
+        visible: false,
+        child: Icon(Icons.abc),
+      ),
+      isExpanded: true,
       items: _voltages.map<DropdownMenuItem<int>>((int value) {
         return DropdownMenuItem<int>(
           value: value,
-          child: Text(value.toString()),
+          child: Center(
+            child: Text(value.toString()),
+          ),
         );
       }).toList(),
       onChanged: (int? value) {
