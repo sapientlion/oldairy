@@ -1,13 +1,13 @@
 Oldairy 1.0.3 - Released on October 18th, 2023.
 
-Additions:
+Added:
 
 * N/a.
 
-Changes:
+Changed:
 
-* Add support for older versions of Android (8.1 and higher).
+* The minimal supported version of Android: from `10` to `8.1`.
 
-Fixes:
+Fixed:
 
-* Address an issue where a git submodule is pointing to the incorrect version of Flutter.
+* An issue where a git submodule was pointing to the incorrect version of Flutter.

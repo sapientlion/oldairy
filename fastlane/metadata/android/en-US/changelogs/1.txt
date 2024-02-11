@@ -1,18 +1,14 @@
 Oldairy 1.0.0 - Released on August 8th, 2023.
 
-Additions:
+Added:
 
 * A cooling time calculator;
- * Find out the approximate cooling time of a typical industrial-sized milk
-   tank;
-* A support of older IEC standard voltages (220V/380V);
- * Although, it's no longer used due to introduction of a newer standard, it's
-   included in the project by default for special use cases.
+* A support for older IEC standard voltages (220V/380V).
 
-Changes:
+Changed:
 
-* N/a
+* N/a.
 
-Fixes:
+Fixed:
 
-* N/a
+* N/a.

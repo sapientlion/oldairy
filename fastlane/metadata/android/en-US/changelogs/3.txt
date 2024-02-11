@@ -1,18 +1,16 @@
 Oldairy 1.0.2 - Released on October 12th, 2023.
 
-Additions:
+Added:
 
-* Add a visible scrollbar to all pages.
+* A visible scrollbar on all pages.
 
-Changes:
+Changed:
 
-* Change the font appearance on some pages;
-* Settings: stick action buttons to the bottom of the screen instead of leaving them
-	at the bottom of the page;
-* Optimize the source code for better maintainability and scalability.
+* Font appearance on some pages;
+* On `Settings` page, stick action buttons to the bottom of the screen instead of leaving them at the bottom of the page;
+* Optimized the source code for better maintainability and scalability.
 
-Fixes:
+Fixed:
 
-* Fix font sizes on all pages.
-* Fix a bug that causes app to crash due to the missing voltage values when switching back from the older standard to
-	the newest one.
+* Font sizes on all pages.
+* A bug that caused app to crash due to the missing voltage values when switching back from the older standard to the newest one.

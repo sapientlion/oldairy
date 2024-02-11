@@ -1,0 +1,16 @@
+Oldairy 1.0.4 - Released on February 12th, 2024.
+
+Added:
+
+* N/a.
+
+Changed:
+
+* Background and foreground colors of the bottom bar on the `Settings` page;
+* Cooling coefficient lower limit: from `0.685` down to `0.2`;
+* For more, see https://github.com/sapientlion/oldairy/blob/master/CHANGELOG.md.
+
+Fixed:
+
+* Inability to change cooling coefficient value due to the awkwardly implemented validation check;
+* Minor typo on the `Settings` page.

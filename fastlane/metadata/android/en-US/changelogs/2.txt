@@ -1,20 +1,14 @@
 Oldairy 1.0.1 - Released on September 11th, 2023.
 
-Additions:
+Added:
 
-* Three new settings on the settings page:
- * `Allow Use of Precise Minutes` - force minutes to be more precise by rounding them;
- * `Enable Time Rounding` - convert raw cooling time value to a human-readable form;
- * `Cooling Coefficient` - although an experimental feature, allow change of default cooling coefficient value to something more situation-appropriate;
-* Implement a `TimeFormatter` class which can be used for extracting hours and minutes from raw cooling time value.
+* Three new settings on the `Settings` page which allow more control over calculations;
+* `TimeFormatter` class which can be used for extracting hours and minutes from raw cooling time value.
 
-Changes:
+Changed:
 
-* Re-enable time rounding feature which was previously disabled due to inadequacy of the previous implementation;
-* Remove any kind of time formatting from `Calculator` class;
-* Upgrade Flutter from version `3.3.5` to `3.10.6`;
-* Upgrade Gradle from version `7.4.0` to `7.6.2`.
+* See https://github.com/sapientlion/oldairy/blob/master/CHANGELOG.md.
 
-Fixes:
+Fixed:
 
-* Fix a critical bug that causes cooling time to be completely imprecise upon a calculation due to missing hour reset routine.
+* A critical bug that caused cooling time to be completely imprecise upon a calculation due to missing hour reset routine.
