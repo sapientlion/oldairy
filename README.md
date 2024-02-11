@@ -1,44 +1,46 @@
 # Oldairy
 
-Oldairy - a simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.
+![GitHub Release](https://img.shields.io/github/v/release/sapientlion/oldairy)
+
+## :book: Overview
+
+Oldairy is a simple calculator intended for finding out the approximate cooling time of a typical industrial-sized milk tank. The project uses the following formula for achieving desirable results: `Tcooling = (((kW x (tinitial - tset)) x Vtank) / U) / I`. Each variable means the following:
+
+* `Tcooling` is amount of time required for a substance to reach its target temperature;
+* `kW` is so-called "cooling coefficient" - total amount of energy the equipment consumes;
+* `Tinitial` is initial/current temperature of a substance;
+* `Tset` is target temperature;
+* `Vtank` is reservoir volume;
+* `U` is voltage;
+* `I` is amperage (which can be further extended to `I1`, `I2` and `I3` in case of three-phase voltage electricity).
+
+Do note that the target value will never be precise. External factors such as outside temperatures, materials and et cetera are not taken into account.
 
 ## :nut_and_bolt: Features
 
-* Basic cooling time calculator;
-* Flexible app customization; adapt the app according to your current needs.
-
-## :wrench: How Does It Work?
-
-Oldairy utilizes the following formula for achieving the desirable results:
-
-`Tcooling = (((0.685 x (tinitial - tset)) x Vtank) / U) / I`.
-
-Where `Tcooling` is a total cooling time of a milk tank, `Tinitial` is initial temperature of a milk tank contents, `Tset` is a desirable temperature, `Vtank` is a reservoir volume, `U` is voltage, `I` is amperage.
-
-The included constant (0.685) is used for the cow milk only. In theory, it can be used for similar substances as well.
-
-It's not a precise number and it will never be like that. It is completely dependent on the current state of equipment and environmental factors such as temperature and air pressure. What is used here is the optimal number for such formula which was found out by pure observation during the practice in the field (i.e. milk tank service and maintenance).
+* A calculator with a limited number of features;
+* App customization - adapt app according to your current needs.
 
 ## :iphone: System requirements
 
-* Android 8.1 and higher.
+The app supports all versions of Android ranging from 8.1 to the latest one. Older versions are not supported and therefore it is not guaranteed that the app would work flawlessly on those systems.
 
 ## :hammer_and_wrench: Installation
 
-To install the app, upload it to Android device and tap on `oldairy-<version>.apk` installation package. Follow the instructions given on the screen.
+To install the app, upload it to the Android device and tap on `oldairy-<version>.apk` package. Follow the instructions given on the screen.
 
 ## :building_construction: Building
 
-The easiest and recommended way to build `*.apk` installation packages is via Android Studio. Open the editor, open the project, `Build > Bundle(s) / APK(s)` and follow the instructions given on the screen.
+The easiest and recommended way to build `*.apk` installation packages is via Android Studio. Open the IDE, open the project, `Build > Bundle(s) / APK(s)` and follow the instructions given on the screen.
 
 ## :framed_picture: Screenshots
 
-<p float="left">
+<p align="center">
     <img alt="Home" src="./fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg?raw=true" width="200" />
     <img alt="Settings" src="./fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg?raw=true" width="200" />
 </p>
 
-## :coffee: A Cup of Coffee & Stuff
+## :coffee: Donations
 
 You can buy me a cup of coffee at https://ko-fi.com/sapientlion.
 
