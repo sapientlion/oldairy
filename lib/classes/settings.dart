@@ -21,6 +21,10 @@
 
 */
 
+//
+//  ignore_for_file: prefer_conditional_assignment
+//
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -42,7 +46,46 @@ class Settings {
   String localeName = '';
   OldairyLocale locale = OldairyLocale();
 
+  //
+  // Load default values from file and use them in various processes.
+  //
   Future<void> readDefaults() async {
+    final String response = await rootBundle.loadString('assets/defaults.json');
+    final data = await json.decode(response);
+    final RegExp packageVersionRegEx = RegExp(r'^([0-99]\.[0-99]\.[0-99])$');
+
+    double? coolingCoefficientLowerLimitRaw = 0.0;
+    double? coolingCoefficientUpperLimitRaw = 0.0;
+
+    packageVersion = data['packageVersion'];
+
+    //
+    // Package version must have the following structure: <major_release>.<minor_release>.<patch>.
+    //
+    if (!packageVersionRegEx.hasMatch(packageVersion)) {
+      packageVersion = 'N/a';
+    }
+
+    coolingCoefficientLowerLimitRaw = double.tryParse(data['coolingCoefficientLowerLimit']);
+
+    if (coolingCoefficientLowerLimitRaw == null) {
+      coolingCoefficientLowerLimit = 0.2;
+    } else {
+      coolingCoefficientLowerLimit = coolingCoefficientLowerLimitRaw;
+    }
+
+    coolingCoefficientUpperLimitRaw = double.tryParse(data['coolingCoefficientUpperLimit']);
+
+    if (coolingCoefficientUpperLimitRaw == null) {
+      coolingCoefficientUpperLimit = 2.0;
+    } else {
+      coolingCoefficientUpperLimit = coolingCoefficientUpperLimitRaw;
+    }
+
+    return;
+  }
+
+  /*Future<void> readDefaults() async {
     final String response = await rootBundle.loadString('assets/defaults.json');
     final data = await json.decode(response);
 
@@ -51,7 +94,7 @@ class Settings {
     coolingCoefficientUpperLimit = double.parse(data['coolingCoefficientUpperLimit']);
 
     return;
-  }
+  }*/
 
   Settings() {
     readDefaults();
