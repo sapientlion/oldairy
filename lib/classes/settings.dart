@@ -33,9 +33,9 @@ import 'package:oldairy/classes/locale.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Settings {
-  bool oldStandardFlag = false; // Old standard support flag.
-  bool timePrecisionFlag = false; // Precision flag.
-  bool timeRoundingFlag = false; // Time rounding flag.
+  bool oldStandardFlag = false;
+  bool timePrecisionFlag = false;
+  bool timeRoundingFlag = false;
 
   double coolingCoefficientLowerLimit = 0.0;
   double coolingCoefficientUpperLimit = 0.0;
@@ -47,13 +47,16 @@ class Settings {
   OldairyLocale locale = OldairyLocale();
 
   //
-  // Load default values from file and use them in various processes.
+  // Load default values from file and use them later in various processes.
   //
-  Future<void> readDefaults() async {
+  Future<void> _readDefaults() async {
     final String response = await rootBundle.loadString('assets/defaults.json');
     final data = await json.decode(response);
     final RegExp packageVersionRegEx = RegExp(r'^([0-99]\.[0-99]\.[0-99])$');
 
+    bool? oldStandardFlagRaw = false;
+    bool? timePrecisionFlagRaw = false;
+    bool? timeRoundingFlagRaw = false;
     double? coolingCoefficientLowerLimitRaw = 0.0;
     double? coolingCoefficientUpperLimitRaw = 0.0;
 
@@ -82,6 +85,30 @@ class Settings {
       coolingCoefficientUpperLimit = coolingCoefficientUpperLimitRaw;
     }
 
+    oldStandardFlagRaw = bool.tryParse(data['oldStandard']);
+
+    if (oldStandardFlagRaw == null) {
+      oldStandardFlag = false;
+    } else {
+      oldStandardFlag = oldStandardFlagRaw;
+    }
+
+    timePrecisionFlagRaw = bool.tryParse(data['timePrecision']);
+
+    if (timePrecisionFlagRaw == null) {
+      timePrecisionFlag = true;
+    } else {
+      timePrecisionFlag = timePrecisionFlagRaw;
+    }
+
+    timeRoundingFlagRaw = bool.tryParse(data['timeRounding']);
+
+    if (timeRoundingFlagRaw == null) {
+      timeRoundingFlag = true;
+    } else {
+      timeRoundingFlag = timeRoundingFlagRaw;
+    }
+
     return;
   }
 
@@ -97,7 +124,19 @@ class Settings {
   }*/
 
   Settings() {
-    readDefaults();
+    _readDefaults();
+  }
+
+  //
+  // Reset values to default ones for every class member.
+  //
+  void reset()
+  {
+    _readDefaults();
+
+    coolingCoefficientCurrent = coolingCoefficientLowerLimit;
+
+    return;
   }
 
   //

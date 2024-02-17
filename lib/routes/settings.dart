@@ -45,7 +45,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     'Swedish',
   ];
 
-  bool _coolingCoefficientLimitFlag = true;
+  bool _coolingCoefficientLimitFlag = true; // Forbid user from applying the new settings on validation fail.
   String _dropdownValue = '';
   Settings _settings = Settings();
 
@@ -262,6 +262,16 @@ class _SettingsRouteState extends State<SettingsRoute> {
               heroTag: null,
               onPressed: () {
                 setState(() {
+                  _settings.reset();
+
+                  _settings.localeCurrent = _dropdownValue = _locales.first;
+                  _coolingCoefficientLimitFlag = true;
+                  _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
+
+                  _dropdownKey.currentState!.reset();
+                });
+
+                /*setState(() {
                   _settings.oldStandardFlag = false;
                   _settings.timePrecisionFlag = true;
                   _settings.timeRoundingFlag = true;
@@ -271,7 +281,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   _coolingCoefficientLimitFlag = true;
                   _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
                   _dropdownKey.currentState!.reset();
-                });
+                });*/
               },
               label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
             ),
