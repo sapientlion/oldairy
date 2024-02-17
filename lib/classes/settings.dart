@@ -29,9 +29,9 @@ import 'package:oldairy/classes/locale.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Settings {
-  bool osFlag = false; // Old standard support flag.
-  bool pFlag = false; // Precision flag.
-  bool rFlag = false; // Time rounding flag.
+  bool oldStandardFlag = false; // Old standard support flag.
+  bool timePrecisionFlag = false; // Precision flag.
+  bool timeRoundingFlag = false; // Time rounding flag.
 
   double coolingCoefficientLowerLimit = 0.0;
   double coolingCoefficientUpperLimit = 0.0;
@@ -75,9 +75,9 @@ class Settings {
   }
 
   Map<String, dynamic> toJson() => {
-        'isOldStandardEnabled': osFlag,
-        'isTimeRoundingEnabled': rFlag,
-        'areAbsoluteValuesAllowed': pFlag,
+        'isOldStandardEnabled': oldStandardFlag,
+        'isTimeRoundingEnabled': timeRoundingFlag,
+        'areAbsoluteValuesAllowed': timePrecisionFlag,
         'coefficient': coolingCoefficientCurrent,
         'currentLocale': localeCurrent,
         'localeFile': localeName,

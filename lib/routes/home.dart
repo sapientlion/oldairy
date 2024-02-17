@@ -773,7 +773,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
     // values.
     //
-    if (!settings.osFlag) {
+    if (!settings.oldStandardFlag) {
       _voltages = <int>[230, 400];
       dropdownValue = _voltages.first;
     } else {
@@ -876,9 +876,9 @@ class _HomeRouteState extends HomeRouteStateManager {
         //
         // Load app settings from a map.
         //
-        settings.osFlag = json['isOldStandardEnabled'];
-        settings.rFlag = json['isTimeRoundingEnabled'];
-        settings.pFlag = json['areAbsoluteValuesAllowed'];
+        settings.oldStandardFlag = json['isOldStandardEnabled'];
+        settings.timeRoundingFlag = json['isTimeRoundingEnabled'];
+        settings.timePrecisionFlag = json['areAbsoluteValuesAllowed'];
         settings.coolingCoefficientCurrent = json['coefficient'];
         settings.localeCurrent = json['currentLocale'];
         settings.localeName = json['localeFile'];

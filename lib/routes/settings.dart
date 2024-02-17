@@ -86,13 +86,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
       title: const Text('Enable Time Rounding'),
-      value: _settings.rFlag,
+      value: _settings.timeRoundingFlag,
       onChanged: (bool? value) {
         setState(() {
-          if (!_settings.rFlag) {
-            _settings.rFlag = true;
+          if (!_settings.timeRoundingFlag) {
+            _settings.timeRoundingFlag = true;
           } else {
-            _settings.rFlag = false;
+            _settings.timeRoundingFlag = false;
           }
         });
       },
@@ -107,13 +107,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
       title: const Text('Allow Use of Precise Minutes'),
-      value: _settings.pFlag,
+      value: _settings.timePrecisionFlag,
       onChanged: (bool? value) {
         setState(() {
-          if (!_settings.pFlag) {
-            _settings.pFlag = true;
+          if (!_settings.timePrecisionFlag) {
+            _settings.timePrecisionFlag = true;
           } else {
-            _settings.pFlag = false;
+            _settings.timePrecisionFlag = false;
           }
         });
       },
@@ -130,13 +130,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
       title: _settings.locale.oldStandardSupport.isEmpty
           ? const Text('Enable 220V/380V Support')
           : Text(_settings.locale.oldStandardSupport),
-      value: _settings.osFlag,
+      value: _settings.oldStandardFlag,
       onChanged: (bool? value) {
         setState(() {
-          if (!_settings.osFlag) {
-            _settings.osFlag = true;
+          if (!_settings.oldStandardFlag) {
+            _settings.oldStandardFlag = true;
           } else {
-            _settings.osFlag = false;
+            _settings.oldStandardFlag = false;
           }
         });
       },
@@ -262,9 +262,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
               heroTag: null,
               onPressed: () {
                 setState(() {
-                  _settings.osFlag = false;
-                  _settings.pFlag = false;
-                  _settings.rFlag = false;
+                  _settings.oldStandardFlag = false;
+                  _settings.timePrecisionFlag = true;
+                  _settings.timeRoundingFlag = true;
                   _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
                   _settings.localeCurrent = _dropdownValue = _locales.first;
 

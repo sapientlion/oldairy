@@ -450,8 +450,8 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     coolingTimeHours = timeFormatter.getHours().toString();
     coolingTimeMinutes = timeFormatter
         .getMinutes(
-          rFlag: settings.rFlag,
-          pFlag: settings.pFlag,
+          rFlag: settings.timeRoundingFlag,
+          pFlag: settings.timePrecisionFlag,
         )
         .toString();
 
