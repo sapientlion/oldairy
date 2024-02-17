@@ -39,7 +39,7 @@ class Settings {
 
   double coolingCoefficientLowerLimit = 0.0;
   double coolingCoefficientUpperLimit = 0.0;
-  double coolingCoefficientCurrent = 0.350;
+  double coolingCoefficientCurrent = 0.0;
 
   String packageVersion = '';
   String localeCurrent = 'English (US)';
@@ -74,7 +74,7 @@ class Settings {
     if (coolingCoefficientLowerLimitRaw == null) {
       coolingCoefficientLowerLimit = 0.2;
     } else {
-      coolingCoefficientLowerLimit = coolingCoefficientLowerLimitRaw;
+      coolingCoefficientCurrent = coolingCoefficientLowerLimit = coolingCoefficientLowerLimitRaw;
     }
 
     coolingCoefficientUpperLimitRaw = double.tryParse(data['coolingCoefficientUpperLimit']);
