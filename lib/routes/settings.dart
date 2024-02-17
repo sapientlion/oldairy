@@ -334,6 +334,25 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> listViewItems = [
+      const ListTile(
+        title: Center(
+          child: Text(
+            'General',
+            style: TextStyle(
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      getLanguageChanger(),
+      getPrecisionCheckbox(),
+      getRoundingCheckbox(),
+      getStandardCheckbox(),
+      getWattsField()
+    ];
+
     _settings = widget.settings;
 
     return Scaffold(
@@ -343,51 +362,16 @@ class _SettingsRouteState extends State<SettingsRoute> {
       body: Scrollbar(
         thumbVisibility: true,
         thickness: 8.0,
-        child: ListView(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(_edgeInsetsSize),
-              child: _settings.locale.general.isEmpty
-                  ? const Text(
-                      'General',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  : Text(
-                      _settings.locale.general,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(_edgeInsetsSize),
-              child: getLanguageChanger(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(_edgeInsetsSize),
-              child: getPrecisionCheckbox(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(_edgeInsetsSize),
-              child: getRoundingCheckbox(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(_edgeInsetsSize),
-              child: getStandardCheckbox(),
-            ),
-            Padding(
-              padding: EdgeInsets.all(_edgeInsetsSize),
-              child: SizedBox(
-                width: 128,
-                child: getWattsField(),
-              ),
-            ),
-          ],
-        ),
+        child: ListView.separated(
+            padding: EdgeInsets.all(_edgeInsetsSize),
+            itemBuilder: (BuildContext context, int index) {
+              return listViewItems.elementAt(index);
+            },
+            separatorBuilder: (BuildContext context, int index) => const Divider(
+                  color: Color.fromARGB(0, 0, 0, 0),
+                  height: 30.0,
+                ),
+            itemCount: 6),
       ),
       bottomNavigationBar: getControlPanel(context),
     );
