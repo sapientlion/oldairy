@@ -279,55 +279,6 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  DropdownButtonFormField<int> getVoltageDropdown() {
-    //
-    // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
-    // values.
-    //
-    if (!settings.osFlag) {
-      _voltages = <int>[230, 400];
-      dropdownValue = _voltages.first;
-    } else {
-      _voltages = <int>[220, 230, 380, 400];
-    }
-
-    return DropdownButtonFormField<int>(
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(settings.locale.voltage),
-        ),
-      ),
-      style: const TextStyle(
-        color: Colors.black,
-        //fontSize: 20,
-      ),
-      value: dropdownValue,
-      icon: const Visibility(
-        visible: false,
-        child: Icon(Icons.abc),
-      ),
-      isExpanded: true,
-      items: _voltages.map<DropdownMenuItem<int>>((int value) {
-        return DropdownMenuItem<int>(
-          value: value,
-          child: Center(
-            child: Text(value.toString()),
-          ),
-        );
-      }).toList(),
-      onChanged: (int? value) {
-        //
-        // This is called when the user selects an item.
-        //
-        onVoltageDropdownSelection(value);
-
-        return;
-      },
-    );
-  }
-
   void onFirstAmperageFieldChange(String value) {
     setState(() {
       ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
@@ -496,6 +447,58 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
+  SizedBox getVoltageDropdown() {
+    //
+    // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
+    // values.
+    //
+    if (!settings.osFlag) {
+      _voltages = <int>[230, 400];
+      dropdownValue = _voltages.first;
+    } else {
+      _voltages = <int>[220, 230, 380, 400];
+    }
+
+    return SizedBox(
+      width: _fieldWidth,
+      child: DropdownButtonFormField<int>(
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(settings.locale.voltage),
+          ),
+        ),
+        style: const TextStyle(
+          color: Colors.black,
+          //fontSize: 20,
+        ),
+        value: dropdownValue,
+        icon: const Visibility(
+          visible: false,
+          child: Icon(Icons.abc),
+        ),
+        isExpanded: true,
+        items: _voltages.map<DropdownMenuItem<int>>((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Center(
+              child: Text(value.toString()),
+            ),
+          );
+        }).toList(),
+        onChanged: (int? value) {
+          //
+          // This is called when the user selects an item.
+          //
+          onVoltageDropdownSelection(value);
+
+          return;
+        },
+      ),
+    );
+  }
+
   //
   // A skeleton method for creating a typical input field for storing various values.
   //
@@ -619,12 +622,16 @@ class _HomeRouteState extends HomeRouteStateManager {
             offset: initTempCtrl.text.length,
           ),
         );
+
+        return;
       },
       () {
         initTempCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: initTempCtrl.value.text.length,
         );
+
+        return;
       },
     );
   }
@@ -641,12 +648,16 @@ class _HomeRouteState extends HomeRouteStateManager {
             offset: targetTempCtrl.text.length,
           ),
         );
+
+        return;
       },
       () {
         targetTempCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: targetTempCtrl.value.text.length,
         );
+
+        return;
       },
     );
   }
@@ -663,12 +674,16 @@ class _HomeRouteState extends HomeRouteStateManager {
             offset: volumeCtrl.text.length,
           ),
         );
+
+        return;
       },
       () {
         volumeCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: volumeCtrl.value.text.length,
         );
+
+        return;
       },
     );
   }
@@ -771,11 +786,15 @@ class _HomeRouteState extends HomeRouteStateManager {
                             child: Row(
                               children: [
                                 getVolumeField(),
-                                getResetButton(() {
-                                  volumeCtrl.text = '';
+                                getResetButton(
+                                  () {
+                                    volumeCtrl.text = '';
 
-                                  onVolumeFieldChange(volumeCtrl.text);
-                                }),
+                                    onVolumeFieldChange(volumeCtrl.text);
+
+                                    return;
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -784,68 +803,102 @@ class _HomeRouteState extends HomeRouteStateManager {
                             child: Row(
                               children: [
                                 getFirstAmperageField(),
-                                getResetButton(() {
-                                  ampsFirstWireCtrl.text = '';
+                                getResetButton(
+                                  () {
+                                    ampsFirstWireCtrl.text = '';
 
-                                  onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
-                                }),
+                                    onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
+
+                                    return;
+                                  },
+                                ),
                               ],
                             ),
                           ),
-                          /*SizedBox(
-                            width: _fieldWidth,
-                            child: getFirstWireField(),
-                          ),*/
                           SizedBox(
-                            width: _fieldWidth,
-                            child: getSecondAmperageField(),
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getSecondAmperageField(),
+                                getResetButton(
+                                  () {
+                                    ampsSecondWireCtrl.text = '';
+
+                                    onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
+
+                                    return;
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
-                            width: _fieldWidth,
-                            child: getThirdAmperageField(),
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getThirdAmperageField(),
+                                getResetButton(
+                                  () {
+                                    ampsThirdWireCtrl.text = '';
+
+                                    onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
+
+                                    return;
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             width: _fieldWidth + _resetBtnWidth,
                             child: Row(
                               children: [
                                 getInitTempField(),
-                                getResetButton(() {
-                                  initTempCtrl.text = '';
+                                getResetButton(
+                                  () {
+                                    initTempCtrl.text = '';
 
-                                  onInitTempFieldChange(initTempCtrl.text);
-                                }),
+                                    onInitTempFieldChange(initTempCtrl.text);
+
+                                    return;
+                                  },
+                                ),
                               ],
                             ),
                           ),
-                          /*SizedBox(
-                            width: _fieldWidth,
-                            child: getInitTempField(),
-                          ),*/
                           SizedBox(
                             width: _fieldWidth + _resetBtnWidth,
                             child: Row(
                               children: [
                                 getTargetTempField(),
-                                getResetButton(() {
-                                  targetTempCtrl.text = '';
+                                getResetButton(
+                                  () {
+                                    targetTempCtrl.text = '';
 
-                                  onTargetTempFieldChange(targetTempCtrl.text);
-                                }),
+                                    onTargetTempFieldChange(targetTempCtrl.text);
+
+                                    return;
+                                  },
+                                ),
                               ],
                             ),
                           ),
-                          /*SizedBox(
-                            width: _fieldWidth,
-                            child: getSetTempField(),
-                          ),*/
                           SizedBox(
-                            width: _fieldWidth,
-                            child: getVoltageDropdown(),
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getVoltageDropdown(),
+                                //
+                                // TODO finish implementation of the reset routine for voltage dropdown menu.
+                                //
+                                getResetButton(
+                                  () {
+                                    return;
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                          /*SizedBox(
-                            width: _fieldWidth,
-                            child: getVolumeField(),
-                          ),*/
                         ],
                       ),
                     ],
