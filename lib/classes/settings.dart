@@ -31,6 +31,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:oldairy/classes/locale.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 class Settings {
   bool oldStandardFlag = false;
@@ -41,6 +42,7 @@ class Settings {
   double coolingCoefficientUpperLimit = 0.0;
   double coolingCoefficientCurrent = 0.0;
 
+  String packageRelease = '';
   String packageVersion = '';
   String localeCurrent = 'English (US)';
   String localeName = '';
@@ -59,6 +61,12 @@ class Settings {
     bool? timeRoundingFlagRaw = false;
     double? coolingCoefficientLowerLimitRaw = 0.0;
     double? coolingCoefficientUpperLimitRaw = 0.0;
+
+    packageRelease = data['packageRelease'];
+
+    if (packageRelease == '') {
+      packageRelease = 'https://api.github.com/repos/sapientlion/oldairy/releases/latest';
+    }
 
     packageVersion = data['packageVersion'];
 
@@ -128,10 +136,42 @@ class Settings {
   }
 
   //
+  // Check for any updates.
+  //
+  Future<http.Response> checkUpdate() async {
+    final Uri uri = Uri.parse(packageRelease);
+    final Map<String, String> header = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    /*http.Response response = await http.get(
+      uri,
+      headers: header,
+    );*/
+
+    /*if (response.statusCode == 200) {
+      result = json.decode(response.body);
+
+      if (_settings.packageVersion != result['tag_name']) {
+        newUpdate = true;
+      } else {
+        newUpdate = false;
+      }
+    } else {
+      newUpdate = false;
+    }*/
+
+    return http.get(
+      uri,
+      headers: header,
+    );
+    //return response;
+  }
+
+  //
   // Reset values to default ones for every class member.
   //
-  void reset()
-  {
+  void reset() {
     _readDefaults();
 
     coolingCoefficientCurrent = coolingCoefficientLowerLimit;

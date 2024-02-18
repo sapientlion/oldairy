@@ -46,6 +46,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ];
 
   bool _coolingCoefficientLimitFlag = true; // Forbid user from applying the new settings on validation fail.
+  bool _updateCheckReadinessFlag = true;
   String _dropdownValue = '';
   Settings _settings = Settings();
 
@@ -243,6 +244,43 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
+  FloatingActionButton getUpdateCheckButton() {
+    return FloatingActionButton.extended(
+        icon: _updateCheckReadinessFlag
+            ? null
+            : const CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+        label: const Text('Check for updates'),
+        onPressed: () {
+          //
+          // Show circular indicator while the app is checking for any new updates.
+          //
+          setState(() {
+            _updateCheckReadinessFlag = false;
+          });
+
+          Iterable<Future<dynamic>> updateCheck = [_settings.checkUpdate()];
+
+          //
+          // Wait for the function to finish its task.
+          //
+          Future.wait(updateCheck);
+
+          //
+          // Hide circular indicator when finished with update check.
+          //
+          setState(() {
+            _settings.checkUpdate().whenComplete(() {
+              setState(() {
+                _updateCheckReadinessFlag = true;
+              });
+            });
+          });
+        });
+  }
+
   //
   // Get a control panel that is responsible for managing the app settings.
   //
@@ -332,6 +370,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     super.dispose();
   }
 
+  bool newUpdate = false;
+  dynamic result;
+
   @override
   Widget build(BuildContext context) {
     List<Widget> listViewItems = [
@@ -350,7 +391,19 @@ class _SettingsRouteState extends State<SettingsRoute> {
       getPrecisionCheckbox(),
       getRoundingCheckbox(),
       getStandardCheckbox(),
-      getWattsField()
+      getWattsField(),
+      const ListTile(
+        title: Center(
+          child: Text(
+            'Updates',
+            style: TextStyle(
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      getUpdateCheckButton(),
     ];
 
     _settings = widget.settings;
@@ -371,7 +424,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   color: Color.fromARGB(0, 0, 0, 0),
                   height: 30.0,
                 ),
-            itemCount: 6),
+            itemCount: 8),
       ),
       bottomNavigationBar: getControlPanel(context),
     );
