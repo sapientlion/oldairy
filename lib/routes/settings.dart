@@ -90,11 +90,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
       value: _settings.timeRoundingFlag,
       onChanged: (bool? value) {
         setState(() {
-          if (!_settings.timeRoundingFlag) {
+          _settings.timeRoundingFlag = value!;
+
+          /*if (!_settings.timeRoundingFlag) {
             _settings.timeRoundingFlag = true;
           } else {
             _settings.timeRoundingFlag = false;
-          }
+          }*/
         });
       },
     );
@@ -111,11 +113,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
       value: _settings.timePrecisionFlag,
       onChanged: (bool? value) {
         setState(() {
-          if (!_settings.timePrecisionFlag) {
+          _settings.timePrecisionFlag = value!;
+
+          /*if (!_settings.timePrecisionFlag) {
             _settings.timePrecisionFlag = true;
           } else {
             _settings.timePrecisionFlag = false;
-          }
+          }*/
         });
       },
     );
@@ -134,11 +138,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
       value: _settings.oldStandardFlag,
       onChanged: (bool? value) {
         setState(() {
-          if (!_settings.oldStandardFlag) {
+          _settings.oldStandardFlag = value!;
+
+          /*if (!_settings.oldStandardFlag) {
             _settings.oldStandardFlag = true;
           } else {
             _settings.oldStandardFlag = false;
-          }
+          }*/
         });
       },
     );
