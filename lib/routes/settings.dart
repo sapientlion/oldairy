@@ -244,6 +244,35 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
+  Future<void> getUpdateCheckAlertBox(bool status) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Information'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                !status ? const Text('Everything is up to date.') : const Text('A new update is available!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                return;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   FloatingActionButton getUpdateCheckButton() {
     return FloatingActionButton.extended(
         icon: _updateCheckReadinessFlag
@@ -276,6 +305,16 @@ class _SettingsRouteState extends State<SettingsRoute> {
               setState(() {
                 _updateCheckReadinessFlag = true;
               });
+
+              if (_settings.responseBody == '') {
+                getUpdateCheckAlertBox(false);
+              } else {
+                if (_settings.packageVersion != _settings.responseBody['tag_name']) {
+                  getUpdateCheckAlertBox(false);
+                } else {
+                  getUpdateCheckAlertBox(true);
+                }
+              }
             });
           });
         });

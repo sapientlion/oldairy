@@ -49,6 +49,8 @@ class Settings {
   String localeName = '';
   OldairyLocale locale = OldairyLocale();
 
+  dynamic responseBody;
+
   //
   // Load default values from file and use them later in various processes.
   //
@@ -148,7 +150,7 @@ class Settings {
   //
   // Check for any updates.
   //
-  Future<http.Response> checkUpdate() async {
+  dynamic checkUpdate() async {
     final Uri uri = Uri.parse(packageRelease);
     final Map<String, String> header = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -171,10 +173,16 @@ class Settings {
       newUpdate = false;
     }*/
 
-    return http.get(
+    http.Response response = await http.get(
       uri,
       headers: header,
     );
+
+    if (response.statusCode == 200) {
+      return responseBody = json.decode(response.body);
+    }
+
+    return responseBody = '';
     //return response;
   }
 
