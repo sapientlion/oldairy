@@ -58,7 +58,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   @protected
   TextEditingController initTempCtrl = TextEditingController();
   @protected
-  TextEditingController setTempCtrl = TextEditingController();
+  TextEditingController targetTempCtrl = TextEditingController();
   @protected
   TextEditingController volumeCtrl = TextEditingController();
   @protected
@@ -113,7 +113,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
             ampsThirdWire: 0.0));
 
     initTempCtrl.text = initValue.toString();
-    setTempCtrl.text = initValue.toString();
+    targetTempCtrl.text = initValue.toString();
     volumeCtrl.text = initValue.toString();
     ampsFirstWireCtrl.text = initValue.toString();
     ampsSecondWireCtrl.text = initValue.toString();

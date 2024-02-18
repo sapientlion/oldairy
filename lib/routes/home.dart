@@ -47,7 +47,9 @@ class _HomeRouteState extends HomeRouteStateManager {
   final double _tempOutputFontSize = 25;
   final double _absoluteZero = -273.15;
   final double _setTempLimit = -50.0;
-  final double _fieldWidth = 125.0;
+  final double _fieldHeight = 70.0;
+  final double _fieldWidth = 110.0;
+  final double _resetBtnWidth = 50.0;
   final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
 
   bool _azFlag = false; // Absolute zero flag.
@@ -58,7 +60,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     dropdownValue = _voltages.first;
 
     initTempCtrl.text = initValue.toString();
-    setTempCtrl.text = initValue.toString();
+    targetTempCtrl.text = initValue.toString();
     volumeCtrl.text = initValue.toString();
     ampsFirstWireCtrl.text = initValue.toString();
     ampsSecondWireCtrl.text = initValue.toString();
@@ -262,7 +264,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       }
 
       timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
-      timeFormatter.calculator.setTemp = double.parse(setTempCtrl.text);
+      timeFormatter.calculator.setTemp = double.parse(targetTempCtrl.text);
       timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
       timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
       timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
@@ -357,39 +359,43 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  TextFormField getFirstWireField() {
-    return TextFormField(
-      autocorrect: false,
-      controller: ampsFirstWireCtrl,
-      decoration: InputDecoration(
-        counterStyle: const TextStyle(height: double.minPositive),
-        counterText: '',
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: settings.locale.ampsFirstWire.isEmpty ? const Text('Amperage 1') : Text(settings.locale.ampsFirstWire),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        onFirstWireFieldChange(value);
-
-        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsFirstWireCtrl.text.length,
+  SizedBox getFirstWireField() {
+    return SizedBox(
+      width: _fieldWidth,
+      child: TextFormField(
+        autocorrect: false,
+        controller: ampsFirstWireCtrl,
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(height: double.minPositive),
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child:
+                settings.locale.ampsFirstWire.isEmpty ? const Text('Amperage 1') : Text(settings.locale.ampsFirstWire),
           ),
-        );
-      },
-      onTap: () {
-        ampsFirstWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsFirstWireCtrl.value.text.length,
-        );
-      },
-      /*style: const TextStyle(
+        ),
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onFirstWireFieldChange(value);
+
+          ampsFirstWireCtrl.selection = TextSelection.fromPosition(
+            TextPosition(
+              offset: ampsFirstWireCtrl.text.length,
+            ),
+          );
+        },
+        onTap: () {
+          ampsFirstWireCtrl.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: ampsFirstWireCtrl.value.text.length,
+          );
+        },
+        /*style: const TextStyle(
         fontSize: 20,
       ),*/
-      textAlign: TextAlign.center,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -552,51 +558,54 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  TextFormField getInitTempField() {
-    return TextFormField(
-      autocorrect: false,
-      controller: initTempCtrl,
-      //
-      // Get rid of the counter; do the same thing for
-      // other fields as well.
-      //
-      decoration: InputDecoration(
-        counterStyle: const TextStyle(
-          height: double.minPositive,
+  SizedBox getInitTempField() {
+    return SizedBox(
+      width: _fieldWidth,
+      child: TextFormField(
+        autocorrect: false,
+        controller: initTempCtrl,
+        //
+        // Get rid of the counter; do the same thing for
+        // other fields as well.
+        //
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(
+            height: double.minPositive,
+          ),
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(settings.locale.initialTemp),
+          ),
         ),
-        counterText: '',
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(settings.locale.initialTemp),
-        ),
-      ),
-      /*style: const TextStyle(
+        /*style: const TextStyle(
         fontSize: 20,
       ),*/
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        onInitTempFieldChange(value);
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onInitTempFieldChange(value);
 
-        initTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: initTempCtrl.text.length,
-          ),
-        );
-      },
-      onTap: () {
-        initTempCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: initTempCtrl.value.text.length,
-        );
-      },
-      textAlign: TextAlign.center,
+          initTempCtrl.selection = TextSelection.fromPosition(
+            TextPosition(
+              offset: initTempCtrl.text.length,
+            ),
+          );
+        },
+        onTap: () {
+          initTempCtrl.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: initTempCtrl.value.text.length,
+          );
+        },
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
-  void onSetTempFieldChange(String value) {
+  void onTargetTempFieldChange(String value) {
     setState(() {
-      setTempCtrl = reset(setTempCtrl);
+      targetTempCtrl = reset(targetTempCtrl);
 
       if (double.tryParse(value) == null) {
         timeFormatter.calculator.setTemp = initValue;
@@ -620,7 +629,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       if (!_azFlag) {
         if (timeFormatter.calculator.setTemp < _setTempLimit || timeFormatter.calculator.setTemp > _initTempLimit) {
           timeFormatter.calculator.setTemp = _setTempLimit;
-          setTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+          targetTempCtrl.text = timeFormatter.calculator.setTemp.toString();
         }
       }
 
@@ -633,39 +642,42 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  TextFormField getSetTempField() {
-    return TextFormField(
-      autocorrect: false,
-      controller: setTempCtrl,
-      decoration: InputDecoration(
-        counterStyle: const TextStyle(height: double.minPositive),
-        counterText: '',
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: settings.locale.setTemp.isEmpty ? const Text('Set Temp') : Text(settings.locale.setTemp),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        onSetTempFieldChange(value);
-
-        setTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: setTempCtrl.text.length,
+  SizedBox getTargetTempField() {
+    return SizedBox(
+      width: _fieldWidth,
+      child: TextFormField(
+        autocorrect: false,
+        controller: targetTempCtrl,
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(height: double.minPositive),
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: settings.locale.setTemp.isEmpty ? const Text('Target Temp') : Text(settings.locale.setTemp),
           ),
-        );
-      },
-      onTap: () {
-        setTempCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: setTempCtrl.value.text.length,
-        );
-      },
-      /*style: const TextStyle(
+        ),
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onTargetTempFieldChange(value);
+
+          targetTempCtrl.selection = TextSelection.fromPosition(
+            TextPosition(
+              offset: targetTempCtrl.text.length,
+            ),
+          );
+        },
+        onTap: () {
+          targetTempCtrl.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: targetTempCtrl.value.text.length,
+          );
+        },
+        /*style: const TextStyle(
         fontSize: 20,
       ),*/
-      textAlign: TextAlign.center,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -693,39 +705,42 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  TextFormField getVolumeField() {
-    return TextFormField(
-      autocorrect: false,
-      controller: volumeCtrl,
-      decoration: InputDecoration(
-        counterStyle: const TextStyle(height: double.minPositive),
-        counterText: '',
-        filled: true,
-        fillColor: const Color.fromRGBO(211, 211, 211, 1),
-        label: Center(
-          child: settings.locale.volume.isEmpty ? const Text('Volume') : Text(settings.locale.volume),
-        ),
-      ),
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        onVolumeFieldChange(value);
-
-        volumeCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: volumeCtrl.text.length,
+  SizedBox getVolumeField() {
+    return SizedBox(
+      width: _fieldWidth,
+      child: TextFormField(
+        autocorrect: false,
+        controller: volumeCtrl,
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(height: double.minPositive),
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: settings.locale.volume.isEmpty ? const Text('Volume') : Text(settings.locale.volume),
           ),
-        );
-      },
-      onTap: () {
-        volumeCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: volumeCtrl.value.text.length,
-        );
-      },
-      /*style: const TextStyle(
+        ),
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onVolumeFieldChange(value);
+
+          volumeCtrl.selection = TextSelection.fromPosition(
+            TextPosition(
+              offset: volumeCtrl.text.length,
+            ),
+          );
+        },
+        onTap: () {
+          volumeCtrl.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: volumeCtrl.value.text.length,
+          );
+        },
+        /*style: const TextStyle(
         fontSize: 20,
       ),*/
-      textAlign: TextAlign.center,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -765,12 +780,27 @@ class _HomeRouteState extends HomeRouteStateManager {
   @override
   void dispose() {
     initTempCtrl.dispose();
-    setTempCtrl.dispose();
+    targetTempCtrl.dispose();
     volumeCtrl.dispose();
     ampsFirstWireCtrl.dispose();
     ampsSecondWireCtrl.dispose();
     ampsThirdWireCtrl.dispose();
     super.dispose();
+  }
+
+  SizedBox getResetButton(void Function()? onPressed) {
+    return SizedBox(
+      height: _fieldHeight,
+      width: _resetBtnWidth,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: onPressed,
+        child: const Icon(Icons.restart_alt),
+      ),
+    );
   }
 
   @override
@@ -796,25 +826,38 @@ class _HomeRouteState extends HomeRouteStateManager {
                     children: [
                       getTempOutput(),
                       const Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.all(15),
                       ),
                       getClearAllButton(),
                       const Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.all(15),
                       ),
                       Wrap(
                         alignment: WrapAlignment.center,
-                        runSpacing: 32,
-                        spacing: 32,
+                        runSpacing: 30,
+                        spacing: 30,
                         children: [
                           SizedBox(
                             width: _fieldWidth,
                             child: getVoltageDropdown(),
                           ),
                           SizedBox(
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getFirstWireField(),
+                                getResetButton(() {
+                                  ampsFirstWireCtrl.text = '';
+
+                                  onFirstWireFieldChange(ampsFirstWireCtrl.text);
+                                }),
+                              ],
+                            ),
+                          ),
+                          /*SizedBox(
                             width: _fieldWidth,
                             child: getFirstWireField(),
-                          ),
+                          ),*/
                           SizedBox(
                             width: _fieldWidth,
                             child: getSecondWireField(),
@@ -824,17 +867,56 @@ class _HomeRouteState extends HomeRouteStateManager {
                             child: getThirdWireField(),
                           ),
                           SizedBox(
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getInitTempField(),
+                                getResetButton(() {
+                                  initTempCtrl.text = '';
+
+                                  onInitTempFieldChange(initTempCtrl.text);
+                                }),
+                              ],
+                            ),
+                          ),
+                          /*SizedBox(
                             width: _fieldWidth,
                             child: getInitTempField(),
-                          ),
+                          ),*/
                           SizedBox(
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getTargetTempField(),
+                                getResetButton(() {
+                                  targetTempCtrl.text = '';
+
+                                  onTargetTempFieldChange(targetTempCtrl.text);
+                                }),
+                              ],
+                            ),
+                          ),
+                          /*SizedBox(
                             width: _fieldWidth,
                             child: getSetTempField(),
-                          ),
+                          ),*/
                           SizedBox(
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getVolumeField(),
+                                getResetButton(() {
+                                  volumeCtrl.text = '';
+
+                                  onVolumeFieldChange(volumeCtrl.text);
+                                }),
+                              ],
+                            ),
+                          ),
+                          /*SizedBox(
                             width: _fieldWidth,
                             child: getVolumeField(),
-                          ),
+                          ),*/
                         ],
                       ),
                     ],
