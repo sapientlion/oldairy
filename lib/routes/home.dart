@@ -838,8 +838,17 @@ class _HomeRouteState extends HomeRouteStateManager {
                         spacing: 30,
                         children: [
                           SizedBox(
-                            width: _fieldWidth,
-                            child: getVoltageDropdown(),
+                            width: _fieldWidth + _resetBtnWidth,
+                            child: Row(
+                              children: [
+                                getVolumeField(),
+                                getResetButton(() {
+                                  volumeCtrl.text = '';
+
+                                  onVolumeFieldChange(volumeCtrl.text);
+                                }),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             width: _fieldWidth + _resetBtnWidth,
@@ -901,17 +910,8 @@ class _HomeRouteState extends HomeRouteStateManager {
                             child: getSetTempField(),
                           ),*/
                           SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getVolumeField(),
-                                getResetButton(() {
-                                  volumeCtrl.text = '';
-
-                                  onVolumeFieldChange(volumeCtrl.text);
-                                }),
-                              ],
-                            ),
+                            width: _fieldWidth,
+                            child: getVoltageDropdown(),
                           ),
                           /*SizedBox(
                             width: _fieldWidth,

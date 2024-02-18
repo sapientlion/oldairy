@@ -27,17 +27,17 @@ import 'package:oldairy/routes/home.dart';
 class Oldairy extends StatelessWidget {
   const Oldairy({super.key});
 
-  final String _appTitle = 'Oldairy';
+  final String _homeTitle = 'Home';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: _appTitle,
+      title: _homeTitle,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
       home: HomeRoute(
-        title: _appTitle,
+        title: _homeTitle,
       ),
     );
   }
