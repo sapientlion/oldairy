@@ -882,6 +882,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         settings.coolingCoefficientCurrent = json['coefficient'];
         settings.localeCurrent = json['currentLocale'];
         settings.localeName = json['localeFile'];
+        settings.updateCheckFlag = json['updateCheckOnStartup'];
 
         readLocale(settings.localeName).then((value) {
           lFlag = value;

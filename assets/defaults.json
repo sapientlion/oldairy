@@ -1,6 +1,7 @@
 {
     "coolingCoefficientLowerLimit": "0.2",
     "coolingCoefficientUpperLimit": "2.0",
+    "updateCheckOnStartup": "true",
     "oldStandard": "false",
     "timePrecision": "true",
     "timeRounding": "true",

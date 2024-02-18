@@ -37,6 +37,7 @@ class Settings {
   bool oldStandardFlag = false;
   bool timePrecisionFlag = false;
   bool timeRoundingFlag = false;
+  bool updateCheckFlag = false;
 
   double coolingCoefficientLowerLimit = 0.0;
   double coolingCoefficientUpperLimit = 0.0;
@@ -59,6 +60,7 @@ class Settings {
     bool? oldStandardFlagRaw = false;
     bool? timePrecisionFlagRaw = false;
     bool? timeRoundingFlagRaw = false;
+    bool? updateCheckRaw = false;
     double? coolingCoefficientLowerLimitRaw = 0.0;
     double? coolingCoefficientUpperLimitRaw = 0.0;
 
@@ -91,6 +93,14 @@ class Settings {
       coolingCoefficientUpperLimit = 2.0;
     } else {
       coolingCoefficientUpperLimit = coolingCoefficientUpperLimitRaw;
+    }
+
+    updateCheckRaw = bool.tryParse(data['updateCheckOnStartup']);
+
+    if (updateCheckRaw == null) {
+      updateCheckFlag = false;
+    } else {
+      updateCheckFlag = oldStandardFlagRaw;
     }
 
     oldStandardFlagRaw = bool.tryParse(data['oldStandard']);
@@ -193,6 +203,7 @@ class Settings {
   //
   Future<File> get _settingsFile async {
     final path = await _appDataPath;
+
     return File('$path/settings.json');
   }
 
@@ -203,6 +214,7 @@ class Settings {
         'coefficient': coolingCoefficientCurrent,
         'currentLocale': localeCurrent,
         'localeFile': localeName,
+        'updateCheckOnStartup': updateCheckFlag,
       };
 
   Future<File> write(Settings settings) async {
@@ -211,7 +223,7 @@ class Settings {
     String encodedSettings = jsonEncode(settings.toJson());
 
     //
-    // Write the file.
+    // Write data to file.
     //
     return file.writeAsString(encodedSettings);
   }
@@ -221,7 +233,7 @@ class Settings {
       final file = await _settingsFile;
 
       //
-      // Read the file.
+      // Read data from file.
       //
       final contents = await file.readAsString();
 

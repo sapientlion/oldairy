@@ -403,6 +403,16 @@ class _SettingsRouteState extends State<SettingsRoute> {
           ),
         ),
       ),
+      CheckboxListTile(
+        title: const Text('Check for updates on startup'),
+        controlAffinity: ListTileControlAffinity.leading,
+        value: _settings.updateCheckFlag,
+        onChanged: (bool? value) {
+          setState(() {
+            _settings.updateCheckFlag = value!;
+          });
+        },
+      ),
       getUpdateCheckButton(),
     ];
 
@@ -424,7 +434,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   color: Color.fromARGB(0, 0, 0, 0),
                   height: 30.0,
                 ),
-            itemCount: 8),
+            itemCount: 9),
       ),
       bottomNavigationBar: getControlPanel(context),
     );
