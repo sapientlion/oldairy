@@ -497,15 +497,18 @@ class _HomeRouteState extends HomeRouteStateManager {
   }
 
   //
-  // A skeleton method for creating a typical input field for storing amperage values.
+  // A skeleton method for creating a typical input field for storing various values.
   //
-  SizedBox getAmperageField(
+  SizedBox getInputField(
       String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap) {
     return SizedBox(
       width: _fieldWidth,
       child: TextFormField(
         autocorrect: false,
         controller: controller,
+        //
+        // Get rid of the counter.
+        //
         decoration: InputDecoration(
           counterStyle: const TextStyle(height: double.minPositive),
           counterText: '',
@@ -515,6 +518,9 @@ class _HomeRouteState extends HomeRouteStateManager {
             child: Text(label),
           ),
         ),
+        //
+        // Accept numbers only.
+        //
         keyboardType: TextInputType.number,
         onChanged: onChanged,
         onTap: onTap,
@@ -524,7 +530,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   }
 
   SizedBox getFirstAmperageField() {
-    return getAmperageField(
+    return getInputField(
       'Amperage 1',
       ampsFirstWireCtrl,
       (value) {
@@ -550,7 +556,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   }
 
   SizedBox getSecondAmperageField() {
-    return getAmperageField(
+    return getInputField(
       'Amperage 2',
       ampsSecondWireCtrl,
       (value) {
@@ -576,7 +582,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   }
 
   SizedBox getThirdAmperageField() {
-    return getAmperageField(
+    return getInputField(
       'Amperage 3',
       ampsThirdWireCtrl,
       (value) {
@@ -602,125 +608,68 @@ class _HomeRouteState extends HomeRouteStateManager {
   }
 
   SizedBox getInitTempField() {
-    return SizedBox(
-      width: _fieldWidth,
-      child: TextFormField(
-        autocorrect: false,
-        controller: initTempCtrl,
-        //
-        // Get rid of the counter; do the same thing for
-        // other fields as well.
-        //
-        decoration: InputDecoration(
-          counterStyle: const TextStyle(
-            height: double.minPositive,
-          ),
-          counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: settings.locale.initialTemp.isEmpty ? const Text('Initial Temp') : Text(settings.locale.initialTemp),
-          ),
-        ),
-        /*style: const TextStyle(
-        fontSize: 20,
-      ),*/
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onInitTempFieldChange(value);
+    return getInputField(
+      'Initial Temp',
+      initTempCtrl,
+      (value) {
+        onInitTempFieldChange(value);
 
-          initTempCtrl.selection = TextSelection.fromPosition(
-            TextPosition(
-              offset: initTempCtrl.text.length,
-            ),
-          );
-        },
-        onTap: () {
-          initTempCtrl.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: initTempCtrl.value.text.length,
-          );
-        },
-        textAlign: TextAlign.center,
-      ),
+        initTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: initTempCtrl.text.length,
+          ),
+        );
+      },
+      () {
+        initTempCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: initTempCtrl.value.text.length,
+        );
+      },
     );
   }
 
   SizedBox getTargetTempField() {
-    return SizedBox(
-      width: _fieldWidth,
-      child: TextFormField(
-        autocorrect: false,
-        controller: targetTempCtrl,
-        decoration: InputDecoration(
-          counterStyle: const TextStyle(height: double.minPositive),
-          counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: settings.locale.setTemp.isEmpty ? const Text('Target Temp') : Text(settings.locale.setTemp),
-          ),
-        ),
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onTargetTempFieldChange(value);
+    return getInputField(
+      'Target Temp',
+      targetTempCtrl,
+      (value) {
+        onTargetTempFieldChange(value);
 
-          targetTempCtrl.selection = TextSelection.fromPosition(
-            TextPosition(
-              offset: targetTempCtrl.text.length,
-            ),
-          );
-        },
-        onTap: () {
-          targetTempCtrl.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: targetTempCtrl.value.text.length,
-          );
-        },
-        /*style: const TextStyle(
-        fontSize: 20,
-      ),*/
-        textAlign: TextAlign.center,
-      ),
+        targetTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: targetTempCtrl.text.length,
+          ),
+        );
+      },
+      () {
+        targetTempCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: targetTempCtrl.value.text.length,
+        );
+      },
     );
   }
 
   SizedBox getVolumeField() {
-    return SizedBox(
-      width: _fieldWidth,
-      child: TextFormField(
-        autocorrect: false,
-        controller: volumeCtrl,
-        decoration: InputDecoration(
-          counterStyle: const TextStyle(height: double.minPositive),
-          counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: settings.locale.volume.isEmpty ? const Text('Volume') : Text(settings.locale.volume),
-          ),
-        ),
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onVolumeFieldChange(value);
+    return getInputField(
+      'Volume',
+      volumeCtrl,
+      (value) {
+        onVolumeFieldChange(value);
 
-          volumeCtrl.selection = TextSelection.fromPosition(
-            TextPosition(
-              offset: volumeCtrl.text.length,
-            ),
-          );
-        },
-        onTap: () {
-          volumeCtrl.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: volumeCtrl.value.text.length,
-          );
-        },
-        /*style: const TextStyle(
-        fontSize: 20,
-      ),*/
-        textAlign: TextAlign.center,
-      ),
+        volumeCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: volumeCtrl.text.length,
+          ),
+        );
+      },
+      () {
+        volumeCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: volumeCtrl.value.text.length,
+        );
+      },
     );
   }
 
