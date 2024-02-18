@@ -322,11 +322,13 @@ class _HomeRouteState extends HomeRouteStateManager {
         // This is called when the user selects an item.
         //
         onVoltageDropdownSelection(value);
+
+        return;
       },
     );
   }
 
-  void onFirstWireFieldChange(String value) {
+  void onFirstAmperageFieldChange(String value) {
     setState(() {
       ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
 
@@ -359,47 +361,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  SizedBox getFirstWireField() {
-    return SizedBox(
-      width: _fieldWidth,
-      child: TextFormField(
-        autocorrect: false,
-        controller: ampsFirstWireCtrl,
-        decoration: InputDecoration(
-          counterStyle: const TextStyle(height: double.minPositive),
-          counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child:
-                settings.locale.ampsFirstWire.isEmpty ? const Text('Amperage 1') : Text(settings.locale.ampsFirstWire),
-          ),
-        ),
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onFirstWireFieldChange(value);
-
-          ampsFirstWireCtrl.selection = TextSelection.fromPosition(
-            TextPosition(
-              offset: ampsFirstWireCtrl.text.length,
-            ),
-          );
-        },
-        onTap: () {
-          ampsFirstWireCtrl.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: ampsFirstWireCtrl.value.text.length,
-          );
-        },
-        /*style: const TextStyle(
-        fontSize: 20,
-      ),*/
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  void onSecondWireFieldChange(String value) {
+  void onSecondAmperageFieldChange(String value) {
     setState(() {
       ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
 
@@ -423,51 +385,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  Visibility getSecondWireField() {
-    return Visibility(
-      visible: _phaseAvailabilityFlag,
-      child: TextFormField(
-        autocorrect: false,
-        controller: ampsSecondWireCtrl,
-        decoration: InputDecoration(
-          counterStyle: const TextStyle(
-            height: double.minPositive,
-          ),
-          counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: settings.locale.ampsSecondWire.isEmpty
-                ? const Text('Amperage 2')
-                : Text(settings.locale.ampsSecondWire),
-          ),
-          labelStyle: TextStyle(
-            color: _fontColor,
-          ),
-        ),
-        enabled: _phaseAvailabilityFlag,
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onSecondWireFieldChange(value);
-
-          ampsSecondWireCtrl.selection = TextSelection.fromPosition(
-            TextPosition(
-              offset: ampsSecondWireCtrl.text.length,
-            ),
-          );
-        },
-        onTap: () {
-          ampsSecondWireCtrl.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: ampsSecondWireCtrl.value.text.length,
-          );
-        },
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  void onThirdWireChange(String value) {
+  void onThirdAmperageFieldChange(String value) {
     setState(() {
       ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
 
@@ -489,49 +407,6 @@ class _HomeRouteState extends HomeRouteStateManager {
     });
 
     return;
-  }
-
-  Visibility getThirdWireField() {
-    return Visibility(
-      visible: _phaseAvailabilityFlag,
-      child: TextFormField(
-        autocorrect: false,
-        controller: ampsThirdWireCtrl,
-        decoration: InputDecoration(
-          counterStyle: const TextStyle(
-            height: double.minPositive,
-          ),
-          counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child:
-                settings.locale.ampsThirdWire.isEmpty ? const Text('Amperage 3') : Text(settings.locale.ampsThirdWire),
-          ),
-          labelStyle: TextStyle(
-            color: _fontColor,
-          ),
-        ),
-        enabled: _phaseAvailabilityFlag,
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onThirdWireChange(value);
-
-          ampsThirdWireCtrl.selection = TextSelection.fromPosition(
-            TextPosition(
-              offset: ampsThirdWireCtrl.text.length,
-            ),
-          );
-        },
-        onTap: () {
-          ampsThirdWireCtrl.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: ampsThirdWireCtrl.value.text.length,
-          );
-        },
-        textAlign: TextAlign.center,
-      ),
-    );
   }
 
   void onInitTempFieldChange(String value) {
@@ -556,6 +431,174 @@ class _HomeRouteState extends HomeRouteStateManager {
     });
 
     return;
+  }
+
+  void onTargetTempFieldChange(String value) {
+    setState(() {
+      targetTempCtrl = reset(targetTempCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.setTemp = initValue;
+      } else {
+        timeFormatter.calculator.setTemp = double.parse(value);
+      }
+
+      //
+      // Check whether set temperature is equal to an absolute zero.
+      //
+      if (timeFormatter.calculator.setTemp == _absoluteZero) {
+        setState(() {
+          _azFlag = true;
+        });
+      } else {
+        setState(() {
+          _azFlag = false;
+        });
+      }
+
+      if (!_azFlag) {
+        if (timeFormatter.calculator.setTemp < _setTempLimit || timeFormatter.calculator.setTemp > _initTempLimit) {
+          timeFormatter.calculator.setTemp = _setTempLimit;
+          targetTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+        }
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onVolumeFieldChange(String value) {
+    setState(() {
+      volumeCtrl = reset(volumeCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.volume = initValue;
+      } else {
+        timeFormatter.calculator.volume = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.volume > _volumeLimit) {
+        timeFormatter.calculator.volume = _volumeLimit.toDouble();
+        volumeCtrl.text = timeFormatter.calculator.volume.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  //
+  // A skeleton method for creating a typical input field for storing amperage values.
+  //
+  SizedBox getAmperageField(
+      String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap) {
+    return SizedBox(
+      width: _fieldWidth,
+      child: TextFormField(
+        autocorrect: false,
+        controller: controller,
+        decoration: InputDecoration(
+          counterStyle: const TextStyle(height: double.minPositive),
+          counterText: '',
+          filled: true,
+          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: Text(label),
+          ),
+        ),
+        keyboardType: TextInputType.number,
+        onChanged: onChanged,
+        onTap: onTap,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  SizedBox getFirstAmperageField() {
+    return getAmperageField(
+      'Amperage 1',
+      ampsFirstWireCtrl,
+      (value) {
+        onFirstAmperageFieldChange(value);
+
+        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsFirstWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      () {
+        ampsFirstWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: ampsFirstWireCtrl.value.text.length,
+        );
+
+        return;
+      },
+    );
+  }
+
+  SizedBox getSecondAmperageField() {
+    return getAmperageField(
+      'Amperage 2',
+      ampsSecondWireCtrl,
+      (value) {
+        onSecondAmperageFieldChange(value);
+
+        ampsSecondWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsSecondWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      () {
+        ampsSecondWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: ampsSecondWireCtrl.value.text.length,
+        );
+
+        return;
+      },
+    );
+  }
+
+  SizedBox getThirdAmperageField() {
+    return getAmperageField(
+      'Amperage 3',
+      ampsThirdWireCtrl,
+      (value) {
+        onThirdAmperageFieldChange(value);
+
+        ampsThirdWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsThirdWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      () {
+        ampsThirdWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: ampsThirdWireCtrl.value.text.length,
+        );
+
+        return;
+      },
+    );
   }
 
   SizedBox getInitTempField() {
@@ -603,45 +646,6 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  void onTargetTempFieldChange(String value) {
-    setState(() {
-      targetTempCtrl = reset(targetTempCtrl);
-
-      if (double.tryParse(value) == null) {
-        timeFormatter.calculator.setTemp = initValue;
-      } else {
-        timeFormatter.calculator.setTemp = double.parse(value);
-      }
-
-      //
-      // Check whether set temperature is equal to an absolute zero.
-      //
-      if (timeFormatter.calculator.setTemp == _absoluteZero) {
-        setState(() {
-          _azFlag = true;
-        });
-      } else {
-        setState(() {
-          _azFlag = false;
-        });
-      }
-
-      if (!_azFlag) {
-        if (timeFormatter.calculator.setTemp < _setTempLimit || timeFormatter.calculator.setTemp > _initTempLimit) {
-          timeFormatter.calculator.setTemp = _setTempLimit;
-          targetTempCtrl.text = timeFormatter.calculator.setTemp.toString();
-        }
-      }
-
-      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-      timeFormatter.calculator.calculate();
-
-      set();
-    });
-
-    return;
-  }
-
   SizedBox getTargetTempField() {
     return SizedBox(
       width: _fieldWidth,
@@ -679,30 +683,6 @@ class _HomeRouteState extends HomeRouteStateManager {
         textAlign: TextAlign.center,
       ),
     );
-  }
-
-  void onVolumeFieldChange(String value) {
-    setState(() {
-      volumeCtrl = reset(volumeCtrl);
-
-      if (double.tryParse(value) == null) {
-        timeFormatter.calculator.volume = initValue;
-      } else {
-        timeFormatter.calculator.volume = double.parse(value);
-      }
-
-      if (timeFormatter.calculator.volume > _volumeLimit) {
-        timeFormatter.calculator.volume = _volumeLimit.toDouble();
-        volumeCtrl.text = timeFormatter.calculator.volume.toString();
-      }
-
-      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-      timeFormatter.calculator.calculate();
-
-      set();
-    });
-
-    return;
   }
 
   SizedBox getVolumeField() {
@@ -854,11 +834,11 @@ class _HomeRouteState extends HomeRouteStateManager {
                             width: _fieldWidth + _resetBtnWidth,
                             child: Row(
                               children: [
-                                getFirstWireField(),
+                                getFirstAmperageField(),
                                 getResetButton(() {
                                   ampsFirstWireCtrl.text = '';
 
-                                  onFirstWireFieldChange(ampsFirstWireCtrl.text);
+                                  onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
                                 }),
                               ],
                             ),
@@ -869,11 +849,11 @@ class _HomeRouteState extends HomeRouteStateManager {
                           ),*/
                           SizedBox(
                             width: _fieldWidth,
-                            child: getSecondWireField(),
+                            child: getSecondAmperageField(),
                           ),
                           SizedBox(
                             width: _fieldWidth,
-                            child: getThirdWireField(),
+                            child: getThirdAmperageField(),
                           ),
                           SizedBox(
                             width: _fieldWidth + _resetBtnWidth,
