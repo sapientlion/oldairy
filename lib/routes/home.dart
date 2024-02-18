@@ -615,7 +615,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       context,
       MaterialPageRoute(
         builder: (context) => SettingsRoute(
-          title: widget.title,
+          title: 'Settings',
           settings: settings,
         ),
       ),

@@ -86,7 +86,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
-      title: const Text('Enable Time Rounding'),
+      title: const Text('Time rounding'),
       value: _settings.timeRoundingFlag,
       onChanged: (bool? value) {
         setState(() {
@@ -107,7 +107,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
-      title: const Text('Allow Use of Precise Minutes'),
+      title: const Text('Round minutes'),
       value: _settings.timePrecisionFlag,
       onChanged: (bool? value) {
         setState(() {
@@ -129,7 +129,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
       title: _settings.locale.oldStandardSupport.isEmpty
-          ? const Text('Enable 220V/380V Support')
+          ? const Text('Enable 220/380 Support')
           : Text(_settings.locale.oldStandardSupport),
       value: _settings.oldStandardFlag,
       onChanged: (bool? value) {
