@@ -49,10 +49,10 @@ class _HomeRouteState extends HomeRouteStateManager {
   final double _setTempLimit = -50.0;
   final double _fieldHeight = 70.0;
   final double _fieldWidth = 110.0;
-  final double _resetBtnWidth = 50.0;
-  final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
+  final double _resetBtnWidth = 40.0;
+  //final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
 
-  bool _azFlag = false; // Absolute zero flag.
+  bool _absoluteZeroFlag = false;
   bool _phaseAvailabilityFlag = false; // Three-phase electricity switch.
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
@@ -226,7 +226,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         //
         // Nothing to see here...
         //
-        _azFlag && settings.osFlag
+        _absoluteZeroFlag && settings.osFlag
             ? Text(
                 '\u{1f480}',
                 style: TextStyle(
@@ -399,15 +399,15 @@ class _HomeRouteState extends HomeRouteStateManager {
       //
       if (timeFormatter.calculator.setTemp == _absoluteZero) {
         setState(() {
-          _azFlag = true;
+          _absoluteZeroFlag = true;
         });
       } else {
         setState(() {
-          _azFlag = false;
+          _absoluteZeroFlag = false;
         });
       }
 
-      if (!_azFlag) {
+      if (!_absoluteZeroFlag) {
         if (timeFormatter.calculator.setTemp < _setTempLimit || timeFormatter.calculator.setTemp > _initTempLimit) {
           timeFormatter.calculator.setTemp = _setTempLimit;
           targetTempCtrl.text = timeFormatter.calculator.setTemp.toString();
@@ -460,7 +460,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     }
 
     return SizedBox(
-      width: _fieldWidth,
+      width: _fieldWidth * 2 + 70.0,
       child: DropdownButtonFormField<int>(
         decoration: InputDecoration(
           filled: true,
@@ -884,7 +884,7 @@ class _HomeRouteState extends HomeRouteStateManager {
                             ),
                           ),
                           SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
+                            width: _fieldWidth * 2 + 110,
                             child: Row(
                               children: [
                                 getVoltageDropdown(),
