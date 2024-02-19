@@ -39,6 +39,9 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   final double _absoluteZero = -273.15;
 
   @protected
+  final String temperatureOutputInitValue = 'N/a';
+
+  @protected
   bool absoluteZeroFlag = false;
   @protected
   bool phaseAvailabilityFlag = false; // Three-phase electricity switch.
@@ -91,6 +94,15 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
         )
         .toString();
 
+    //
+    // No point in showing `empty` time.
+    //
+    if (coolingTimeHours == '0' || coolingTimeMinutes == '0') {
+      temperatureOutputCtrl.text = temperatureOutputInitValue;
+
+      return;
+    }
+
     temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes';
 
     return;
@@ -99,7 +111,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   //
   // Re-initialize `TextEditingController` if empty.
   //
-  TextEditingController reset(TextEditingController controller) {
+  /*TextEditingController reset(TextEditingController controller) {
     if (controller.value.text.isEmpty) {
       controller.text = initValue.toString();
       controller.selection = TextSelection(
@@ -109,7 +121,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     }
 
     return controller;
-  }
+  }*/
 
   //
   // Purge all fields from data.
@@ -150,27 +162,29 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     final data = await json.decode(response);
     Map<String, dynamic> locale = data;
 
-    setState(() {
-      settings.locale.hours = locale['hours'];
-      settings.locale.minutes = locale['minutes'];
-      settings.locale.initialTemp = locale['initialTemp'];
-      settings.locale.setTemp = locale['setTemp'];
-      settings.locale.volume = locale['volume'];
-      settings.locale.voltage = locale['voltage'];
-      settings.locale.ampsFirstWire = locale['ampFirst'];
-      settings.locale.ampsSecondWire = locale['ampSecond'];
-      settings.locale.ampsThirdWire = locale['ampThird'];
-      settings.locale.clearAll = locale['clearAll'];
-      settings.locale.settings = locale['settings'];
-      settings.locale.about = locale['about'];
-      settings.locale.help = locale['help'];
-      settings.locale.exit = locale['exit'];
-      settings.locale.general = locale['general'];
-      settings.locale.language = locale['language'];
-      settings.locale.oldStandardSupport = locale['oldStandard'];
-      settings.locale.defaults = locale['defaults'];
-      settings.locale.apply = locale['apply'];
-    });
+    setState(
+      () {
+        settings.locale.hours = locale['hours'];
+        settings.locale.minutes = locale['minutes'];
+        settings.locale.initialTemp = locale['initialTemp'];
+        settings.locale.setTemp = locale['setTemp'];
+        settings.locale.volume = locale['volume'];
+        settings.locale.voltage = locale['voltage'];
+        settings.locale.ampsFirstWire = locale['ampFirst'];
+        settings.locale.ampsSecondWire = locale['ampSecond'];
+        settings.locale.ampsThirdWire = locale['ampThird'];
+        settings.locale.clearAll = locale['clearAll'];
+        settings.locale.settings = locale['settings'];
+        settings.locale.about = locale['about'];
+        settings.locale.help = locale['help'];
+        settings.locale.exit = locale['exit'];
+        settings.locale.general = locale['general'];
+        settings.locale.language = locale['language'];
+        settings.locale.oldStandardSupport = locale['oldStandard'];
+        settings.locale.defaults = locale['defaults'];
+        settings.locale.apply = locale['apply'];
+      },
+    );
 
     return true;
   }
@@ -220,25 +234,20 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     return locale;
   }
 
-
-
-  void onVoltageDropdownSelection(int? value) {
+  void onVolumeFieldChange(String value) {
     setState(() {
-      dropdownValue = value!;
-      timeFormatter.calculator.voltage = value.toDouble();
+      //volumeCtrl = reset(volumeCtrl);
 
-      if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
-        phaseAvailabilityFlag = false;
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.volume = initValue;
       } else {
-        phaseAvailabilityFlag = true;
+        timeFormatter.calculator.volume = double.parse(value);
       }
 
-      timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
-      timeFormatter.calculator.setTemp = double.parse(targetTempCtrl.text);
-      timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
-      timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
-      timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
-      timeFormatter.calculator.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
+      if (timeFormatter.calculator.volume > _volumeLimit) {
+        timeFormatter.calculator.volume = _volumeLimit.toDouble();
+        volumeCtrl.text = timeFormatter.calculator.volume.toString();
+      }
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
       timeFormatter.calculator.calculate();
@@ -251,7 +260,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   void onFirstAmperageFieldChange(String value) {
     setState(() {
-      ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
+      //ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
 
       //
       // Input field can't be empty. Prevent that by doing the following.
@@ -284,7 +293,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   void onSecondAmperageFieldChange(String value) {
     setState(() {
-      ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
+      //ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
 
       if (double.tryParse(value) == null) {
         timeFormatter.calculator.ampsSecondWire = initValue;
@@ -308,7 +317,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   void onThirdAmperageFieldChange(String value) {
     setState(() {
-      ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
+      //ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
 
       if (double.tryParse(value) == null) {
         timeFormatter.calculator.ampsThirdWire = initValue;
@@ -332,7 +341,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   void onInitTempFieldChange(String value) {
     setState(() {
-      initTempCtrl = reset(initTempCtrl);
+      //initTempCtrl = reset(initTempCtrl);
 
       if (double.tryParse(value) == null) {
         timeFormatter.calculator.initialTemp = initValue;
@@ -356,7 +365,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   void onTargetTempFieldChange(String value) {
     setState(() {
-      targetTempCtrl = reset(targetTempCtrl);
+      //targetTempCtrl = reset(targetTempCtrl);
 
       if (double.tryParse(value) == null) {
         timeFormatter.calculator.setTemp = initValue;
@@ -393,20 +402,23 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     return;
   }
 
-  void onVolumeFieldChange(String value) {
+  void onVoltageDropdownSelection(int? value) {
     setState(() {
-      volumeCtrl = reset(volumeCtrl);
+      dropdownValue = value!;
+      timeFormatter.calculator.voltage = value.toDouble();
 
-      if (double.tryParse(value) == null) {
-        timeFormatter.calculator.volume = initValue;
+      if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
+        phaseAvailabilityFlag = false;
       } else {
-        timeFormatter.calculator.volume = double.parse(value);
+        phaseAvailabilityFlag = true;
       }
 
-      if (timeFormatter.calculator.volume > _volumeLimit) {
-        timeFormatter.calculator.volume = _volumeLimit.toDouble();
-        volumeCtrl.text = timeFormatter.calculator.volume.toString();
-      }
+      timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
+      timeFormatter.calculator.setTemp = double.parse(targetTempCtrl.text);
+      timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
+      timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
+      timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
+      timeFormatter.calculator.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
 
       timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
       timeFormatter.calculator.calculate();

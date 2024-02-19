@@ -46,14 +46,12 @@ class _HomeRouteState extends HomeRouteStateManager {
   final double _fieldWidth = 110.0;
   final double _resetBtnWidth = 40.0;
 
-  final String _temperatureOutputInitValue = 'N/a';
-
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
   _HomeRouteState() {
     dropdownValue = _voltages.first;
 
-    temperatureOutputCtrl.text = _temperatureOutputInitValue;
+    temperatureOutputCtrl.text = temperatureOutputInitValue;
     volumeCtrl.text = initValue.toString();
     ampsFirstWireCtrl.text = initValue.toString();
     ampsSecondWireCtrl.text = initValue.toString();
@@ -202,7 +200,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   FloatingActionButton getClearAllButton() {
     return FloatingActionButton.extended(
       onPressed: () {
-        temperatureOutputCtrl.text = _temperatureOutputInitValue;
+        temperatureOutputCtrl.text = temperatureOutputInitValue;
 
         purge(timeFormatter.calculator);
       },
@@ -302,8 +300,11 @@ class _HomeRouteState extends HomeRouteStateManager {
   // A skeleton method for creating a typical input field for storing various values.
   //
   SizedBox getInputField(
+      String label, TextEditingController controller, void Function(String)? onChanged,
+      {bool enabled = false, void Function()? onTap}) {
+  /*SizedBox getInputField(
       String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap,
-      {bool enabled = false}) {
+      {bool enabled = false}) {*/
     return SizedBox(
       width: _fieldWidth,
       child: TextFormField(
@@ -348,14 +349,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      () {
+      /*() {
         ampsFirstWireCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: ampsFirstWireCtrl.value.text.length,
         );
 
         return;
-      },
+      },*/
     );
   }
 
@@ -374,14 +375,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      () {
+      /*() {
         ampsSecondWireCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: ampsSecondWireCtrl.value.text.length,
         );
 
         return;
-      },
+      },*/
       enabled: true,
     );
   }
@@ -401,14 +402,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      () {
+      /*() {
         ampsThirdWireCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: ampsThirdWireCtrl.value.text.length,
         );
 
         return;
-      },
+      },*/
       enabled: true,
     );
   }
@@ -428,14 +429,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      () {
+      /*() {
         initTempCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: initTempCtrl.value.text.length,
         );
 
         return;
-      },
+      },*/
     );
   }
 
@@ -454,14 +455,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      () {
+      /*() {
         targetTempCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: targetTempCtrl.value.text.length,
         );
 
         return;
-      },
+      },*/
     );
   }
 
@@ -480,14 +481,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      () {
+      /*() {
         volumeCtrl.selection = TextSelection(
           baseOffset: 0,
           extentOffset: volumeCtrl.value.text.length,
         );
 
         return;
-      },
+      },*/
     );
   }
 
