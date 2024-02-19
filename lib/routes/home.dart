@@ -689,12 +689,14 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   @override
   void dispose() {
-    initTempCtrl.dispose();
-    targetTempCtrl.dispose();
+    temperatureOutputCtrl.dispose();
     volumeCtrl.dispose();
     ampsFirstWireCtrl.dispose();
     ampsSecondWireCtrl.dispose();
     ampsThirdWireCtrl.dispose();
+    initTempCtrl.dispose();
+    targetTempCtrl.dispose();
+
     super.dispose();
   }
 
