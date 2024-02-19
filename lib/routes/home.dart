@@ -50,6 +50,8 @@ class _HomeRouteState extends HomeRouteStateManager {
   final double _fieldHeight = 70.0;
   final double _fieldWidth = 110.0;
   final double _resetBtnWidth = 40.0;
+
+  final String _temperatureOutputInitValue = 'N/a';
   //final Color _fontColor = const Color.fromRGBO(0, 0, 0, 1);
 
   bool _absoluteZeroFlag = false;
@@ -59,12 +61,13 @@ class _HomeRouteState extends HomeRouteStateManager {
   _HomeRouteState() {
     dropdownValue = _voltages.first;
 
-    initTempCtrl.text = initValue.toString();
-    targetTempCtrl.text = initValue.toString();
+    temperatureOutputCtrl.text = _temperatureOutputInitValue;
     volumeCtrl.text = initValue.toString();
     ampsFirstWireCtrl.text = initValue.toString();
     ampsSecondWireCtrl.text = initValue.toString();
     ampsThirdWireCtrl.text = initValue.toString();
+    initTempCtrl.text = initValue.toString();
+    targetTempCtrl.text = initValue.toString();
 
     //
     // Don't forget to initialize the voltage located inside of the calculator object.
@@ -204,61 +207,10 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  Wrap getTempOutput() {
-    return Wrap(
-      children: [
-        settings.locale.hours.isEmpty
-            ? Text(
-                '$coolingTimeHours h. ',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ) // Trailing space is intentional. Do not remove!
-            : Text(
-                '$coolingTimeHours ${settings.locale.hours}',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-        settings.locale.minutes.isEmpty
-            ? Text(
-                '$coolingTimeMinutes m.',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            : Text(
-                '$coolingTimeMinutes ${settings.locale.minutes}',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-        //
-        // Nothing to see here...
-        //
-        _absoluteZeroFlag && settings.osFlag
-            ? Text(
-                '\u{1f480}',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                ),
-              )
-            : const Text(''),
-      ],
-    );
-  }
-
   FloatingActionButton getClearAllButton() {
     return FloatingActionButton.extended(
       onPressed: () {
-        setState(() {
-          coolingTimeHours = '0';
-          coolingTimeMinutes = '0';
-        });
+        temperatureOutputCtrl.text = _temperatureOutputInitValue;
 
         purge(timeFormatter.calculator);
       },
@@ -459,6 +411,42 @@ class _HomeRouteState extends HomeRouteStateManager {
     });
 
     return;
+  }
+
+  Row getTemperatureOutput() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: _fieldWidth * 2 + 110,
+          child: TextFormField(
+            controller: temperatureOutputCtrl,
+            decoration: const InputDecoration(
+              counterStyle: TextStyle(height: double.minPositive),
+              counterText: '',
+              filled: true,
+              fillColor: Color.fromRGBO(211, 211, 211, 1),
+              label: Center(
+                child: Text('Cooling Time'),
+              ),
+            ),
+            readOnly: true,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        //
+        // Nothing to see here...
+        //
+        _absoluteZeroFlag && settings.osFlag
+            ? Text(
+                '\u{1f480}',
+                style: TextStyle(
+                  fontSize: _tempOutputFontSize,
+                ),
+              )
+            : const Text(''),
+      ],
+    );
   }
 
   SizedBox getVoltageDropdown() {
@@ -790,7 +778,7 @@ class _HomeRouteState extends HomeRouteStateManager {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      getTempOutput(),
+                      getTemperatureOutput(),
                       const Padding(
                         padding: EdgeInsets.all(15),
                       ),

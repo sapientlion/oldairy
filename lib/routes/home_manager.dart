@@ -45,20 +45,19 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   @protected
   TimeFormatter timeFormatter = TimeFormatter(
-      calculator: Calculator(
-    initialTemp: 0.0,
-    setTemp: 0.0,
-    volume: 0.0,
-    voltage: 0.0,
-    ampsFirstWire: 0.0,
-    ampsSecondWire: 0.0,
-    ampsThirdWire: 0.0,
-  ));
+    calculator: Calculator(
+      initialTemp: 0.0,
+      setTemp: 0.0,
+      volume: 0.0,
+      voltage: 0.0,
+      ampsFirstWire: 0.0,
+      ampsSecondWire: 0.0,
+      ampsThirdWire: 0.0,
+    ),
+  );
 
   @protected
-  TextEditingController initTempCtrl = TextEditingController();
-  @protected
-  TextEditingController targetTempCtrl = TextEditingController();
+  TextEditingController temperatureOutputCtrl = TextEditingController();
   @protected
   TextEditingController volumeCtrl = TextEditingController();
   @protected
@@ -67,6 +66,10 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   TextEditingController ampsSecondWireCtrl = TextEditingController();
   @protected
   TextEditingController ampsThirdWireCtrl = TextEditingController();
+  @protected
+  TextEditingController initTempCtrl = TextEditingController();
+  @protected
+  TextEditingController targetTempCtrl = TextEditingController();
 
   //
   // Set cooling time.
@@ -79,6 +82,8 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           pFlag: settings.pFlag,
         )
         .toString();
+
+    temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes';
 
     return;
   }
