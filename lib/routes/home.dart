@@ -41,7 +41,6 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends HomeRouteStateManager {
-
   final double _tempOutputFontSize = 25;
   final double _fieldHeight = 70.0;
   final double _fieldWidth = 110.0;
@@ -68,34 +67,32 @@ class _HomeRouteState extends HomeRouteStateManager {
     timeFormatter.calculator.voltage = _voltages.first.toDouble();
   }
 
-
-
   //
   // React to popup menu button presses.
   //
   void doPopupAction(int value) async {
     switch (value) {
-    //
-    // Open the settings route.
-    //
+      //
+      // Open the settings route.
+      //
       case 1:
         {
           getSettingsRoute();
 
           return;
         }
-    //
-    // Open the about route.
-    //
+      //
+      // Open the about route.
+      //
       case 2:
         {
           getAboutRoute();
 
           return;
         }
-    //
-    // Terminate app altogether.
-    //
+      //
+      // Terminate app altogether.
+      //
       case 3:
         {
           SystemNavigator.pop();
@@ -506,11 +503,155 @@ class _HomeRouteState extends HomeRouteStateManager {
         onPressed: !enabled
             ? onPressed
             : !phaseAvailabilityFlag
-            ? null
-            : onPressed,
+                ? null
+                : onPressed,
         child: const Icon(Icons.restart_alt),
       ),
     );
+  }
+
+  List<Widget> getForm() {
+    List<Widget> widgetChildren = [];
+    List<Widget> widgets = [];
+
+    for (int index = 0; index < 6; index++) {
+      switch (index) {
+        case 0:
+          {
+            widgetChildren = [
+              getVolumeField(),
+              getResetButton(
+                    () {
+                  volumeCtrl.text = '';
+
+                  onVolumeFieldChange(volumeCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+        case 1:
+          {
+            widgetChildren = [
+              getFirstAmperageField(),
+              getResetButton(
+                    () {
+                  ampsFirstWireCtrl.text = '';
+
+                  onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+        case 2:
+          {
+            widgetChildren = [
+              getSecondAmperageField(),
+              getResetButton(
+                    () {
+                  ampsSecondWireCtrl.text = '';
+
+                  onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
+
+                  return;
+                },
+                enabled: true,
+              ),
+            ];
+
+            break;
+          }
+        case 3:
+          {
+            widgetChildren = [
+              getThirdAmperageField(),
+              getResetButton(
+                    () {
+                  ampsThirdWireCtrl.text = '';
+
+                  onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
+
+                  return;
+                },
+                enabled: true,
+              ),
+            ];
+
+            break;
+          }
+        case 4:
+          {
+            widgetChildren = [
+              getInitTempField(),
+              getResetButton(
+                    () {
+                  initTempCtrl.text = '';
+
+                  onInitTempFieldChange(initTempCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+        case 5:
+          {
+            widgetChildren = [
+              getTargetTempField(),
+              getResetButton(
+                    () {
+                  targetTempCtrl.text = '';
+
+                  onTargetTempFieldChange(targetTempCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+      }
+
+      widgets.add(
+        SizedBox(
+          width: _fieldWidth + _resetBtnWidth,
+          child: Row(
+            children: widgetChildren,
+          ),
+        ),
+      );
+    }
+
+    widgets.add(
+      SizedBox(
+        width: _fieldWidth * 2 + 110,
+        child: Row(
+          children: [
+            getVoltageDropdown(),
+            //
+            // TODO finish implementation of the reset routine for voltage dropdown menu.
+            //
+            getResetButton(
+                  () {
+                return;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return widgets;
   }
 
   @override
@@ -568,155 +709,28 @@ class _HomeRouteState extends HomeRouteStateManager {
       ),
       body: Scrollbar(
         thumbVisibility: true,
-        thickness: 8.0,
+        thickness: 10.0,
         child: Center(
           child: SingleChildScrollView(
             dragStartBehavior: DragStartBehavior.down,
-            child: Column(
-              children: <Widget>[
-                Form(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      getTemperatureOutput(),
-                      const Padding(
-                        padding: EdgeInsets.all(15),
-                      ),
-                      getClearAllButton(),
-                      const Padding(
-                        padding: EdgeInsets.all(15),
-                      ),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        runSpacing: 30,
-                        spacing: 30,
-                        children: [
-                          SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getVolumeField(),
-                                getResetButton(
-                                  () {
-                                    volumeCtrl.text = '';
-
-                                    onVolumeFieldChange(volumeCtrl.text);
-
-                                    return;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getFirstAmperageField(),
-                                getResetButton(
-                                  () {
-                                    ampsFirstWireCtrl.text = '';
-
-                                    onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
-
-                                    return;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getSecondAmperageField(),
-                                getResetButton(
-                                  () {
-                                    ampsSecondWireCtrl.text = '';
-
-                                    onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
-
-                                    return;
-                                  },
-                                  enabled: true,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getThirdAmperageField(),
-                                getResetButton(
-                                  () {
-                                    ampsThirdWireCtrl.text = '';
-
-                                    onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
-
-                                    return;
-                                  },
-                                  enabled: true,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getInitTempField(),
-                                getResetButton(
-                                  () {
-                                    initTempCtrl.text = '';
-
-                                    onInitTempFieldChange(initTempCtrl.text);
-
-                                    return;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _fieldWidth + _resetBtnWidth,
-                            child: Row(
-                              children: [
-                                getTargetTempField(),
-                                getResetButton(
-                                  () {
-                                    targetTempCtrl.text = '';
-
-                                    onTargetTempFieldChange(targetTempCtrl.text);
-
-                                    return;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: _fieldWidth * 2 + 110,
-                            child: Row(
-                              children: [
-                                getVoltageDropdown(),
-                                //
-                                // TODO finish implementation of the reset routine for voltage dropdown menu.
-                                //
-                                getResetButton(
-                                  () {
-                                    return;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+            child: Form(
+              child: Column(
+                children: [
+                  getTemperatureOutput(),
+                  const Padding(
+                    padding: EdgeInsets.all(15),
                   ),
-                ),
-              ],
+                  getClearAllButton(),
+                  const Padding(
+                    padding: EdgeInsets.all(15),
+                  ),
+                  Wrap(
+                    runSpacing: 30,
+                    spacing: 30,
+                    children: getForm(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
