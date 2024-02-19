@@ -31,15 +31,23 @@ import 'package:oldairy/classes/tformatter.dart';
 import 'package:oldairy/routes/home.dart';
 
 abstract class HomeRouteStateManager extends State<HomeRoute> {
+  final int _initTempLimit = 50;
+  final int _volumeLimit = 30000;
+  final int _ampsLimit = 125;
   final double initValue = 0.0;
+  final double _targetTempLimit = -50.0;
+  final double _absoluteZero = -273.15;
 
+  @protected
+  bool absoluteZeroFlag = false;
+  @protected
+  bool phaseAvailabilityFlag = false; // Three-phase electricity switch.
   @protected
   int dropdownValue = 0; // Current dropdown button value.
   @protected
   String coolingTimeHours = '0'; // Cooling time: hours.
   @protected
   String coolingTimeMinutes = '0'; // Cooling time: minutes.
-
   @protected
   Settings settings = Settings(); // General app settings.
 
@@ -210,5 +218,202 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     }
 
     return locale;
+  }
+
+
+
+  void onVoltageDropdownSelection(int? value) {
+    setState(() {
+      dropdownValue = value!;
+      timeFormatter.calculator.voltage = value.toDouble();
+
+      if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
+        phaseAvailabilityFlag = false;
+      } else {
+        phaseAvailabilityFlag = true;
+      }
+
+      timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
+      timeFormatter.calculator.setTemp = double.parse(targetTempCtrl.text);
+      timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
+      timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
+      timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
+      timeFormatter.calculator.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onFirstAmperageFieldChange(String value) {
+    setState(() {
+      ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
+
+      //
+      // Input field can't be empty. Prevent that by doing the following.
+      //
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.ampsFirstWire = initValue;
+      } else {
+        timeFormatter.calculator.ampsFirstWire = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
+        //
+        // Set member value to pre-defined amperage limit.
+        //
+        timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
+        //
+        // Assign a new value to the input field.
+        //
+        ampsFirstWireCtrl.text = timeFormatter.calculator.ampsFirstWire.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onSecondAmperageFieldChange(String value) {
+    setState(() {
+      ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.ampsSecondWire = initValue;
+      } else {
+        timeFormatter.calculator.ampsSecondWire = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
+        timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
+        ampsSecondWireCtrl.text = timeFormatter.calculator.ampsSecondWire.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onThirdAmperageFieldChange(String value) {
+    setState(() {
+      ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.ampsThirdWire = initValue;
+      } else {
+        timeFormatter.calculator.ampsThirdWire = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
+        timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
+        ampsThirdWireCtrl.text = timeFormatter.calculator.ampsThirdWire.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onInitTempFieldChange(String value) {
+    setState(() {
+      initTempCtrl = reset(initTempCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.initialTemp = initValue;
+      } else {
+        timeFormatter.calculator.initialTemp = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.initialTemp > _initTempLimit || timeFormatter.calculator.initialTemp < 0) {
+        timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
+        initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onTargetTempFieldChange(String value) {
+    setState(() {
+      targetTempCtrl = reset(targetTempCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.setTemp = initValue;
+      } else {
+        timeFormatter.calculator.setTemp = double.parse(value);
+      }
+
+      //
+      // Check whether set temperature is equal to an absolute zero.
+      //
+      if (timeFormatter.calculator.setTemp == _absoluteZero) {
+        setState(() {
+          absoluteZeroFlag = true;
+        });
+      } else {
+        setState(() {
+          absoluteZeroFlag = false;
+        });
+      }
+
+      if (!absoluteZeroFlag) {
+        if (timeFormatter.calculator.setTemp < _targetTempLimit || timeFormatter.calculator.setTemp > _initTempLimit) {
+          timeFormatter.calculator.setTemp = _targetTempLimit;
+          targetTempCtrl.text = timeFormatter.calculator.setTemp.toString();
+        }
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
+  }
+
+  void onVolumeFieldChange(String value) {
+    setState(() {
+      volumeCtrl = reset(volumeCtrl);
+
+      if (double.tryParse(value) == null) {
+        timeFormatter.calculator.volume = initValue;
+      } else {
+        timeFormatter.calculator.volume = double.parse(value);
+      }
+
+      if (timeFormatter.calculator.volume > _volumeLimit) {
+        timeFormatter.calculator.volume = _volumeLimit.toDouble();
+        volumeCtrl.text = timeFormatter.calculator.volume.toString();
+      }
+
+      timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+      timeFormatter.calculator.calculate();
+
+      set();
+    });
+
+    return;
   }
 }
