@@ -503,7 +503,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   // A skeleton method for creating a typical input field for storing various values.
   //
   SizedBox getInputField(
-      String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap) {
+      String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap, {bool enabled = false}) {
     return SizedBox(
       width: _fieldWidth,
       child: TextFormField(
@@ -521,6 +521,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             child: Text(label),
           ),
         ),
+        enabled: !enabled ? null : _phaseAvailabilityFlag,
         //
         // Accept numbers only.
         //
@@ -581,6 +582,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
+      enabled: true,
     );
   }
 
@@ -607,6 +609,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
+      enabled: true,
     );
   }
 
@@ -732,7 +735,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     super.dispose();
   }
 
-  SizedBox getResetButton(void Function()? onPressed) {
+  SizedBox getResetButton(void Function()? onPressed, {bool enabled = false}) {
     return SizedBox(
       height: _fieldHeight,
       width: _resetBtnWidth,
@@ -741,7 +744,7 @@ class _HomeRouteState extends HomeRouteStateManager {
           backgroundColor: Colors.green,
           foregroundColor: Colors.white,
         ),
-        onPressed: onPressed,
+        onPressed: !enabled ? onPressed : !_phaseAvailabilityFlag ? null : onPressed,
         child: const Icon(Icons.restart_alt),
       ),
     );
@@ -828,6 +831,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
                                     return;
                                   },
+                                  enabled: true,
                                 ),
                               ],
                             ),
@@ -845,6 +849,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
                                     return;
                                   },
+                                  enabled: true,
                                 ),
                               ],
                             ),
