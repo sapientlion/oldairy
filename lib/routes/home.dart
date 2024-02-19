@@ -187,6 +187,20 @@ class _HomeRouteState extends HomeRouteStateManager {
       onSelected: (value) async {
         doPopupAction(value);
       },
+      child: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              Icon(Icons.menu),
+              Text('Menu'),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -503,7 +517,8 @@ class _HomeRouteState extends HomeRouteStateManager {
   // A skeleton method for creating a typical input field for storing various values.
   //
   SizedBox getInputField(
-      String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap, {bool enabled = false}) {
+      String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap,
+      {bool enabled = false}) {
     return SizedBox(
       width: _fieldWidth,
       child: TextFormField(
@@ -744,7 +759,11 @@ class _HomeRouteState extends HomeRouteStateManager {
           backgroundColor: Colors.green,
           foregroundColor: Colors.white,
         ),
-        onPressed: !enabled ? onPressed : !_phaseAvailabilityFlag ? null : onPressed,
+        onPressed: !enabled
+            ? onPressed
+            : !_phaseAvailabilityFlag
+                ? null
+                : onPressed,
         child: const Icon(Icons.restart_alt),
       ),
     );
