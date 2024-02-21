@@ -40,7 +40,7 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends HomeRouteStateManager {
-  final double _tempOutputFontSize = 25;
+  final double _tempOutputFontSize = 25.0;
   final double _fieldHeight = 70.0;
   final double _fieldWidth = 110.0;
   final double _resetBtnWidth = 40.0;
@@ -380,6 +380,11 @@ class _HomeRouteState extends HomeRouteStateManager {
             //
             getResetButton(
               onPressed: () {
+                setState(() {
+                  dropdownValue = _voltages.first;
+
+                });
+
                 return;
               },
             ),
@@ -708,14 +713,14 @@ class _HomeRouteState extends HomeRouteStateManager {
         //
         // Nothing to see here...
         //
-        absoluteZeroFlag && settings.osFlag
+        /*absoluteZeroFlag && settings.osFlag
             ? Text(
                 '\u{1f480}',
                 style: TextStyle(
                   fontSize: _tempOutputFontSize,
                 ),
               )
-            : const Text(''),
+            : const Text(''),*/
       ],
     );
   }
@@ -819,7 +824,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getVolumeField() {
     return getInputField(
-      label: 'Volume',
+      label: 'Volume (L)',
       controller: volumeCtrl,
       hintText: '0.0',
       onChanged: (value) {

@@ -35,7 +35,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   final int _volumeLimit = 30000;
   final int _ampsLimit = 125;
   //final double initValue = 0.0;
-  final double _targetTempLimit = -50.0;
+  final double _targetTempLimit = -273.15;
   final double _absoluteZero = -273.15;
 
   @protected
@@ -211,11 +211,14 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
         // Check whether set temperature is equal to an absolute zero.
         //
         if (timeFormatter.calculator.targetTemp == _absoluteZero) {
-          setState(
-            () {
-              absoluteZeroFlag = true;
-            },
-          );
+          if(timeFormatter.calculator.voltage == 380 || timeFormatter.calculator.voltage == 400)
+            {
+              setState(
+                    () {
+                  absoluteZeroFlag = true;
+                },
+              );
+            }
         } else {
           setState(
             () {
@@ -224,13 +227,24 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           );
         }
 
-        if (!absoluteZeroFlag) {
+        if (timeFormatter.calculator.targetTemp < _targetTempLimit || timeFormatter.calculator.targetTemp > timeFormatter.calculator.initialTemp) {
+          timeFormatter.calculator.targetTemp = -50.0;
+          targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
+        }
+
+        /*if (timeFormatter.calculator.targetTemp < _targetTempLimit ||
+            timeFormatter.calculator.targetTemp > _initTempLimit) {
+          timeFormatter.calculator.targetTemp = _targetTempLimit;
+          targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
+        }*/
+
+        /*if (!absoluteZeroFlag) {
           if (timeFormatter.calculator.targetTemp < _targetTempLimit ||
               timeFormatter.calculator.targetTemp > _initTempLimit) {
             timeFormatter.calculator.targetTemp = _targetTempLimit;
             targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
           }
-        }
+        }*/
 
         timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
         timeFormatter.calculator.calculate();
@@ -355,7 +369,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
     return controller;
   }*/
-  
+
   ///
   /// Purge all fields from data and reset the calculator.
   ///
@@ -449,6 +463,13 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
       return;
     }
+
+    if(absoluteZeroFlag)
+      {
+        temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes \u{1f480}';
+
+        return;
+      }
 
     temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes';
 
