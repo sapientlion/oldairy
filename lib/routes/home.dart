@@ -26,15 +26,14 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/home_manager.dart';
 import 'package:oldairy/routes/settings.dart';
 
 class HomeRoute extends StatefulWidget {
-  const HomeRoute({super.key, required this.title});
-
   final String title;
+
+  const HomeRoute({super.key, required this.title});
 
   @override
   State<HomeRoute> createState() => _HomeRouteState();
@@ -65,9 +64,64 @@ class _HomeRouteState extends HomeRouteStateManager {
     timeFormatter.calculator.voltage = _voltages.first.toDouble();
   }
 
-  //
-  // React to popup menu button presses.
-  //
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          getPopupMenuButton(context),
+        ],
+      ),
+      body: Scrollbar(
+        thumbVisibility: true,
+        thickness: 10.0,
+        child: Center(
+          child: SingleChildScrollView(
+            dragStartBehavior: DragStartBehavior.down,
+            child: Form(
+              child: Column(
+                children: [
+                  getTemperatureOutput(),
+                  const Padding(
+                    padding: EdgeInsets.all(15),
+                  ),
+                  getClearAllButton(),
+                  const Padding(
+                    padding: EdgeInsets.all(15),
+                  ),
+                  Wrap(
+                    runSpacing: 30,
+                    spacing: 30,
+                    children: getForm(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    temperatureOutputCtrl.dispose();
+    volumeCtrl.dispose();
+    ampsFirstWireCtrl.dispose();
+    ampsSecondWireCtrl.dispose();
+    ampsThirdWireCtrl.dispose();
+    initTempCtrl.dispose();
+    targetTempCtrl.dispose();
+
+    super.dispose();
+  }
+
+  ///
+  /// Get a response whenever popup menu button is pressed by the user.
+  ///
+  /// [value] - menu option.
+  ///
   void doPopupAction(int value) async {
     switch (value) {
       //
@@ -102,49 +156,9 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  //
-  // Get settings route on screen.
-  //
-  void getSettingsRoute() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SettingsRoute(
-          title: widget.title,
-          settings: settings,
-        ),
-      ),
-    );
-
-    //
-    // Transfer newly applied settings from settings route to home route.
-    //
-    setState(() {
-      settings = result;
-    });
-
-    //
-    // Change UI language.
-    //
-    switchLocale(settings.localeCurrent);
-
-    //
-    // Do calculate after applying the app settings.
-    //
-    timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-    timeFormatter.calculator.calculate();
-
-    //
-    // Show final results on screen.
-    //
-    set();
-
-    return;
-  }
-
-  //
-  // Get about route on screen.
-  //
+  ///
+  /// Get the about route on screen.
+  ///
   void getAboutRoute() async {
     await Navigator.push(
       context,
@@ -159,44 +173,9 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  PopupMenuButton<int> getPopupMenuButton(BuildContext context) {
-    return PopupMenuButton(
-      itemBuilder: (context) {
-        return [
-          PopupMenuItem<int>(
-            value: 1,
-            child: settings.locale.settings.isEmpty ? const Text("Settings") : Text(settings.locale.settings),
-          ),
-          PopupMenuItem<int>(
-            value: 2,
-            child: settings.locale.about.isEmpty ? const Text("About") : Text(settings.locale.about),
-          ),
-          PopupMenuItem<int>(
-            value: 3,
-            child: settings.locale.exit.isEmpty ? const Text("Exit") : Text(settings.locale.exit),
-          ),
-        ];
-      },
-      onSelected: (value) async {
-        doPopupAction(value);
-      },
-      child: const Center(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              Icon(Icons.menu),
-              Text('Menu'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
+  ///
+  /// Get clear all button that removes all data stored inside of all input fields.
+  ///
   FloatingActionButton getClearAllButton() {
     return FloatingActionButton.extended(
       onPressed: () {
@@ -208,99 +187,265 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  Row getTemperatureOutput() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: _fieldWidth * 2 + 110,
-          child: TextFormField(
-            controller: temperatureOutputCtrl,
-            decoration: const InputDecoration(
-              counterStyle: TextStyle(height: double.minPositive),
-              counterText: '',
-              filled: true,
-              fillColor: Color.fromRGBO(211, 211, 211, 1),
-              label: Center(
-                child: Text('Cooling Time (hh:mm)'),
-              ),
-            ),
-            readOnly: true,
-            textAlign: TextAlign.center,
+  ///
+  /// Get first amperage input field.
+  ///
+  SizedBox getFirstAmperageField() {
+    return getInputField(
+      label: 'Amperage 1 (A)',
+      controller: ampsFirstWireCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onFirstAmperageFieldChange(value);
+
+        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsFirstWireCtrl.text.length,
           ),
-        ),
-        //
-        // Nothing to see here...
-        //
-        absoluteZeroFlag && settings.osFlag
-            ? Text(
-                '\u{1f480}',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                ),
-              )
-            : const Text(''),
-      ],
+        );
+
+        return;
+      },
+      /*SizedBox getFirstAmperageField() {
+    return getInputField(
+      'Amperage 1',
+      ampsFirstWireCtrl,
+      (value) {
+        onFirstAmperageFieldChange(value);
+
+        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsFirstWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },*/
+      /*() {
+        ampsFirstWireCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: ampsFirstWireCtrl.value.text.length,
+        );
+
+        return;
+      },*/
     );
   }
 
-  SizedBox getVoltageDropdown() {
+  ///
+  /// Get a list of all form widgets. Before storing them, ensure that all widgets are encapsulated
+  /// within a simple container thus getting a structurally sound UI layout.
+  ///
+  /// * [widgets] - form widgets storage.
+  ///
+  List<Widget> getForm() {
+    List<Widget> widgetChildren = [];
+    List<Widget> widgets = [];
+
     //
-    // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
-    // values.
+    // Create a widget and attach reset button to it.
     //
-    if (!settings.osFlag) {
-      _voltages = <int>[230, 400];
-      dropdownValue = _voltages.first;
-    } else {
-      _voltages = <int>[220, 230, 380, 400];
+    for (int index = 0; index < 6; index++) {
+      switch (index) {
+        case 0:
+          {
+            widgetChildren = [
+              getVolumeField(),
+              getResetButton(
+                onPressed: () {
+                  volumeCtrl.text = '';
+
+                  onVolumeFieldChange(volumeCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+        case 1:
+          {
+            widgetChildren = [
+              getFirstAmperageField(),
+              getResetButton(
+                onPressed: () {
+                  ampsFirstWireCtrl.text = '';
+
+                  onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+        case 2:
+          {
+            widgetChildren = [
+              getSecondAmperageField(),
+              getResetButton(
+                onPressed: () {
+                  ampsSecondWireCtrl.text = '';
+
+                  onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
+
+                  return;
+                },
+                enabled: true,
+              ),
+            ];
+
+            break;
+          }
+        case 3:
+          {
+            widgetChildren = [
+              getThirdAmperageField(),
+              getResetButton(
+                onPressed: () {
+                  ampsThirdWireCtrl.text = '';
+
+                  onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
+
+                  return;
+                },
+                enabled: true,
+              ),
+            ];
+
+            break;
+          }
+        case 4:
+          {
+            widgetChildren = [
+              getInitTempField(),
+              getResetButton(
+                onPressed: () {
+                  initTempCtrl.text = '';
+
+                  onInitTempFieldChange(initTempCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+        case 5:
+          {
+            widgetChildren = [
+              getTargetTempField(),
+              getResetButton(
+                onPressed: () {
+                  targetTempCtrl.text = '';
+
+                  onTargetTempFieldChange(targetTempCtrl.text);
+
+                  return;
+                },
+              ),
+            ];
+
+            break;
+          }
+      }
+
+      //
+      // Store newly created widget inside of the `SizedBox` to avoid any potential errors.
+      //
+      widgets.add(
+        SizedBox(
+          width: _fieldWidth + _resetBtnWidth,
+          child: Row(
+            children: widgetChildren,
+          ),
+        ),
+      );
     }
 
-    return SizedBox(
-      width: _fieldWidth * 2 + 70.0,
-      child: DropdownButtonFormField<int>(
-        decoration: const InputDecoration(
-          filled: true,
-          fillColor: Color.fromRGBO(211, 211, 211, 1),
-          label: Center(
-            child: Text('Voltage (V)'),
-            //child: settings.locale.voltage.isEmpty ? const Text('Voltage (V)') : Text(settings.locale.voltage),
-          ),
-        ),
-        style: const TextStyle(
-          color: Colors.black,
-          //fontSize: 20,
-        ),
-        value: dropdownValue,
-        icon: const Visibility(
-          visible: false,
-          child: Icon(Icons.abc),
-        ),
-        isExpanded: true,
-        items: _voltages.map<DropdownMenuItem<int>>((int value) {
-          return DropdownMenuItem<int>(
-            value: value,
-            child: Center(
-              child: Text(value.toString()),
+    //
+    // Voltage dropdown menu is a separate entity that must be treated in a different way.
+    //
+    widgets.add(
+      SizedBox(
+        width: _fieldWidth * 2 + 110,
+        child: Row(
+          children: [
+            getVoltageDropdown(),
+            //
+            // TODO finish implementation of the reset routine for voltage dropdown menu.
+            //
+            getResetButton(
+              onPressed: () {
+                return;
+              },
             ),
-          );
-        }).toList(),
-        onChanged: (int? value) {
-        //onChanged: (int? value) {
-          //
-          // This is called when the user selects an item.
-          //
-          onVoltageDropdownSelection(value);
-
-          return;
-        },
+          ],
+        ),
       ),
+    );
+
+    return widgets;
+  }
+
+  ///
+  /// Get initial temperature input field on screen.
+  ///
+  SizedBox getInitTempField() {
+    return getInputField(
+      label: 'Initial Temp',
+      controller: initTempCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onInitTempFieldChange(value);
+
+        initTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: initTempCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getInitTempField() {
+    return getInputField(
+      'Initial Temp',
+      initTempCtrl,
+      (value) {
+        onInitTempFieldChange(value);
+
+        initTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: initTempCtrl.text.length,
+          ),
+        );
+
+        return;
+      },*/
+      /*() {
+        initTempCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: initTempCtrl.value.text.length,
+        );
+
+        return;
+      },*/
     );
   }
 
-  //
-  // A skeleton method for creating a typical input field for storing various values.
-  //
+  ///
+  /// Get a generic input field.
+  ///
+  /// * [label] - input field label as String;
+  /// * [hintText] - input suggestion to show before entering text, as String;
+  /// * [controller] - typical text controller for altering the text as TextEditingController;
+  /// * [onChanged] - series of routines that follow after editing the contents of input field;
+  /// * [enabled] - input field state;
+  /// * [onTap] - series of routines that follow after tapping on input field.
+  ///
   SizedBox getInputField({
     required String label,
     required String hintText,
@@ -345,45 +490,72 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getFirstAmperageField() {
-    return getInputField(
-      label: 'Amperage 1 (A)',
-      controller: ampsFirstWireCtrl,
-      hintText: '0.0',
-      onChanged: (value) {
-        onFirstAmperageFieldChange(value);
-
-        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsFirstWireCtrl.text.length,
+  ///
+  /// Get a popup menu that allows traversal between different app routes.
+  ///
+  PopupMenuButton<int> getPopupMenuButton(BuildContext context) {
+    return PopupMenuButton(
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem<int>(
+            value: 1,
+            child: settings.locale.settings.isEmpty ? const Text("Settings") : Text(settings.locale.settings),
           ),
-        );
-
-        return;
+          PopupMenuItem<int>(
+            value: 2,
+            child: settings.locale.about.isEmpty ? const Text("About") : Text(settings.locale.about),
+          ),
+          PopupMenuItem<int>(
+            value: 3,
+            child: settings.locale.exit.isEmpty ? const Text("Exit") : Text(settings.locale.exit),
+          ),
+        ];
       },
-      /*SizedBox getFirstAmperageField() {
-    return getInputField(
-      'Amperage 1',
-      ampsFirstWireCtrl,
-      (value) {
-        onFirstAmperageFieldChange(value);
-
-        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsFirstWireCtrl.text.length,
+      onSelected: (value) async {
+        doPopupAction(value);
+      },
+      child: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              Icon(Icons.menu),
+              Text('Menu'),
+            ],
           ),
-        );
+        ),
+      ),
+    );
+  }
 
-        return;
-      },*/
-      /*() {
-        ampsFirstWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsFirstWireCtrl.value.text.length,
-        );
-
-        return;
-      },*/
+  ///
+  /// Get a generic reset button.
+  ///
+  /// * [onPressed] - what must happen after pressing the button;
+  /// * [enabled] - state of the button.
+  ///
+  SizedBox getResetButton({
+    required void Function()? onPressed,
+    bool enabled = false,
+  }) {
+    return SizedBox(
+      height: _fieldHeight,
+      width: _resetBtnWidth,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: !enabled
+            ? onPressed
+            : !phaseAvailabilityFlag
+                ? null
+                : onPressed,
+        child: const Icon(Icons.restart_alt),
+      ),
     );
   }
 
@@ -430,6 +602,124 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
+  //
+  // Get settings route on screen.
+  //
+  void getSettingsRoute() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SettingsRoute(
+          title: widget.title,
+          settings: settings,
+        ),
+      ),
+    );
+
+    //
+    // Transfer newly applied settings from settings route to home route.
+    //
+    setState(() {
+      settings = result;
+    });
+
+    //
+    // Change UI language.
+    //
+    switchLocale(settings.localeCurrent);
+
+    //
+    // Do calculate after applying the app settings.
+    //
+    timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+    timeFormatter.calculator.calculate();
+
+    //
+    // Show final results on screen.
+    //
+    set();
+
+    return;
+  }
+
+  SizedBox getTargetTempField() {
+    return getInputField(
+      label: 'Target Temp',
+      controller: targetTempCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onTargetTempFieldChange(value);
+
+        targetTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: targetTempCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getTargetTempField() {
+    return getInputField(
+      'Target Temp',
+      targetTempCtrl,
+      (value) {
+        onTargetTempFieldChange(value);
+
+        targetTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: targetTempCtrl.text.length,
+          ),
+        );
+
+        return;
+      },*/
+      /*() {
+        targetTempCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: targetTempCtrl.value.text.length,
+        );
+
+        return;
+      },*/
+    );
+  }
+
+  Row getTemperatureOutput() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: _fieldWidth * 2 + 110,
+          child: TextFormField(
+            controller: temperatureOutputCtrl,
+            decoration: const InputDecoration(
+              counterStyle: TextStyle(height: double.minPositive),
+              counterText: '',
+              filled: true,
+              fillColor: Color.fromRGBO(211, 211, 211, 1),
+              label: Center(
+                child: Text('Cooling Time (hh:mm)'),
+              ),
+            ),
+            readOnly: true,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        //
+        // Nothing to see here...
+        //
+        absoluteZeroFlag && settings.osFlag
+            ? Text(
+                '\u{1f480}',
+                style: TextStyle(
+                  fontSize: _tempOutputFontSize,
+                ),
+              )
+            : const Text(''),
+      ],
+    );
+  }
+
   SizedBox getThirdAmperageField() {
     return getInputField(
       label: 'Amperage 3 (A)',
@@ -473,87 +763,57 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getInitTempField() {
-    return getInputField(
-      label: 'Initial Temp',
-      controller: initTempCtrl,
-      hintText: '0.0',
-      onChanged: (value) {
-        onInitTempFieldChange(value);
+  SizedBox getVoltageDropdown() {
+    //
+    // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
+    // values.
+    //
+    if (!settings.osFlag) {
+      _voltages = <int>[230, 400];
+      dropdownValue = _voltages.first;
+    } else {
+      _voltages = <int>[220, 230, 380, 400];
+    }
 
-        initTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: initTempCtrl.text.length,
+    return SizedBox(
+      width: _fieldWidth * 2 + 70.0,
+      child: DropdownButtonFormField<int>(
+        decoration: const InputDecoration(
+          filled: true,
+          fillColor: Color.fromRGBO(211, 211, 211, 1),
+          label: Center(
+            child: Text('Voltage (V)'),
+            //child: settings.locale.voltage.isEmpty ? const Text('Voltage (V)') : Text(settings.locale.voltage),
           ),
-        );
+        ),
+        style: const TextStyle(
+          color: Colors.black,
+          //fontSize: 20,
+        ),
+        value: dropdownValue,
+        icon: const Visibility(
+          visible: false,
+          child: Icon(Icons.abc),
+        ),
+        isExpanded: true,
+        items: _voltages.map<DropdownMenuItem<int>>((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Center(
+              child: Text(value.toString()),
+            ),
+          );
+        }).toList(),
+        onChanged: (int? value) {
+          //onChanged: (int? value) {
+          //
+          // This is called when the user selects an item.
+          //
+          onVoltageDropdownSelection(value);
 
-        return;
-      },
-      /*SizedBox getInitTempField() {
-    return getInputField(
-      'Initial Temp',
-      initTempCtrl,
-      (value) {
-        onInitTempFieldChange(value);
-
-        initTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: initTempCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        initTempCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: initTempCtrl.value.text.length,
-        );
-
-        return;
-      },*/
-    );
-  }
-
-  SizedBox getTargetTempField() {
-    return getInputField(
-      label: 'Target Temp',
-      controller: targetTempCtrl,
-      hintText: '0.0',
-      onChanged: (value) {
-        onTargetTempFieldChange(value);
-
-        targetTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: targetTempCtrl.text.length,
-          ),
-        );
-
-        return;
-      },
-      /*SizedBox getTargetTempField() {
-    return getInputField(
-      'Target Temp',
-      targetTempCtrl,
-      (value) {
-        onTargetTempFieldChange(value);
-
-        targetTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: targetTempCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        targetTempCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: targetTempCtrl.value.text.length,
-        );
-
-        return;
-      },*/
+          return;
+        },
+      ),
     );
   }
 
@@ -599,169 +859,6 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getResetButton(void Function()? onPressed, {bool enabled = false}) {
-    return SizedBox(
-      height: _fieldHeight,
-      width: _resetBtnWidth,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-        ),
-        onPressed: !enabled
-            ? onPressed
-            : !phaseAvailabilityFlag
-                ? null
-                : onPressed,
-        child: const Icon(Icons.restart_alt),
-      ),
-    );
-  }
-
-  List<Widget> getForm() {
-    List<Widget> widgetChildren = [];
-    List<Widget> widgets = [];
-
-    for (int index = 0; index < 6; index++) {
-      switch (index) {
-        case 0:
-          {
-            widgetChildren = [
-              getVolumeField(),
-              getResetButton(
-                () {
-                  volumeCtrl.text = '';
-
-                  onVolumeFieldChange(volumeCtrl.text);
-
-                  return;
-                },
-              ),
-            ];
-
-            break;
-          }
-        case 1:
-          {
-            widgetChildren = [
-              getFirstAmperageField(),
-              getResetButton(
-                () {
-                  ampsFirstWireCtrl.text = '';
-
-                  onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
-
-                  return;
-                },
-              ),
-            ];
-
-            break;
-          }
-        case 2:
-          {
-            widgetChildren = [
-              getSecondAmperageField(),
-              getResetButton(
-                () {
-                  ampsSecondWireCtrl.text = '';
-
-                  onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
-
-                  return;
-                },
-                enabled: true,
-              ),
-            ];
-
-            break;
-          }
-        case 3:
-          {
-            widgetChildren = [
-              getThirdAmperageField(),
-              getResetButton(
-                () {
-                  ampsThirdWireCtrl.text = '';
-
-                  onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
-
-                  return;
-                },
-                enabled: true,
-              ),
-            ];
-
-            break;
-          }
-        case 4:
-          {
-            widgetChildren = [
-              getInitTempField(),
-              getResetButton(
-                () {
-                  initTempCtrl.text = '';
-
-                  onInitTempFieldChange(initTempCtrl.text);
-
-                  return;
-                },
-              ),
-            ];
-
-            break;
-          }
-        case 5:
-          {
-            widgetChildren = [
-              getTargetTempField(),
-              getResetButton(
-                () {
-                  targetTempCtrl.text = '';
-
-                  onTargetTempFieldChange(targetTempCtrl.text);
-
-                  return;
-                },
-              ),
-            ];
-
-            break;
-          }
-      }
-
-      widgets.add(
-        SizedBox(
-          width: _fieldWidth + _resetBtnWidth,
-          child: Row(
-            children: widgetChildren,
-          ),
-        ),
-      );
-    }
-
-    widgets.add(
-      SizedBox(
-        width: _fieldWidth * 2 + 110,
-        child: Row(
-          children: [
-            getVoltageDropdown(),
-            //
-            // TODO finish implementation of the reset routine for voltage dropdown menu.
-            //
-            getResetButton(
-              () {
-                return;
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-
-    return widgets;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -793,58 +890,5 @@ class _HomeRouteState extends HomeRouteStateManager {
         }
       });
     });
-  }
-
-  @override
-  void dispose() {
-    temperatureOutputCtrl.dispose();
-    volumeCtrl.dispose();
-    ampsFirstWireCtrl.dispose();
-    ampsSecondWireCtrl.dispose();
-    ampsThirdWireCtrl.dispose();
-    initTempCtrl.dispose();
-    targetTempCtrl.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          getPopupMenuButton(context),
-        ],
-      ),
-      body: Scrollbar(
-        thumbVisibility: true,
-        thickness: 10.0,
-        child: Center(
-          child: SingleChildScrollView(
-            dragStartBehavior: DragStartBehavior.down,
-            child: Form(
-              child: Column(
-                children: [
-                  getTemperatureOutput(),
-                  const Padding(
-                    padding: EdgeInsets.all(15),
-                  ),
-                  getClearAllButton(),
-                  const Padding(
-                    padding: EdgeInsets.all(15),
-                  ),
-                  Wrap(
-                    runSpacing: 30,
-                    spacing: 30,
-                    children: getForm(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
