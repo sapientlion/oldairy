@@ -31,7 +31,7 @@ void main() {
   test('[NEG] Using a low voltage, `initialTemp` and `setTemp` subtraction is equal to zero', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 11.0,
+      targetTemp: 11.0,
       volume: 100.0,
       voltage: 220,
       ampsFirstWire: 4.0,
@@ -46,7 +46,7 @@ void main() {
   test('[NEG] Using a low voltage, voltage is equal to zero (simulate division by zero)', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 0,
       ampsFirstWire: 4.0,
@@ -61,7 +61,7 @@ void main() {
   test('[NEG] Using a low voltage, amperage is equal to zero (simulate division by zero)', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 220,
       ampsFirstWire: 0.0,
@@ -76,7 +76,7 @@ void main() {
   test('[POS] Using a low voltage, get adequate result', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 220,
       ampsFirstWire: 4.0,
@@ -94,7 +94,7 @@ void main() {
   test('[NEG] Using a high voltage, `initialTemp` and `setTemp` subtraction is equal to zero', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 11.0,
+      targetTemp: 11.0,
       volume: 100.0,
       voltage: 380,
       ampsFirstWire: 4.0,
@@ -109,7 +109,7 @@ void main() {
   test('[NEG] Using a high voltage, voltage is equal to zero (simulate division by zero)', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 0,
       ampsFirstWire: 4.0,
@@ -124,7 +124,7 @@ void main() {
   test('[NEG] Using a high voltage, all amperages are equal to zero (simulate division by zero)', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 380,
       ampsFirstWire: 0.0,
@@ -139,7 +139,7 @@ void main() {
   test('[NEG] Using a high voltage, first amperage is equal to zero (simulate division by zero)', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 380,
       ampsFirstWire: 0.0,
@@ -154,7 +154,7 @@ void main() {
   test('[POS] Using a high voltage, get adequate result without the inclusion of the second wire', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 380,
       ampsFirstWire: 4.0,
@@ -169,7 +169,7 @@ void main() {
   test('[POS] Using a high voltage, get adequate result without the inclusion of the third wire', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 380,
       ampsFirstWire: 4.0,
@@ -184,7 +184,7 @@ void main() {
   test('[POS] Using a high voltage, get adequate result', () {
     Calculator calculator = Calculator(
       initialTemp: 11.0,
-      setTemp: 5.0,
+      targetTemp: 5.0,
       volume: 100.0,
       voltage: 380,
       ampsFirstWire: 4.0,

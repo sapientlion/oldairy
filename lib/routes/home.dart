@@ -52,12 +52,12 @@ class _HomeRouteState extends HomeRouteStateManager {
     dropdownValue = _voltages.first;
 
     temperatureOutputCtrl.text = temperatureOutputInitValue;
-    volumeCtrl.text = initValue.toString();
+    /*volumeCtrl.text = initValue.toString();
     ampsFirstWireCtrl.text = initValue.toString();
     ampsSecondWireCtrl.text = initValue.toString();
     ampsThirdWireCtrl.text = initValue.toString();
     initTempCtrl.text = initValue.toString();
-    targetTempCtrl.text = initValue.toString();
+    targetTempCtrl.text = initValue.toString();*/
 
     //
     // Don't forget to initialize the voltage located inside of the calculator object.
@@ -222,7 +222,7 @@ class _HomeRouteState extends HomeRouteStateManager {
               filled: true,
               fillColor: Color.fromRGBO(211, 211, 211, 1),
               label: Center(
-                child: Text('Cooling Time'),
+                child: Text('Cooling Time (hh:mm)'),
               ),
             ),
             readOnly: true,
@@ -259,11 +259,12 @@ class _HomeRouteState extends HomeRouteStateManager {
     return SizedBox(
       width: _fieldWidth * 2 + 70.0,
       child: DropdownButtonFormField<int>(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          fillColor: Color.fromRGBO(211, 211, 211, 1),
           label: Center(
-            child: settings.locale.voltage.isEmpty ? const Text('Voltage') : Text(settings.locale.voltage),
+            child: Text('Voltage (V)'),
+            //child: settings.locale.voltage.isEmpty ? const Text('Voltage (V)') : Text(settings.locale.voltage),
           ),
         ),
         style: const TextStyle(
@@ -285,6 +286,7 @@ class _HomeRouteState extends HomeRouteStateManager {
           );
         }).toList(),
         onChanged: (int? value) {
+        //onChanged: (int? value) {
           //
           // This is called when the user selects an item.
           //
@@ -299,10 +301,18 @@ class _HomeRouteState extends HomeRouteStateManager {
   //
   // A skeleton method for creating a typical input field for storing various values.
   //
-  SizedBox getInputField(
+  SizedBox getInputField({
+    required String label,
+    required String hintText,
+    required TextEditingController controller,
+    required Function(String)? onChanged,
+    bool enabled = false,
+    void Function()? onTap,
+  }) {
+    /*SizedBox getInputField(
       String label, TextEditingController controller, void Function(String)? onChanged,
-      {bool enabled = false, void Function()? onTap}) {
-  /*SizedBox getInputField(
+      {bool enabled = false, void Function()? onTap}) {*/
+    /*SizedBox getInputField(
       String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap,
       {bool enabled = false}) {*/
     return SizedBox(
@@ -318,6 +328,7 @@ class _HomeRouteState extends HomeRouteStateManager {
           counterText: '',
           filled: true,
           fillColor: const Color.fromRGBO(211, 211, 211, 1),
+          hintText: hintText,
           label: Center(
             child: Text(label),
           ),
@@ -336,6 +347,22 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getFirstAmperageField() {
     return getInputField(
+      label: 'Amperage 1 (A)',
+      controller: ampsFirstWireCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onFirstAmperageFieldChange(value);
+
+        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsFirstWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getFirstAmperageField() {
+    return getInputField(
       'Amperage 1',
       ampsFirstWireCtrl,
       (value) {
@@ -348,7 +375,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         );
 
         return;
-      },
+      },*/
       /*() {
         ampsFirstWireCtrl.selection = TextSelection(
           baseOffset: 0,
@@ -362,6 +389,22 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getSecondAmperageField() {
     return getInputField(
+      label: 'Amperage 2 (A)',
+      controller: ampsSecondWireCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onSecondAmperageFieldChange(value);
+
+        ampsSecondWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsSecondWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getSecondAmperageField() {
+    return getInputField(
       'Amperage 2',
       ampsSecondWireCtrl,
       (value) {
@@ -374,7 +417,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         );
 
         return;
-      },
+      },*/
       /*() {
         ampsSecondWireCtrl.selection = TextSelection(
           baseOffset: 0,
@@ -389,6 +432,22 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getThirdAmperageField() {
     return getInputField(
+      label: 'Amperage 3 (A)',
+      controller: ampsThirdWireCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onThirdAmperageFieldChange(value);
+
+        ampsThirdWireCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: ampsThirdWireCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getThirdAmperageField() {
+    return getInputField(
       'Amperage 3',
       ampsThirdWireCtrl,
       (value) {
@@ -401,7 +460,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         );
 
         return;
-      },
+      },*/
       /*() {
         ampsThirdWireCtrl.selection = TextSelection(
           baseOffset: 0,
@@ -416,6 +475,22 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getInitTempField() {
     return getInputField(
+      label: 'Initial Temp',
+      controller: initTempCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onInitTempFieldChange(value);
+
+        initTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: initTempCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getInitTempField() {
+    return getInputField(
       'Initial Temp',
       initTempCtrl,
       (value) {
@@ -428,7 +503,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         );
 
         return;
-      },
+      },*/
       /*() {
         initTempCtrl.selection = TextSelection(
           baseOffset: 0,
@@ -442,6 +517,22 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getTargetTempField() {
     return getInputField(
+      label: 'Target Temp',
+      controller: targetTempCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onTargetTempFieldChange(value);
+
+        targetTempCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: targetTempCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getTargetTempField() {
+    return getInputField(
       'Target Temp',
       targetTempCtrl,
       (value) {
@@ -454,7 +545,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         );
 
         return;
-      },
+      },*/
       /*() {
         targetTempCtrl.selection = TextSelection(
           baseOffset: 0,
@@ -468,6 +559,22 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   SizedBox getVolumeField() {
     return getInputField(
+      label: 'Volume',
+      controller: volumeCtrl,
+      hintText: '0.0',
+      onChanged: (value) {
+        onVolumeFieldChange(value);
+
+        volumeCtrl.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: volumeCtrl.text.length,
+          ),
+        );
+
+        return;
+      },
+      /*SizedBox getVolumeField() {
+    return getInputField(
       'Volume',
       volumeCtrl,
       (value) {
@@ -480,7 +587,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         );
 
         return;
-      },
+      },*/
       /*() {
         volumeCtrl.selection = TextSelection(
           baseOffset: 0,
@@ -522,7 +629,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             widgetChildren = [
               getVolumeField(),
               getResetButton(
-                    () {
+                () {
                   volumeCtrl.text = '';
 
                   onVolumeFieldChange(volumeCtrl.text);
@@ -539,7 +646,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             widgetChildren = [
               getFirstAmperageField(),
               getResetButton(
-                    () {
+                () {
                   ampsFirstWireCtrl.text = '';
 
                   onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
@@ -556,7 +663,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             widgetChildren = [
               getSecondAmperageField(),
               getResetButton(
-                    () {
+                () {
                   ampsSecondWireCtrl.text = '';
 
                   onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
@@ -574,7 +681,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             widgetChildren = [
               getThirdAmperageField(),
               getResetButton(
-                    () {
+                () {
                   ampsThirdWireCtrl.text = '';
 
                   onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
@@ -592,7 +699,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             widgetChildren = [
               getInitTempField(),
               getResetButton(
-                    () {
+                () {
                   initTempCtrl.text = '';
 
                   onInitTempFieldChange(initTempCtrl.text);
@@ -609,7 +716,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             widgetChildren = [
               getTargetTempField(),
               getResetButton(
-                    () {
+                () {
                   targetTempCtrl.text = '';
 
                   onTargetTempFieldChange(targetTempCtrl.text);
@@ -643,7 +750,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             // TODO finish implementation of the reset routine for voltage dropdown menu.
             //
             getResetButton(
-                  () {
+              () {
                 return;
               },
             ),

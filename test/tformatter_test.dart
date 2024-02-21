@@ -28,7 +28,7 @@ import 'package:oldairy/classes/tformatter.dart';
 void main() {
   Calculator calcZero = Calculator(
       initialTemp: 0.0,
-      setTemp: 0.0,
+      targetTemp: 0.0,
       volume: 0.0,
       voltage: 0.0,
       ampsFirstWire: 0.0,
@@ -36,7 +36,7 @@ void main() {
       ampsThirdWire: 0.0);
   Calculator calc = Calculator(
       initialTemp: 64.0,
-      setTemp: -64.0,
+      targetTemp: -64.0,
       volume: 100.0,
       voltage: 220.0,
       ampsFirstWire: 4.0,

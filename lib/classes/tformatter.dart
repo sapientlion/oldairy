@@ -32,7 +32,7 @@ class TimeFormatter {
 
   Calculator calculator = Calculator(
     initialTemp: 0.0,
-    setTemp: 0.0,
+    targetTemp: 0.0,
     volume: 0.0,
     voltage: 0.0,
     ampsFirstWire: 0.0,

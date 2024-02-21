@@ -46,7 +46,7 @@ class Calculator {
 
   double kWatts = 0.0;
   double initialTemp = 0.0;
-  double setTemp = 0.0;
+  double targetTemp = 0.0;
   double volume = 0.0;
   double voltage = 0.0;
   double ampsFirstWire = 0.0;
@@ -55,7 +55,7 @@ class Calculator {
 
   Calculator({
     required this.initialTemp,
-    required this.setTemp,
+    required this.targetTemp,
     required this.volume,
     required this.voltage,
     required this.ampsFirstWire,
@@ -104,7 +104,7 @@ class Calculator {
   }
 
   double calculate() {
-    _coolingTime = initialTemp - setTemp;
+    _coolingTime = initialTemp - targetTemp;
 
     //
     // No point in going any further when the result will always be the same
