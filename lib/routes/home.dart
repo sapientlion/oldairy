@@ -378,16 +378,15 @@ class _HomeRouteState extends HomeRouteStateManager {
             //
             // TODO finish implementation of the reset routine for voltage dropdown menu.
             //
-            getResetButton(
+            /*getResetButton(
               onPressed: () {
                 setState(() {
                   dropdownValue = _voltages.first;
-
                 });
 
                 return;
               },
-            ),
+            ),*/
           ],
         ),
       ),
@@ -482,6 +481,7 @@ class _HomeRouteState extends HomeRouteStateManager {
           label: Center(
             child: Text(label),
           ),
+          labelStyle: const TextStyle(fontSize: 15.0),
         ),
         enabled: !enabled ? null : phaseAvailabilityFlag,
         //
@@ -781,7 +781,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     }
 
     return SizedBox(
-      width: _fieldWidth * 2 + 70.0,
+      width: _fieldWidth * 2 + 110.0,
       child: DropdownButtonFormField<int>(
         decoration: const InputDecoration(
           filled: true,
