@@ -962,12 +962,12 @@ class _HomeRouteState extends HomeRouteStateManager {
             //
             // Load app settings from a map.
             //
-            settings.oldStandardFlag = json['isOldStandardEnabled'];
-            settings.timeRoundingFlag = json['isTimeRoundingEnabled'];
-            settings.timePrecisionFlag = json['areAbsoluteValuesAllowed'];
-            settings.coolingCoefficientCurrent = json['coefficient'];
-            settings.localeCurrent = json['currentLocale'];
+            settings.oldStandardFlag = json['oldStandard'];
+            settings.timeRoundingFlag = json['timeRounding'];
+            settings.coolingCoefficientCurrent = json['coefficientValue'];
+            settings.localeCurrent = json['localeCurrent'];
             settings.localeName = json['localeFile'];
+            settings.minutesRoundingFlag = json['minutesRounding'];
             settings.updateCheckFlag = json['updateCheckOnStartup'];
 
             readLocale(settings.localeName).then(

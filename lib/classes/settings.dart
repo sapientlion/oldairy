@@ -29,13 +29,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:oldairy/classes/locale.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 
 class Settings {
   bool oldStandardFlag = false;
-  bool timePrecisionFlag = false;
+  bool minutesRoundingFlag = false;
   bool timeRoundingFlag = false;
   bool updateCheckFlag = false;
 
@@ -51,16 +51,112 @@ class Settings {
 
   dynamic responseBody;
 
-  //
-  // Load default values from file and use them later in various processes.
-  //
+  Settings() {
+    _readDefaults();
+  }
+
+  ///
+  /// Get app data location path.
+  ///
+  Future<String> get _appDataPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  ///
+  /// Get a settings file.
+  ///
+  Future<File> get _settingsFile async {
+    final path = await _appDataPath;
+
+    return File('$path/settings.json');
+  }
+
+  ///
+  /// Check for any updates.
+  ///
+  dynamic checkUpdate() async {
+    final Uri uri = Uri.parse(packageRelease);
+    final Map<String, String> header = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    http.Response response = await http.get(
+      uri,
+      headers: header,
+    );
+
+    if (response.statusCode == 200) {
+      return responseBody = json.decode(response.body);
+    }
+
+    return responseBody = '';
+  }
+
+  Future<String> read() async {
+    try {
+      final file = await _settingsFile;
+
+      //
+      // Read data from file.
+      //
+      final contents = await file.readAsString();
+
+      return contents;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  ///
+  /// Reset values to default ones of every class member.
+  ///
+  void reset() {
+    _readDefaults();
+
+    coolingCoefficientCurrent = coolingCoefficientLowerLimit;
+
+    return;
+  }
+
+  ///
+  /// Convert all settings to JSON format.
+  ///
+  Map<String, dynamic> toJson() => {
+        'coefficientValue': coolingCoefficientCurrent,
+        'localeCurrent': localeCurrent,
+        'localeFile': localeName,
+        'minutesRounding': minutesRoundingFlag,
+        'oldStandard': oldStandardFlag,
+        'timeRounding': timeRoundingFlag,
+        'updateCheckOnStartup': updateCheckFlag,
+      };
+
+  ///
+  /// Save all current settings to file.
+  ///
+  Future<File> write(Settings settings) async {
+    final file = await _settingsFile;
+
+    String encodedSettings = jsonEncode(settings.toJson());
+
+    //
+    // Write data to file.
+    //
+    return file.writeAsString(encodedSettings);
+  }
+
+  ///
+  /// Load default values from file and use them later in various processes.
+  ///
   Future<void> _readDefaults() async {
     final String response = await rootBundle.loadString('assets/defaults.json');
     final data = await json.decode(response);
     final RegExp packageVersionRegEx = RegExp(r'^([0-99]\.[0-99]\.[0-99])$');
 
     bool? oldStandardFlagRaw = false;
-    bool? timePrecisionFlagRaw = false;
+    bool? minutesRoundingFlagRaw = false;
     bool? timeRoundingFlagRaw = false;
     bool? updateCheckRaw = false;
     double? coolingCoefficientLowerLimitRaw = 0.0;
@@ -97,12 +193,12 @@ class Settings {
       coolingCoefficientUpperLimit = coolingCoefficientUpperLimitRaw;
     }
 
-    updateCheckRaw = bool.tryParse(data['updateCheckOnStartup']);
+    minutesRoundingFlagRaw = bool.tryParse(data['minutesRounding']);
 
-    if (updateCheckRaw == null) {
-      updateCheckFlag = false;
+    if (minutesRoundingFlagRaw == null) {
+      minutesRoundingFlag = true;
     } else {
-      updateCheckFlag = oldStandardFlagRaw;
+      minutesRoundingFlag = minutesRoundingFlagRaw;
     }
 
     oldStandardFlagRaw = bool.tryParse(data['oldStandard']);
@@ -113,14 +209,6 @@ class Settings {
       oldStandardFlag = oldStandardFlagRaw;
     }
 
-    timePrecisionFlagRaw = bool.tryParse(data['timePrecision']);
-
-    if (timePrecisionFlagRaw == null) {
-      timePrecisionFlag = true;
-    } else {
-      timePrecisionFlag = timePrecisionFlagRaw;
-    }
-
     timeRoundingFlagRaw = bool.tryParse(data['timeRounding']);
 
     if (timeRoundingFlagRaw == null) {
@@ -129,125 +217,14 @@ class Settings {
       timeRoundingFlag = timeRoundingFlagRaw;
     }
 
-    return;
-  }
+    updateCheckRaw = bool.tryParse(data['updateCheckOnStartup']);
 
-  /*Future<void> readDefaults() async {
-    final String response = await rootBundle.loadString('assets/defaults.json');
-    final data = await json.decode(response);
-
-    packageVersion = data['packageVersion'];
-    coolingCoefficientLowerLimit = double.parse(data['coolingCoefficientLowerLimit']);
-    coolingCoefficientUpperLimit = double.parse(data['coolingCoefficientUpperLimit']);
-
-    return;
-  }*/
-
-  Settings() {
-    _readDefaults();
-  }
-
-  //
-  // Check for any updates.
-  //
-  dynamic checkUpdate() async {
-    final Uri uri = Uri.parse(packageRelease);
-    final Map<String, String> header = {
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
-
-    /*http.Response response = await http.get(
-      uri,
-      headers: header,
-    );*/
-
-    /*if (response.statusCode == 200) {
-      result = json.decode(response.body);
-
-      if (_settings.packageVersion != result['tag_name']) {
-        newUpdate = true;
-      } else {
-        newUpdate = false;
-      }
+    if (updateCheckRaw == null) {
+      updateCheckFlag = false;
     } else {
-      newUpdate = false;
-    }*/
-
-    http.Response response = await http.get(
-      uri,
-      headers: header,
-    );
-
-    if (response.statusCode == 200) {
-      return responseBody = json.decode(response.body);
+      updateCheckFlag = updateCheckRaw;
     }
-
-    return responseBody = '';
-    //return response;
-  }
-
-  //
-  // Reset values to default ones for every class member.
-  //
-  void reset() {
-    _readDefaults();
-
-    coolingCoefficientCurrent = coolingCoefficientLowerLimit;
 
     return;
-  }
-
-  //
-  // Get app data location path.
-  //
-  Future<String> get _appDataPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  //
-  // Get a settings file.
-  //
-  Future<File> get _settingsFile async {
-    final path = await _appDataPath;
-
-    return File('$path/settings.json');
-  }
-
-  Map<String, dynamic> toJson() => {
-        'isOldStandardEnabled': oldStandardFlag,
-        'isTimeRoundingEnabled': timeRoundingFlag,
-        'areAbsoluteValuesAllowed': timePrecisionFlag,
-        'coefficient': coolingCoefficientCurrent,
-        'currentLocale': localeCurrent,
-        'localeFile': localeName,
-        'updateCheckOnStartup': updateCheckFlag,
-      };
-
-  Future<File> write(Settings settings) async {
-    final file = await _settingsFile;
-
-    String encodedSettings = jsonEncode(settings.toJson());
-
-    //
-    // Write data to file.
-    //
-    return file.writeAsString(encodedSettings);
-  }
-
-  Future<String> read() async {
-    try {
-      final file = await _settingsFile;
-
-      //
-      // Read data from file.
-      //
-      final contents = await file.readAsString();
-
-      return contents;
-    } catch (e) {
-      return '';
-    }
   }
 }
