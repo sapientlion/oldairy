@@ -768,6 +768,88 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
+  ///
+  /// Check for any updates.
+  ///
+  bool checkUpdate() {
+    bool updateAvailabilityFlag = false;
+
+    //
+    // Show circular indicator while the app is checking for any new updates.
+    //
+    setState(
+      () {
+        updateAvailabilityFlag = false;
+      },
+    );
+
+    Iterable<Future<dynamic>> updateCheck = [settings.checkUpdate()];
+
+    //
+    // Wait for the function to finish its task.
+    //
+    Future.wait(updateCheck);
+
+    //
+    // Hide circular indicator when finished with update check.
+    //
+    setState(
+      () {
+        settings.checkUpdate().whenComplete(
+          () {
+            setState(
+              () {
+                updateAvailabilityFlag = true;
+              },
+            );
+
+            if (settings.responseBody != '') {
+              if (settings.packageVersion != settings.responseBody['tag_name'].toString()) {
+                getUpdateCheckAlertBox(true);
+              }
+            }
+          },
+        );
+      },
+    );
+
+    return updateAvailabilityFlag;
+  }
+
+  ///
+  /// Let user know about a new update (if any).
+  ///
+  /// [state] - using this flag determine whether a new update exists or not.
+  ///
+  Future<void> getUpdateCheckAlertBox(bool state) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Information'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                !state ? const Text('Everything is up to date.') : const Text('A new update is available!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                return;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   SizedBox getVoltageDropdown() {
     //
     // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
@@ -801,14 +883,16 @@ class _HomeRouteState extends HomeRouteStateManager {
           child: Icon(Icons.abc),
         ),
         isExpanded: true,
-        items: _voltages.map<DropdownMenuItem<int>>((int value) {
-          return DropdownMenuItem<int>(
-            value: value,
-            child: Center(
-              child: Text(value.toString()),
-            ),
-          );
-        }).toList(),
+        items: _voltages.map<DropdownMenuItem<int>>(
+          (int value) {
+            return DropdownMenuItem<int>(
+              value: value,
+              child: Center(
+                child: Text(value.toString()),
+              ),
+            );
+          },
+        ).toList(),
         onChanged: (int? value) {
           //onChanged: (int? value) {
           //
@@ -868,33 +952,43 @@ class _HomeRouteState extends HomeRouteStateManager {
   void initState() {
     super.initState();
 
-    settings.read().then((value) {
-      setState(() {
-        bool lFlag = true;
-        Map<String, dynamic> json = jsonDecode(value);
+    settings.read().then(
+      (value) {
+        setState(
+          () {
+            bool lFlag = true;
+            Map<String, dynamic> json = jsonDecode(value);
 
-        //
-        // Load app settings from a map.
-        //
-        settings.oldStandardFlag = json['isOldStandardEnabled'];
-        settings.timeRoundingFlag = json['isTimeRoundingEnabled'];
-        settings.timePrecisionFlag = json['areAbsoluteValuesAllowed'];
-        settings.coolingCoefficientCurrent = json['coefficient'];
-        settings.localeCurrent = json['currentLocale'];
-        settings.localeName = json['localeFile'];
-        settings.updateCheckFlag = json['updateCheckOnStartup'];
+            //
+            // Load app settings from a map.
+            //
+            settings.oldStandardFlag = json['isOldStandardEnabled'];
+            settings.timeRoundingFlag = json['isTimeRoundingEnabled'];
+            settings.timePrecisionFlag = json['areAbsoluteValuesAllowed'];
+            settings.coolingCoefficientCurrent = json['coefficient'];
+            settings.localeCurrent = json['currentLocale'];
+            settings.localeName = json['localeFile'];
+            settings.updateCheckFlag = json['updateCheckOnStartup'];
 
-        readLocale(settings.localeName).then((value) {
-          lFlag = value;
-        });
+            readLocale(settings.localeName).then(
+              (value) {
+                lFlag = value;
+              },
+            );
 
-        //
-        // Requested locale may be absent from the disk.
-        //
-        if (!lFlag) {
-          readLocale('en_us.json');
-        }
-      });
-    });
+            //
+            // Requested locale may be absent from the disk.
+            //
+            if (!lFlag) {
+              readLocale('en_us.json');
+            }
+
+            if (settings.updateCheckFlag) {
+              checkUpdate();
+            }
+          },
+        );
+      },
+    );
   }
 }
