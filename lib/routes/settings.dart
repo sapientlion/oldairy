@@ -187,7 +187,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
         fillColor: Color.fromRGBO(211, 211, 211, 1),
         hintText: '0.0',
         label: Center(
-          child: Text('Cooling Coefficient (TEST)'),
+          child: Text('Cooling Coefficient'),
         ),
       ),
       keyboardType: TextInputType.number,
@@ -448,7 +448,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
       getPrecisionCheckbox(),
       getRoundingCheckbox(),
       getStandardCheckbox(),
-      getWattsField(),
       const ListTile(
         title: Center(
           child: Text(
@@ -473,6 +472,18 @@ class _SettingsRouteState extends State<SettingsRoute> {
         },
       ),
       getUpdateCheckButton(),
+      const ListTile(
+        title: Center(
+          child: Text(
+            'Experimental',
+            style: TextStyle(
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      getWattsField(),
     ];
 
     _settings = widget.settings;
@@ -493,7 +504,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   color: Color.fromARGB(0, 0, 0, 0),
                   height: 30.0,
                 ),
-            itemCount: 9),
+            itemCount: 10),
       ),
       bottomNavigationBar: getControlPanel(context),
     );
