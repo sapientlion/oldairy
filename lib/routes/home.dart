@@ -104,6 +104,54 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
+  ///
+  /// Check for any updates.
+  ///
+  bool checkUpdate() {
+    bool updateAvailabilityFlag = false;
+
+    //
+    // Show circular indicator while the app is checking for any new updates.
+    //
+    setState(
+      () {
+        updateAvailabilityFlag = false;
+      },
+    );
+
+    Iterable<Future<dynamic>> updateCheck = [settings.checkUpdate()];
+
+    //
+    // Wait for the function to finish its task.
+    //
+    Future.wait(updateCheck);
+
+    //
+    // Hide circular indicator when finished with update check.
+    //
+    setState(
+      () {
+        settings.checkUpdate().whenComplete(
+          () {
+            setState(
+              () {
+                updateAvailabilityFlag = true;
+              },
+            );
+
+            if (settings.responseBody != '') {
+              if (settings.packageVersion != settings.responseBody['tag_name'].toString()) {
+                getUpdateCheckAlertBox(true);
+              }
+            }
+          },
+        );
+      },
+    );
+
+    return updateAvailabilityFlag;
+  }
+
   @override
   void dispose() {
     temperatureOutputCtrl.dispose();
@@ -766,54 +814,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       },*/
       enabled: true,
     );
-  }
-
-  ///
-  /// Check for any updates.
-  ///
-  bool checkUpdate() {
-    bool updateAvailabilityFlag = false;
-
-    //
-    // Show circular indicator while the app is checking for any new updates.
-    //
-    setState(
-      () {
-        updateAvailabilityFlag = false;
-      },
-    );
-
-    Iterable<Future<dynamic>> updateCheck = [settings.checkUpdate()];
-
-    //
-    // Wait for the function to finish its task.
-    //
-    Future.wait(updateCheck);
-
-    //
-    // Hide circular indicator when finished with update check.
-    //
-    setState(
-      () {
-        settings.checkUpdate().whenComplete(
-          () {
-            setState(
-              () {
-                updateAvailabilityFlag = true;
-              },
-            );
-
-            if (settings.responseBody != '') {
-              if (settings.packageVersion != settings.responseBody['tag_name'].toString()) {
-                getUpdateCheckAlertBox(true);
-              }
-            }
-          },
-        );
-      },
-    );
-
-    return updateAvailabilityFlag;
   }
 
   ///

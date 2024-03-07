@@ -50,9 +50,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
   String _dropdownValue = '';
   Settings _settings = Settings();
 
-  //
-  // Get language switcher.
-  //
+  ///
+  /// Get language switcher.
+  ///
   DropdownButtonFormField<String> getLanguageChanger() {
     return DropdownButtonFormField<String>(
       key: _dropdownKey,
@@ -79,9 +79,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  //
-  // Get time rounding checkbox.
-  //
+  ///
+  /// Get time rounding checkbox.
+  ///
   CheckboxListTile getRoundingCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -102,9 +102,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  //
-  // Get time precision checkbox.
-  //
+  ///
+  /// Get time precision checkbox.
+  ///
   CheckboxListTile getPrecisionCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -125,9 +125,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  //
-  // Get voltage standard checkbox.
-  //
+  ///
+  /// Get voltage standard checkbox.
+  ///
   CheckboxListTile getStandardCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -173,9 +173,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     return;
   }
 
-  //
-  // Get cooling coefficient field.
-  //
+  ///
+  /// Get cooling coefficient field.
+  ///
   TextField getWattsField() {
     return TextField(
       autocorrect: false,
@@ -211,9 +211,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  //
-  // Summon AlertDialog on validation fail.
-  //
+  ///
+  /// Summon AlertDialog on validation fail.
+  ///
   //
   // TODO use this feature for other options as well.
   //
@@ -250,7 +250,12 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  Future<void> getUpdateCheckAlertBox(bool status) async {
+  ///
+  /// Let user know about a new update (if any).
+  ///
+  /// [state] - using this flag determine whether a new update exists or not.
+  ///
+  Future<void> getUpdateCheckAlertBox(bool state) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -260,7 +265,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                !status ? const Text('Everything is up to date.') : const Text('A new update is available!'),
+                !state ? const Text('Everything is up to date.') : const Text('A new update is available!'),
               ],
             ),
           ),
@@ -281,54 +286,61 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
   FloatingActionButton getUpdateCheckButton() {
     return FloatingActionButton.extended(
-        icon: _updateCheckReadinessFlag
-            ? null
-            : const CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 3,
-              ),
-        label: const Text('Check for updates'),
-        onPressed: () {
-          //
-          // Show circular indicator while the app is checking for any new updates.
-          //
-          setState(() {
-            _updateCheckReadinessFlag = false;
-          });
+      icon: _updateCheckReadinessFlag
+          ? null
+          : const CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 3,
+            ),
+      label: const Text('Check for updates'),
+      onPressed: () {
+        //
+        // Show circular indicator while the app is checking for any new updates.
+        //
+        setState(() {
+          _updateCheckReadinessFlag = false;
+        });
 
-          Iterable<Future<dynamic>> updateCheck = [_settings.checkUpdate()];
+        Iterable<Future<dynamic>> updateCheck = [_settings.checkUpdate()];
 
-          //
-          // Wait for the function to finish its task.
-          //
-          Future.wait(updateCheck);
+        //
+        // Wait for the function to finish its task.
+        //
+        Future.wait(updateCheck);
 
-          //
-          // Hide circular indicator when finished with update check.
-          //
-          setState(() {
-            _settings.checkUpdate().whenComplete(() {
-              setState(() {
-                _updateCheckReadinessFlag = true;
-              });
+        //
+        // Hide circular indicator when finished with update check.
+        //
+        setState(
+          () {
+            _settings.checkUpdate().whenComplete(
+              () {
+                setState(
+                  () {
+                    _updateCheckReadinessFlag = true;
+                  },
+                );
 
-              if (_settings.responseBody == '') {
-                getUpdateCheckAlertBox(false);
-              } else {
-                if (_settings.packageVersion != _settings.responseBody['tag_name']) {
+                if (_settings.responseBody == '') {
                   getUpdateCheckAlertBox(false);
                 } else {
-                  getUpdateCheckAlertBox(true);
+                  if (_settings.packageVersion != _settings.responseBody['tag_name']) {
+                    getUpdateCheckAlertBox(true);
+                  } else {
+                    getUpdateCheckAlertBox(false);
+                  }
                 }
-              }
-            });
-          });
-        });
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
-  //
-  // Get a control panel that is responsible for managing the app settings.
-  //
+  ///
+  /// Get a control panel that is responsible for managing the app settings.
+  ///
   BottomAppBar getControlPanel(BuildContext context) {
     return BottomAppBar(
       color: Colors.green,
@@ -338,7 +350,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
-            width: 128,
+            width: 125,
             child: FloatingActionButton.extended(
               backgroundColor: Colors.greenAccent,
               foregroundColor: Colors.black,
@@ -373,7 +385,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           // Apply current app settings.
           //
           SizedBox(
-            width: 128,
+            width: 125,
             child: FloatingActionButton.extended(
               backgroundColor: Colors.greenAccent,
               foregroundColor: Colors.black,
@@ -449,13 +461,15 @@ class _SettingsRouteState extends State<SettingsRoute> {
         ),
       ),
       CheckboxListTile(
-        title: const Text('Check for updates on startup'),
+        title: const Text('Check for updates on app startup'),
         controlAffinity: ListTileControlAffinity.leading,
         value: _settings.updateCheckFlag,
         onChanged: (bool? value) {
-          setState(() {
-            _settings.updateCheckFlag = value!;
-          });
+          setState(
+            () {
+              _settings.updateCheckFlag = value!;
+            },
+          );
         },
       ),
       getUpdateCheckButton(),
