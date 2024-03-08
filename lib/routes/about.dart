@@ -64,7 +64,7 @@ class _AboutRouteState extends State<AboutRoute> {
           separatorBuilder: (BuildContext context, int index) {
             return const Divider(
               color: Colors.black,
-              height: 30.0,
+              height: 110.0,
             );
           },
           shrinkWrap: true,
