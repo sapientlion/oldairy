@@ -30,6 +30,8 @@ import 'package:oldairy/routes/about.dart';
 import 'package:oldairy/routes/home_manager.dart';
 import 'package:oldairy/routes/settings.dart';
 
+import '../classes/global.dart';
+
 class HomeRoute extends StatefulWidget {
   final String title;
 
@@ -212,7 +214,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       context,
       MaterialPageRoute(
         builder: (context) => AboutRoute(
-          title: widget.title,
+          title: 'About',
           settings: settings,
         ),
       ),
@@ -552,15 +554,15 @@ class _HomeRouteState extends HomeRouteStateManager {
         return [
           PopupMenuItem<int>(
             value: 1,
-            child: settings.locale.settings.isEmpty ? const Text("Settings") : Text(settings.locale.settings),
+            child: settings.locale.settings.isEmpty ? const Text('Settings') : Text(settings.locale.settings),
           ),
           PopupMenuItem<int>(
             value: 2,
-            child: settings.locale.about.isEmpty ? const Text("About") : Text(settings.locale.about),
+            child: settings.locale.about.isEmpty ? const Text('About') : Text(settings.locale.about),
           ),
           PopupMenuItem<int>(
             value: 3,
-            child: settings.locale.exit.isEmpty ? const Text("Exit") : Text(settings.locale.exit),
+            child: settings.locale.exit.isEmpty ? const Text('Exit') : Text(settings.locale.exit),
           ),
         ];
       },
@@ -960,15 +962,15 @@ class _HomeRouteState extends HomeRouteStateManager {
             Map<String, dynamic> json = jsonDecode(value);
 
             //
-            // Load app settings from a map.
+            // Load app settings from map.
             //
-            settings.oldStandardFlag = json['oldStandard'];
-            settings.timeRoundingFlag = json['timeRounding'];
-            settings.coolingCoefficientCurrent = json['coefficientValue'];
-            settings.localeCurrent = json['localeCurrent'];
-            settings.localeName = json['localeFile'];
-            settings.minutesRoundingFlag = json['minutesRounding'];
-            settings.updateCheckFlag = json['updateCheckOnStartup'];
+            settings.oldStandardFlag = json[Global.keyOldStandard];
+            settings.timeRoundingFlag = json[Global.keyTimeRounding];
+            settings.coolingCoefficientCurrent = json[Global.keyCoefficientValue];
+            settings.localeCurrent = json[Global.keyLocaleCurrent];
+            settings.localeName = json[Global.keyLocaleFile];
+            settings.minutesRoundingFlag = json[Global.keyTimeRounding];
+            settings.updateCheckFlag = json[Global.keyUpdateCheckOnStartup];
 
             readLocale(settings.localeName).then(
               (value) {

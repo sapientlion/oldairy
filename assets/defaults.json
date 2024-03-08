@@ -1,10 +1,10 @@
 {
     "coolingCoefficientLowerLimit": "0.2",
     "coolingCoefficientUpperLimit": "2.0",
-    "updateCheckOnStartup": "true",
+    "minutesRounding": "true",
     "oldStandard": "false",
-    "timePrecision": "true",
     "timeRounding": "true",
     "packageRelease": "https://api.github.com/repos/sapientlion/oldairy/releases/latest",
-    "packageVersion": "1.0.4"
+    "packageVersion": "2.0.0",
+    "updateCheckOnStartup": "false"
 }

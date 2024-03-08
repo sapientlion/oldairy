@@ -33,6 +33,8 @@ import 'package:http/http.dart' as http;
 import 'package:oldairy/classes/locale.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'global.dart';
+
 class Settings {
   bool oldStandardFlag = false;
   bool minutesRoundingFlag = false;
@@ -124,13 +126,13 @@ class Settings {
   /// Convert all settings to JSON format.
   ///
   Map<String, dynamic> toJson() => {
-        'coefficientValue': coolingCoefficientCurrent,
-        'localeCurrent': localeCurrent,
-        'localeFile': localeName,
-        'minutesRounding': minutesRoundingFlag,
-        'oldStandard': oldStandardFlag,
-        'timeRounding': timeRoundingFlag,
-        'updateCheckOnStartup': updateCheckFlag,
+        Global.keyCoefficientValue: coolingCoefficientCurrent,
+        Global.keyLocaleCurrent: localeCurrent,
+        Global.keyLocaleFile: localeName,
+        Global.keyMinutesRounding: minutesRoundingFlag,
+        Global.keyOldStandard: oldStandardFlag,
+        Global.keyTimeRounding: timeRoundingFlag,
+        Global.keyUpdateCheckOnStartup: updateCheckFlag,
       };
 
   ///
@@ -162,13 +164,13 @@ class Settings {
     double? coolingCoefficientLowerLimitRaw = 0.0;
     double? coolingCoefficientUpperLimitRaw = 0.0;
 
-    packageRelease = data['packageRelease'];
+    packageRelease = data[Global.keyPackageRelease];
 
     if (packageRelease == '') {
       packageRelease = 'https://api.github.com/repos/sapientlion/oldairy/releases/latest';
     }
 
-    packageVersion = data['packageVersion'];
+    packageVersion = data[Global.keyPackageVersion];
 
     //
     // Package version must have the following structure: <major_release>.<minor_release>.<patch>.
@@ -177,7 +179,7 @@ class Settings {
       packageVersion = 'N/a';
     }
 
-    coolingCoefficientLowerLimitRaw = double.tryParse(data['coolingCoefficientLowerLimit']);
+    coolingCoefficientLowerLimitRaw = double.tryParse(data[Global.keyCoolingCoefficientLowerLimit]);
 
     if (coolingCoefficientLowerLimitRaw == null) {
       coolingCoefficientLowerLimit = 0.2;
@@ -185,7 +187,7 @@ class Settings {
       coolingCoefficientCurrent = coolingCoefficientLowerLimit = coolingCoefficientLowerLimitRaw;
     }
 
-    coolingCoefficientUpperLimitRaw = double.tryParse(data['coolingCoefficientUpperLimit']);
+    coolingCoefficientUpperLimitRaw = double.tryParse(data[Global.keyCoolingCoefficientUpperLimit]);
 
     if (coolingCoefficientUpperLimitRaw == null) {
       coolingCoefficientUpperLimit = 2.0;
@@ -193,7 +195,7 @@ class Settings {
       coolingCoefficientUpperLimit = coolingCoefficientUpperLimitRaw;
     }
 
-    minutesRoundingFlagRaw = bool.tryParse(data['minutesRounding']);
+    minutesRoundingFlagRaw = bool.tryParse(data[Global.keyMinutesRounding]);
 
     if (minutesRoundingFlagRaw == null) {
       minutesRoundingFlag = true;
@@ -201,7 +203,7 @@ class Settings {
       minutesRoundingFlag = minutesRoundingFlagRaw;
     }
 
-    oldStandardFlagRaw = bool.tryParse(data['oldStandard']);
+    oldStandardFlagRaw = bool.tryParse(data[Global.keyOldStandard]);
 
     if (oldStandardFlagRaw == null) {
       oldStandardFlag = false;
@@ -209,7 +211,7 @@ class Settings {
       oldStandardFlag = oldStandardFlagRaw;
     }
 
-    timeRoundingFlagRaw = bool.tryParse(data['timeRounding']);
+    timeRoundingFlagRaw = bool.tryParse(data[Global.keyTimeRounding]);
 
     if (timeRoundingFlagRaw == null) {
       timeRoundingFlag = true;
@@ -217,7 +219,7 @@ class Settings {
       timeRoundingFlag = timeRoundingFlagRaw;
     }
 
-    updateCheckRaw = bool.tryParse(data['updateCheckOnStartup']);
+    updateCheckRaw = bool.tryParse(data[Global.keyUpdateCheckOnStartup]);
 
     if (updateCheckRaw == null) {
       updateCheckFlag = false;
