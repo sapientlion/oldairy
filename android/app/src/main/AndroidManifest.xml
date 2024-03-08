@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ora.tfo.oldairy">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <application
         android:label="Oldairy"
         android:name="${applicationName}"
