@@ -25,6 +25,7 @@
 import 'package:flutter/material.dart';
 import 'package:oldairy/classes/global.dart';
 import 'package:oldairy/classes/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'license.dart';
 
@@ -73,10 +74,20 @@ class _AboutRouteState extends State<AboutRoute> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    _widgets.add(_getPackageInfo());
+    _widgets.add(_getPackageDescription());
+    _widgets.add(_getTechnicalDetails());
+    _widgets.add(_getCopyrightInfo());
+  }
+
   ///
   /// Generic text widget generator.
   ///
-  Text get({required String data, TextStyle? style}) {
+  Text _get({required String data, TextStyle? style}) {
     return Text(
       data,
       style: style,
@@ -87,14 +98,14 @@ class _AboutRouteState extends State<AboutRoute> {
   ///
   /// Get copyright details.
   ///
-  Text getCopyrightInfo() {
-    return get(data: 'Oldairy Copyright © 2023 - 2024 Leo `SapientLion` Markoff');
+  Text _getCopyrightInfo() {
+    return _get(data: 'Oldairy Copyright © 2023 - 2024 Leo `SapientLion` Markoff');
   }
 
   ///
   /// Get project license.
   ///
-  Future<void> getLicenseInfo() async {
+  Future<void> _getLicenseInfo() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -110,8 +121,8 @@ class _AboutRouteState extends State<AboutRoute> {
   ///
   /// Get project description.
   ///
-  Text getPackageDescription() {
-    return get(
+  Text _getPackageDescription() {
+    return _get(
         data:
             'A simple calculator for finding out the approximate cooling time of a typical industrial-sized milk tank.');
   }
@@ -119,14 +130,14 @@ class _AboutRouteState extends State<AboutRoute> {
   ///
   /// Get general project information.
   ///
-  Column getPackageInfo() {
+  Column _getPackageInfo() {
     return Column(
       children: [
-        get(
+        _get(
           data: 'Oldairy',
           style: const TextStyle(fontSize: 30.0),
         ),
-        get(
+        _get(
           data: 'Version ${widget.settings.packageVersion}',
         ),
       ],
@@ -136,12 +147,18 @@ class _AboutRouteState extends State<AboutRoute> {
   ///
   /// Get all technical information on this project.
   ///
-  Column getTechnicalDetails() {
+  Column _getTechnicalDetails() {
     return Column(
       children: [
         TextButton.icon(
           icon: const Icon(Icons.account_tree),
           onPressed: () {
+            bool result = _launchGitHub() as bool;
+
+            if (!result) {
+              _getUnavailableResourceAlertBox();
+            }
+
             return;
           },
           label: const Text('Visit project on GitHub'),
@@ -149,7 +166,7 @@ class _AboutRouteState extends State<AboutRoute> {
         TextButton.icon(
           icon: const Icon(Icons.book),
           onPressed: () {
-            getLicenseInfo();
+            _getLicenseInfo();
 
             return;
           },
@@ -159,13 +176,48 @@ class _AboutRouteState extends State<AboutRoute> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  ///
+  /// Show dialog window on web resource request fail.
+  ///
+  void _getUnavailableResourceAlertBox() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Information'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Requested web resource is not available. Try again later.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
 
-    _widgets.add(getPackageInfo());
-    _widgets.add(getPackageDescription());
-    _widgets.add(getTechnicalDetails());
-    _widgets.add(getCopyrightInfo());
+                return;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  ///
+  /// Invoke internet page to see more information on this project.
+  ///
+  Future<bool> _launchGitHub() async {
+    Uri url = Uri.parse('https://gefwefwefwefweion/oldairy');
+
+    if (!await launchUrl(url)) {
+      return false;
+    }
+
+    return true;
   }
 }
