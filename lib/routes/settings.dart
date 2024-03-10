@@ -184,17 +184,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ///
   BottomAppBar getControlPanel(BuildContext context) {
     return BottomAppBar(
-      color: Colors.green,
-      padding: const EdgeInsets.all(16.0),
-      shadowColor: Colors.transparent,
+      padding: const EdgeInsets.all(15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
             width: 125,
             child: FloatingActionButton.extended(
-              backgroundColor: Colors.greenAccent,
-              foregroundColor: Colors.black,
               heroTag: null,
               onPressed: () {
                 setState(() {
@@ -206,19 +202,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
                   _dropdownKey.currentState!.reset();
                 });
-
-                /*setState(() {
-                  _settings.oldStandardFlag = false;
-                  _settings.timePrecisionFlag = true;
-                  _settings.timeRoundingFlag = true;
-                  _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
-                  _settings.localeCurrent = _dropdownValue = _locales.first;
-
-                  _coolingCoefficientLimitFlag = true;
-                  _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
-                  _dropdownKey.currentState!.reset();
-                });*/
               },
+              icon: const Icon(Icons.restore),
               label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
             ),
           ),
@@ -228,8 +213,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
           SizedBox(
             width: 125,
             child: FloatingActionButton.extended(
-              backgroundColor: Colors.greenAccent,
-              foregroundColor: Colors.black,
               heroTag: null,
               onPressed: () {
                 if (!_coolingCoefficientLimitFlag) {
@@ -243,6 +226,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
                 return;
               },
+              icon: const Icon(Icons.check_circle),
               label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
             ),
           ),
@@ -292,12 +276,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
       onChanged: (bool? value) {
         setState(() {
           _settings.minutesRoundingFlag = value!;
-
-          /*if (!_settings.timePrecisionFlag) {
-            _settings.timePrecisionFlag = true;
-          } else {
-            _settings.timePrecisionFlag = false;
-          }*/
         });
       },
     );
@@ -315,12 +293,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
       onChanged: (bool? value) {
         setState(() {
           _settings.timeRoundingFlag = value!;
-
-          /*if (!_settings.timeRoundingFlag) {
-            _settings.timeRoundingFlag = true;
-          } else {
-            _settings.timeRoundingFlag = false;
-          }*/
         });
       },
     );
@@ -340,12 +312,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
       onChanged: (bool? value) {
         setState(() {
           _settings.oldStandardFlag = value!;
-
-          /*if (!_settings.oldStandardFlag) {
-            _settings.oldStandardFlag = true;
-          } else {
-            _settings.oldStandardFlag = false;
-          }*/
         });
       },
     );
@@ -388,7 +354,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   FloatingActionButton getUpdateCheckButton() {
     return FloatingActionButton.extended(
       icon: _updateAvailabilityFlag
-          ? null
+          ? const Icon(Icons.check_circle)
           : const CircularProgressIndicator(
               color: Colors.white,
               strokeWidth: 3,
@@ -447,10 +413,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
       autocorrect: false,
       controller: _coefficientCtrl,
       decoration: const InputDecoration(
-        counterStyle: TextStyle(height: double.minPositive),
         counterText: '',
-        filled: true,
-        fillColor: Color.fromRGBO(211, 211, 211, 1),
         hintText: '0.0',
         label: Center(
           child: Text('Cooling Coefficient'),

@@ -42,10 +42,10 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends HomeRouteStateManager {
-  final double _tempOutputFontSize = 25.0;
-  final double _fieldHeight = 70.0;
-  final double _fieldWidth = 110.0;
+  final double _fieldWidth = 140.0;
   final double _resetBtnWidth = 40.0;
+  final double _runSpacingConstant = 2.3;
+  final double _runSpacing = 15.0;
 
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
@@ -53,12 +53,6 @@ class _HomeRouteState extends HomeRouteStateManager {
     dropdownValue = _voltages.first;
 
     temperatureOutputCtrl.text = temperatureOutputInitValue;
-    /*volumeCtrl.text = initValue.toString();
-    ampsFirstWireCtrl.text = initValue.toString();
-    ampsSecondWireCtrl.text = initValue.toString();
-    ampsThirdWireCtrl.text = initValue.toString();
-    initTempCtrl.text = initValue.toString();
-    targetTempCtrl.text = initValue.toString();*/
 
     //
     // Don't forget to initialize the voltage located inside of the calculator object.
@@ -85,17 +79,23 @@ class _HomeRouteState extends HomeRouteStateManager {
               child: Column(
                 children: [
                   getTemperatureOutput(),
-                  const Padding(
-                    padding: EdgeInsets.all(15),
+                  Padding(
+                    padding: EdgeInsets.all(_runSpacing),
                   ),
                   getClearAllButton(),
-                  const Padding(
-                    padding: EdgeInsets.all(15),
+                  Padding(
+                    padding: EdgeInsets.all(_runSpacing),
                   ),
                   Wrap(
-                    runSpacing: 30,
-                    spacing: 30,
+                    runSpacing: _runSpacing,
                     children: getForm(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(_runSpacing),
+                  ),
+                  SizedBox(
+                    width: _fieldWidth * _runSpacingConstant,
+                    child: getVoltageDropdown(),
                   ),
                 ],
               ),
@@ -226,14 +226,15 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Get clear all button that removes all data stored inside of all input fields.
   ///
-  FloatingActionButton getClearAllButton() {
-    return FloatingActionButton.extended(
+  ElevatedButton getClearAllButton() {
+    return ElevatedButton.icon(
+      icon: const Icon(Icons.brush),
+      label: settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(settings.locale.clearAll),
       onPressed: () {
         temperatureOutputCtrl.text = temperatureOutputInitValue;
 
         purge(timeFormatter.calculator);
       },
-      label: settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(settings.locale.clearAll),
     );
   }
 
@@ -256,29 +257,6 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      /*SizedBox getFirstAmperageField() {
-    return getInputField(
-      'Amperage 1',
-      ampsFirstWireCtrl,
-      (value) {
-        onFirstAmperageFieldChange(value);
-
-        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsFirstWireCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        ampsFirstWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsFirstWireCtrl.value.text.length,
-        );
-
-        return;
-      },*/
     );
   }
 
@@ -409,38 +387,12 @@ class _HomeRouteState extends HomeRouteStateManager {
       widgets.add(
         SizedBox(
           width: _fieldWidth + _resetBtnWidth,
-          child: Row(
+          child: Column(
             children: widgetChildren,
           ),
         ),
       );
     }
-
-    //
-    // Voltage dropdown menu is a separate entity that must be treated in a different way.
-    //
-    widgets.add(
-      SizedBox(
-        width: _fieldWidth * 2 + 110,
-        child: Row(
-          children: [
-            getVoltageDropdown(),
-            //
-            // TODO finish implementation of the reset routine for voltage dropdown menu.
-            //
-            /*getResetButton(
-              onPressed: () {
-                setState(() {
-                  dropdownValue = _voltages.first;
-                });
-
-                return;
-              },
-            ),*/
-          ],
-        ),
-      ),
-    );
 
     return widgets;
   }
@@ -464,29 +416,6 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      /*SizedBox getInitTempField() {
-    return getInputField(
-      'Initial Temp',
-      initTempCtrl,
-      (value) {
-        onInitTempFieldChange(value);
-
-        initTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: initTempCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        initTempCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: initTempCtrl.value.text.length,
-        );
-
-        return;
-      },*/
     );
   }
 
@@ -508,30 +437,17 @@ class _HomeRouteState extends HomeRouteStateManager {
     bool enabled = false,
     void Function()? onTap,
   }) {
-    /*SizedBox getInputField(
-      String label, TextEditingController controller, void Function(String)? onChanged,
-      {bool enabled = false, void Function()? onTap}) {*/
-    /*SizedBox getInputField(
-      String label, TextEditingController controller, void Function(String)? onChanged, void Function()? onTap,
-      {bool enabled = false}) {*/
     return SizedBox(
       width: _fieldWidth,
       child: TextFormField(
         autocorrect: false,
         controller: controller,
-        //
-        // Get rid of the counter.
-        //
         decoration: InputDecoration(
-          counterStyle: const TextStyle(height: double.minPositive),
           counterText: '',
-          filled: true,
-          fillColor: const Color.fromRGBO(211, 211, 211, 1),
           hintText: hintText,
           label: Center(
             child: Text(label),
           ),
-          labelStyle: const TextStyle(fontSize: 15.0),
         ),
         enabled: !enabled ? null : phaseAvailabilityFlag,
         //
@@ -597,19 +513,16 @@ class _HomeRouteState extends HomeRouteStateManager {
     bool enabled = false,
   }) {
     return SizedBox(
-      height: _fieldHeight,
-      width: _resetBtnWidth,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-        ),
+      height: 35.0,
+      width: _fieldWidth,
+      child: ElevatedButton.icon(
         onPressed: !enabled
             ? onPressed
             : !phaseAvailabilityFlag
                 ? null
                 : onPressed,
-        child: const Icon(Icons.restart_alt),
+        icon: const Icon(Icons.restart_alt),
+        label: const Text('Reset'),
       ),
     );
   }
@@ -630,29 +543,6 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      /*SizedBox getSecondAmperageField() {
-    return getInputField(
-      'Amperage 2',
-      ampsSecondWireCtrl,
-      (value) {
-        onSecondAmperageFieldChange(value);
-
-        ampsSecondWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsSecondWireCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        ampsSecondWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsSecondWireCtrl.value.text.length,
-        );
-
-        return;
-      },*/
       enabled: true,
     );
   }
@@ -713,29 +603,6 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      /*SizedBox getTargetTempField() {
-    return getInputField(
-      'Target Temp',
-      targetTempCtrl,
-      (value) {
-        onTargetTempFieldChange(value);
-
-        targetTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: targetTempCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        targetTempCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: targetTempCtrl.value.text.length,
-        );
-
-        return;
-      },*/
     );
   }
 
@@ -744,14 +611,12 @@ class _HomeRouteState extends HomeRouteStateManager {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: _fieldWidth * 2 + 110,
+          width: _fieldWidth * _runSpacingConstant,
           child: TextFormField(
             controller: temperatureOutputCtrl,
             decoration: const InputDecoration(
               counterStyle: TextStyle(height: double.minPositive),
               counterText: '',
-              filled: true,
-              fillColor: Color.fromRGBO(211, 211, 211, 1),
               label: Center(
                 child: Text('Cooling Time (hh:mm)'),
               ),
@@ -760,17 +625,6 @@ class _HomeRouteState extends HomeRouteStateManager {
             textAlign: TextAlign.center,
           ),
         ),
-        //
-        // Nothing to see here...
-        //
-        /*absoluteZeroFlag && settings.osFlag
-            ? Text(
-                '\u{1f480}',
-                style: TextStyle(
-                  fontSize: _tempOutputFontSize,
-                ),
-              )
-            : const Text(''),*/
       ],
     );
   }
@@ -791,29 +645,6 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      /*SizedBox getThirdAmperageField() {
-    return getInputField(
-      'Amperage 3',
-      ampsThirdWireCtrl,
-      (value) {
-        onThirdAmperageFieldChange(value);
-
-        ampsThirdWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsThirdWireCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        ampsThirdWireCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: ampsThirdWireCtrl.value.text.length,
-        );
-
-        return;
-      },*/
       enabled: true,
     );
   }
@@ -865,11 +696,9 @@ class _HomeRouteState extends HomeRouteStateManager {
     }
 
     return SizedBox(
-      width: _fieldWidth * 2 + 110.0,
+      width: _fieldWidth * 2.6,
       child: DropdownButtonFormField<int>(
         decoration: const InputDecoration(
-          filled: true,
-          fillColor: Color.fromRGBO(211, 211, 211, 1),
           label: Center(
             child: Text('Voltage (V)'),
             //child: settings.locale.voltage.isEmpty ? const Text('Voltage (V)') : Text(settings.locale.voltage),
@@ -896,7 +725,6 @@ class _HomeRouteState extends HomeRouteStateManager {
           },
         ).toList(),
         onChanged: (int? value) {
-          //onChanged: (int? value) {
           //
           // This is called when the user selects an item.
           //
@@ -924,29 +752,6 @@ class _HomeRouteState extends HomeRouteStateManager {
 
         return;
       },
-      /*SizedBox getVolumeField() {
-    return getInputField(
-      'Volume',
-      volumeCtrl,
-      (value) {
-        onVolumeFieldChange(value);
-
-        volumeCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: volumeCtrl.text.length,
-          ),
-        );
-
-        return;
-      },*/
-      /*() {
-        volumeCtrl.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: volumeCtrl.value.text.length,
-        );
-
-        return;
-      },*/
     );
   }
 
