@@ -595,26 +595,21 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  Row _getTemperatureOutput() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: _fieldWidth * _runSpacingConstant,
-          child: TextFormField(
-            controller: temperatureOutputCtrl,
-            decoration: const InputDecoration(
-              counterStyle: TextStyle(height: double.minPositive),
-              counterText: '',
-              label: Center(
-                child: Text('Cooling Time (hh:mm)'),
-              ),
-            ),
-            readOnly: true,
-            textAlign: TextAlign.center,
+  SizedBox _getTemperatureOutput() {
+    return SizedBox(
+      width: _fieldWidth * _runSpacingConstant,
+      child: TextFormField(
+        controller: temperatureOutputCtrl,
+        decoration: const InputDecoration(
+          counterStyle: TextStyle(height: double.minPositive),
+          counterText: '',
+          label: Center(
+            child: Text('Cooling Time (hh:mm)'),
           ),
         ),
-      ],
+        readOnly: true,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
