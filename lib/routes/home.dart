@@ -49,24 +49,13 @@ class _HomeRouteState extends HomeRouteStateManager {
 
   List<int> _voltages = <int>[230, 400]; // Store ISO-approved voltages here.
 
-  _HomeRouteState() {
-    dropdownValue = _voltages.first;
-
-    temperatureOutputCtrl.text = temperatureOutputInitValue;
-
-    //
-    // Don't forget to initialize the voltage located inside of the calculator object.
-    //
-    timeFormatter.calculator.voltage = _voltages.first.toDouble();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          getPopupMenuButton(context),
+          _getPopupMenuButton(context),
         ],
       ),
       body: Scrollbar(
@@ -78,24 +67,24 @@ class _HomeRouteState extends HomeRouteStateManager {
             child: Form(
               child: Column(
                 children: [
-                  getTemperatureOutput(),
+                  _getTemperatureOutput(),
                   Padding(
                     padding: EdgeInsets.all(_runSpacing),
                   ),
-                  getClearAllButton(),
+                  _getClearAllButton(),
                   Padding(
                     padding: EdgeInsets.all(_runSpacing),
                   ),
                   Wrap(
                     runSpacing: _runSpacing,
-                    children: getForm(),
+                    children: _getForm(),
                   ),
                   Padding(
                     padding: EdgeInsets.all(_runSpacing),
                   ),
                   SizedBox(
                     width: _fieldWidth * _runSpacingConstant,
-                    child: getVoltageDropdown(),
+                    child: _getVoltageDropdown(),
                   ),
                 ],
               ),
@@ -109,7 +98,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Check for any updates.
   ///
-  bool checkUpdate() {
+  bool _checkUpdate() {
     bool updateAvailabilityFlag = false;
 
     //
@@ -143,7 +132,7 @@ class _HomeRouteState extends HomeRouteStateManager {
 
             if (settings.responseBody != '') {
               if (settings.packageVersion != settings.responseBody['tag_name'].toString()) {
-                getUpdateCheckAlertBox(true);
+                _getUpdateCheckAlertBox(true);
               }
             }
           },
@@ -172,14 +161,14 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// [value] - menu option.
   ///
-  void doPopupAction(int value) async {
+  void _doPopupAction(int value) async {
     switch (value) {
       //
       // Open the settings route.
       //
       case 1:
         {
-          getSettingsRoute();
+          _getSettingsRoute();
 
           return;
         }
@@ -188,7 +177,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       //
       case 2:
         {
-          getAboutRoute();
+          _getAboutRoute();
 
           return;
         }
@@ -209,7 +198,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Get the about route on screen.
   ///
-  void getAboutRoute() async {
+  void _getAboutRoute() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -226,7 +215,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Get clear all button that removes all data stored inside of all input fields.
   ///
-  ElevatedButton getClearAllButton() {
+  ElevatedButton _getClearAllButton() {
     return ElevatedButton.icon(
       icon: const Icon(Icons.brush),
       label: settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(settings.locale.clearAll),
@@ -241,8 +230,8 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Get first amperage input field.
   ///
-  SizedBox getFirstAmperageField() {
-    return getInputField(
+  SizedBox _getFirstAmperageField() {
+    return _getInputField(
       label: 'Amperage 1 (A)',
       controller: ampsFirstWireCtrl,
       hintText: '0.0',
@@ -266,7 +255,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// * [widgets] - form widgets storage.
   ///
-  List<Widget> getForm() {
+  List<Widget> _getForm() {
     List<Widget> widgetChildren = [];
     List<Widget> widgets = [];
 
@@ -278,8 +267,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         case 0:
           {
             widgetChildren = [
-              getVolumeField(),
-              getResetButton(
+              _getVolumeField(),
+              _getResetButton(
                 onPressed: () {
                   volumeCtrl.text = '';
 
@@ -295,8 +284,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         case 1:
           {
             widgetChildren = [
-              getFirstAmperageField(),
-              getResetButton(
+              _getFirstAmperageField(),
+              _getResetButton(
                 onPressed: () {
                   ampsFirstWireCtrl.text = '';
 
@@ -312,8 +301,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         case 2:
           {
             widgetChildren = [
-              getSecondAmperageField(),
-              getResetButton(
+              _getSecondAmperageField(),
+              _getResetButton(
                 onPressed: () {
                   ampsSecondWireCtrl.text = '';
 
@@ -330,8 +319,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         case 3:
           {
             widgetChildren = [
-              getThirdAmperageField(),
-              getResetButton(
+              _getThirdAmperageField(),
+              _getResetButton(
                 onPressed: () {
                   ampsThirdWireCtrl.text = '';
 
@@ -348,8 +337,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         case 4:
           {
             widgetChildren = [
-              getInitTempField(),
-              getResetButton(
+              _getInitTempField(),
+              _getResetButton(
                 onPressed: () {
                   initTempCtrl.text = '';
 
@@ -365,8 +354,8 @@ class _HomeRouteState extends HomeRouteStateManager {
         case 5:
           {
             widgetChildren = [
-              getTargetTempField(),
-              getResetButton(
+              _getTargetTempField(),
+              _getResetButton(
                 onPressed: () {
                   targetTempCtrl.text = '';
 
@@ -400,8 +389,8 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Get initial temperature input field on screen.
   ///
-  SizedBox getInitTempField() {
-    return getInputField(
+  SizedBox _getInitTempField() {
+    return _getInputField(
       label: 'Initial Temp',
       controller: initTempCtrl,
       hintText: '0.0',
@@ -429,7 +418,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   /// * [enabled] - input field state;
   /// * [onTap] - series of routines that follow after tapping on input field.
   ///
-  SizedBox getInputField({
+  SizedBox _getInputField({
     required String label,
     required String hintText,
     required TextEditingController controller,
@@ -464,7 +453,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// Get a popup menu that allows traversal between different app routes.
   ///
-  PopupMenuButton<int> getPopupMenuButton(BuildContext context) {
+  PopupMenuButton<int> _getPopupMenuButton(BuildContext context) {
     return PopupMenuButton(
       itemBuilder: (context) {
         return [
@@ -483,7 +472,7 @@ class _HomeRouteState extends HomeRouteStateManager {
         ];
       },
       onSelected: (value) async {
-        doPopupAction(value);
+        _doPopupAction(value);
       },
       child: const Center(
         child: Padding(
@@ -508,7 +497,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   /// * [onPressed] - what must happen after pressing the button;
   /// * [enabled] - state of the button.
   ///
-  SizedBox getResetButton({
+  SizedBox _getResetButton({
     required void Function()? onPressed,
     bool enabled = false,
   }) {
@@ -527,8 +516,8 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getSecondAmperageField() {
-    return getInputField(
+  SizedBox _getSecondAmperageField() {
+    return _getInputField(
       label: 'Amperage 2 (A)',
       controller: ampsSecondWireCtrl,
       hintText: '0.0',
@@ -550,7 +539,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   //
   // Get settings route on screen.
   //
-  void getSettingsRoute() async {
+  void _getSettingsRoute() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -587,8 +576,8 @@ class _HomeRouteState extends HomeRouteStateManager {
     return;
   }
 
-  SizedBox getTargetTempField() {
-    return getInputField(
+  SizedBox _getTargetTempField() {
+    return _getInputField(
       label: 'Target Temp',
       controller: targetTempCtrl,
       hintText: '0.0',
@@ -606,7 +595,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  Row getTemperatureOutput() {
+  Row _getTemperatureOutput() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -629,8 +618,8 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getThirdAmperageField() {
-    return getInputField(
+  SizedBox _getThirdAmperageField() {
+    return _getInputField(
       label: 'Amperage 3 (A)',
       controller: ampsThirdWireCtrl,
       hintText: '0.0',
@@ -654,7 +643,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ///
   /// [state] - using this flag determine whether a new update exists or not.
   ///
-  Future<void> getUpdateCheckAlertBox(bool state) async {
+  Future<void> _getUpdateCheckAlertBox(bool state) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -683,7 +672,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getVoltageDropdown() {
+  SizedBox _getVoltageDropdown() {
     //
     // Check for the currently set voltages standard. Also, do this to prevent app from crashing due to the missing
     // values.
@@ -736,8 +725,8 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
-  SizedBox getVolumeField() {
-    return getInputField(
+  SizedBox _getVolumeField() {
+    return _getInputField(
       label: 'Volume (L)',
       controller: volumeCtrl,
       hintText: '0.0',
@@ -758,6 +747,17 @@ class _HomeRouteState extends HomeRouteStateManager {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      dropdownValue = _voltages.first;
+
+      temperatureOutputCtrl.text = temperatureOutputInitValue;
+
+      //
+      // Don't forget to initialize the voltage located inside of the calculator object.
+      //
+      timeFormatter.calculator.voltage = _voltages.first.toDouble();
+    });
 
     settings.read().then(
       (value) {
@@ -791,7 +791,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             }
 
             if (settings.updateCheckFlag) {
-              checkUpdate();
+              _checkUpdate();
             }
           },
         );
