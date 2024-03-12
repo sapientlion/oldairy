@@ -38,7 +38,7 @@ import 'dart:math';
 
 import 'package:oldairy/classes/settings.dart';
 
-class Calculator {
+abstract class Calculator {
   final int _ampsLimits = 125;
   final Settings _settings = Settings();
 

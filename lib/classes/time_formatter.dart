@@ -23,30 +23,23 @@
 
 import 'calculator.dart';
 
-class TimeFormatter {
+class TimeFormatter extends Calculator {
   final int _minutesInOneHour = 60;
 
   int _cTimeHours = 0;
   int _cTimeMinutes = 0;
   double _cTime = 0.0;
 
-  Calculator calculator = Calculator(
-    initialTemp: 0.0,
-    targetTemp: 0.0,
-    volume: 0.0,
-    voltage: 0.0,
-    ampsFirstWire: 0.0,
-    ampsSecondWire: 0.0,
-    ampsThirdWire: 0.0,
-  );
-
   TimeFormatter({
-    required this.calculator,
-  }) {
-    calculator.calculate();
-
-    _cTime = calculator.get();
-  }
+    required super.initialTemp,
+    required super.targetTemp,
+    required super.volume,
+    required super.voltage,
+    required super.ampsFirstWire,
+    required super.ampsSecondWire,
+    required super.ampsThirdWire,
+    super.kWatts = 0.350,
+  });
 
   int getFraction(String value) {
     if (value.isEmpty) {
@@ -75,20 +68,8 @@ class TimeFormatter {
     return int.parse(resValue);
   }
 
-  double get(bool rFlag) {
-    if (_cTime <= 0) {
-      return _cTime;
-    }
-
-    if (!rFlag) {
-      return _cTime;
-    }
-
-    return _cTime;
-  }
-
   int getHours() {
-    _cTime = calculator.get();
+    _cTime = super.get();
 
     return _cTimeHours = _cTime.toInt();
   }
@@ -97,7 +78,7 @@ class TimeFormatter {
     bool rFlag = true, // Time rounding flag.
     bool pFlag = true, // Precision flag.
   }) {
-    _cTime = calculator.get();
+    _cTime = super.get();
 
     if (_cTime <= 0) {
       return _cTimeMinutes;

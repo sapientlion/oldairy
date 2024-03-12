@@ -24,7 +24,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:oldairy/classes/calculator.dart';
 import 'package:oldairy/classes/settings.dart';
-import 'package:oldairy/classes/tformatter.dart';
+import 'package:oldairy/classes/time_formatter.dart';
 import 'package:oldairy/routes/home.dart';
 
 abstract class HomeRouteStateManager extends State<HomeRoute> {
@@ -54,15 +54,13 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
   @protected
   TimeFormatter timeFormatter = TimeFormatter(
-    calculator: Calculator(
-      initialTemp: 0.0,
-      targetTemp: 0.0,
-      volume: 0.0,
-      voltage: 0.0,
-      ampsFirstWire: 0.0,
-      ampsSecondWire: 0.0,
-      ampsThirdWire: 0.0,
-    ),
+    initialTemp: 0.0,
+    targetTemp: 0.0,
+    volume: 0.0,
+    voltage: 0.0,
+    ampsFirstWire: 0.0,
+    ampsSecondWire: 0.0,
+    ampsThirdWire: 0.0,
   );
 
   @protected
@@ -145,21 +143,21 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
         switch (wire) {
           case 3:
             {
-              timeFormatter.calculator.ampsThirdWire = wireValue;
+              timeFormatter.ampsThirdWire = wireValue;
               ampsThirdWireCtrl.text = value;
 
               break;
             }
           case 2:
             {
-              timeFormatter.calculator.ampsSecondWire = wireValue;
+              timeFormatter.ampsSecondWire = wireValue;
               ampsSecondWireCtrl.text = value;
 
               break;
             }
           case 1:
             {
-              timeFormatter.calculator.ampsFirstWire = wireValue;
+              timeFormatter.ampsFirstWire = wireValue;
               ampsFirstWireCtrl.text = value;
 
               break;
@@ -170,9 +168,9 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
             }
         }
 
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
 
-        timeFormatter.calculator.calculate();
+        timeFormatter.calculate();
         set();
       },
     );
@@ -184,18 +182,18 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     setState(
       () {
         if (double.tryParse(value) == null) {
-          timeFormatter.calculator.initialTemp = initialValue;
+          timeFormatter.initialTemp = initialValue;
         } else {
-          timeFormatter.calculator.initialTemp = double.parse(value);
+          timeFormatter.initialTemp = double.parse(value);
         }
 
-        if (timeFormatter.calculator.initialTemp > _initTempLimit || timeFormatter.calculator.initialTemp < 0) {
-          timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
-          initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
+        if (timeFormatter.initialTemp > _initTempLimit || timeFormatter.initialTemp < 0) {
+          timeFormatter.initialTemp = _initTempLimit.toDouble();
+          initTempCtrl.text = timeFormatter.initialTemp.toString();
         }
 
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
+        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.calculate();
 
         set();
       },
@@ -207,19 +205,17 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void onTargetTempFieldChange(String value) {
     setState(
       () {
-        //targetTempCtrl = reset(targetTempCtrl);
-
         if (double.tryParse(value) == null) {
-          timeFormatter.calculator.targetTemp = initialValue;
+          timeFormatter.targetTemp = initialValue;
         } else {
-          timeFormatter.calculator.targetTemp = double.parse(value);
+          timeFormatter.targetTemp = double.parse(value);
         }
 
         //
         // Check whether set temperature is equal to an absolute zero.
         //
-        if (timeFormatter.calculator.targetTemp == _absoluteZero) {
-          if (timeFormatter.calculator.voltage == 380 || timeFormatter.calculator.voltage == 400) {
+        if (timeFormatter.targetTemp == _absoluteZero) {
+          if (timeFormatter.voltage == 380 || timeFormatter.voltage == 400) {
             setState(
               () {
                 absoluteZeroFlag = true;
@@ -234,14 +230,13 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           );
         }
 
-        if (timeFormatter.calculator.targetTemp < _targetTempLimit ||
-            timeFormatter.calculator.targetTemp > timeFormatter.calculator.initialTemp) {
-          timeFormatter.calculator.targetTemp = -50.0;
-          targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
+        if (timeFormatter.targetTemp < _targetTempLimit || timeFormatter.targetTemp > timeFormatter.initialTemp) {
+          timeFormatter.targetTemp = -50.0;
+          targetTempCtrl.text = timeFormatter.targetTemp.toString();
         }
 
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
+        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.calculate();
 
         set();
       },
@@ -254,9 +249,9 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     setState(
       () {
         dropdownValue = value!.toInt();
-        timeFormatter.calculator.voltage = dropdownValue.toDouble();
+        timeFormatter.voltage = dropdownValue.toDouble();
 
-        if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
+        if (timeFormatter.voltage >= 220 && timeFormatter.voltage <= 230) {
           phaseAvailabilityFlag = false;
         } else {
           phaseAvailabilityFlag = true;
@@ -264,22 +259,22 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
         if (check()) {
           if (!phaseAvailabilityFlag) {
-            timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
-            timeFormatter.calculator.targetTemp = double.parse(targetTempCtrl.text);
-            timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
-            timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
+            timeFormatter.initialTemp = double.parse(initTempCtrl.text);
+            timeFormatter.targetTemp = double.parse(targetTempCtrl.text);
+            timeFormatter.volume = double.parse(volumeCtrl.text);
+            timeFormatter.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
           } else {
-            timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
-            timeFormatter.calculator.targetTemp = double.parse(targetTempCtrl.text);
-            timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
-            timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
-            timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
-            timeFormatter.calculator.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
+            timeFormatter.initialTemp = double.parse(initTempCtrl.text);
+            timeFormatter.targetTemp = double.parse(targetTempCtrl.text);
+            timeFormatter.volume = double.parse(volumeCtrl.text);
+            timeFormatter.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
+            timeFormatter.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
+            timeFormatter.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
           }
         }
 
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
+        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.calculate();
 
         set();
       },
@@ -292,18 +287,18 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     setState(
       () {
         if (double.tryParse(value) == null) {
-          timeFormatter.calculator.volume = initialValue;
+          timeFormatter.volume = initialValue;
         } else {
-          timeFormatter.calculator.volume = double.parse(value);
+          timeFormatter.volume = double.parse(value);
         }
 
-        if (timeFormatter.calculator.volume > _volumeLimit) {
-          timeFormatter.calculator.volume = _volumeLimit.toDouble();
-          volumeCtrl.text = timeFormatter.calculator.volume.toString();
+        if (timeFormatter.volume > _volumeLimit) {
+          timeFormatter.volume = _volumeLimit.toDouble();
+          volumeCtrl.text = timeFormatter.volume.toString();
         }
 
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
+        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.calculate();
 
         set();
       },
@@ -321,14 +316,13 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     const double initialValue = 0.0;
 
     timeFormatter = TimeFormatter(
-      calculator: Calculator(
-          initialTemp: initialValue,
-          targetTemp: initialValue,
-          volume: initialValue,
-          voltage: dropdownValue.toDouble(),
-          ampsFirstWire: initialValue,
-          ampsSecondWire: initialValue,
-          ampsThirdWire: initialValue),
+      initialTemp: initialValue,
+      targetTemp: initialValue,
+      volume: initialValue,
+      voltage: dropdownValue.toDouble(),
+      ampsFirstWire: initialValue,
+      ampsSecondWire: initialValue,
+      ampsThirdWire: initialValue,
     );
 
     initTempCtrl.text = targetTempCtrl.text =

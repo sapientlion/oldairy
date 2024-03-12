@@ -120,7 +120,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       //
       // Don't forget to initialize the voltage located inside of the calculator object.
       //
-      timeFormatter.calculator.voltage = _voltages.first.toDouble();
+      timeFormatter.voltage = _voltages.first.toDouble();
     });
 
     settings.read().then(
@@ -261,7 +261,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       onPressed: () {
         temperatureOutputCtrl.text = temperatureOutputInitValue;
 
-        purge(timeFormatter.calculator);
+        purge(timeFormatter);
       },
     );
   }
@@ -340,7 +340,6 @@ class _HomeRouteState extends HomeRouteStateManager {
                   ampsSecondWireCtrl.text = '';
 
                   onAmperageChange(2, ampsSecondWireCtrl.text);
-                  //onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
 
                   return;
                 },
@@ -551,7 +550,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       hintText: '0.0',
       onChanged: (value) {
         onAmperageChange(2, value);
-        //onSecondAmperageFieldChange(value);
 
         return;
       },
@@ -585,8 +583,8 @@ class _HomeRouteState extends HomeRouteStateManager {
     //
     // Do calculate after applying the app settings.
     //
-    timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-    timeFormatter.calculator.calculate();
+    timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+    timeFormatter.calculate();
 
     //
     // Show final results on screen.
@@ -634,7 +632,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       hintText: '0.0',
       onChanged: (value) {
         onAmperageChange(3, value);
-        //onThirdAmperageFieldChange(value);
 
         return;
       },
