@@ -168,7 +168,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
             }
         }
 
-        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
 
         timeFormatter.calculate();
         set();
@@ -192,7 +192,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           initTempCtrl.text = timeFormatter.initialTemp.toString();
         }
 
-        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
         timeFormatter.calculate();
 
         set();
@@ -235,7 +235,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           targetTempCtrl.text = timeFormatter.targetTemp.toString();
         }
 
-        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
         timeFormatter.calculate();
 
         set();
@@ -273,7 +273,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           }
         }
 
-        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
         timeFormatter.calculate();
 
         set();
@@ -297,7 +297,7 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           volumeCtrl.text = timeFormatter.volume.toString();
         }
 
-        timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
         timeFormatter.calculate();
 
         set();

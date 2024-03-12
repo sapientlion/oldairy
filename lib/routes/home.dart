@@ -583,7 +583,7 @@ class _HomeRouteState extends HomeRouteStateManager {
     //
     // Do calculate after applying the app settings.
     //
-    timeFormatter.kWatts = settings.coolingCoefficientCurrent;
+    timeFormatter.coefficient = settings.coolingCoefficientCurrent;
     timeFormatter.calculate();
 
     //

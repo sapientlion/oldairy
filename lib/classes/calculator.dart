@@ -36,6 +36,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:oldairy/classes/settings.dart';
 
 abstract class Calculator {
@@ -44,7 +45,7 @@ abstract class Calculator {
 
   double _coolingTime = 0.0;
 
-  double kWatts = 0.0;
+  double coefficient = 0.0;
   double initialTemp = 0.0;
   double targetTemp = 0.0;
   double volume = 0.0;
@@ -61,32 +62,71 @@ abstract class Calculator {
     required this.ampsFirstWire,
     required this.ampsSecondWire,
     required this.ampsThirdWire,
-    this.kWatts = 0.350,
+    this.coefficient = 0.350,
   });
 
+  ///
+  /// Get total cooling time.
+  ///
   double get() {
     return _coolingTime;
   }
 
+  ///
+  /// Calculate normally.
+  ///
   double calculateLow() {
     if (voltage < 220 || voltage > 230) {
-      return _coolingTime = 0.0;
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateLow::_coolingTime : ] $_coolingTime');
+      }
+
+      return _coolingTime;
     }
 
-    return _coolingTime /= ampsFirstWire;
+    _coolingTime /= ampsFirstWire;
+
+    if (kDebugMode) {
+      print('[Calculator::calculateLow::_coolingTime : ] $_coolingTime');
+    }
+
+    return _coolingTime;
   }
 
+  ///
+  /// Calculate using three-phase electricity system.
+  ///
   double calculateHigh() {
     if (voltage < 380 || voltage > 400) {
-      return _coolingTime = 0.0;
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
+      }
+
+      return _coolingTime;
     }
 
     if (ampsSecondWire > _ampsLimits) {
-      return _coolingTime = 0.0;
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
+      }
+
+      return _coolingTime;
     }
 
     if (ampsThirdWire > _ampsLimits) {
-      return _coolingTime = 0.0;
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
+      }
+
+      return _coolingTime;
     }
 
     //
@@ -94,32 +134,68 @@ abstract class Calculator {
     //
     double combinedAmperage = ampsFirstWire + ampsSecondWire + ampsThirdWire;
 
+    if (kDebugMode) {
+      print('[Calculator::calculateHigh::combinedAmperage : ] $combinedAmperage');
+    }
+
     combinedAmperage = combinedAmperage / sqrt(3);
+
+    if (kDebugMode) {
+      print('[Calculator::calculateHigh::combinedAmperage : ] $combinedAmperage');
+    }
 
     if (combinedAmperage <= 0) {
       return _coolingTime = 0.0;
     }
 
-    return _coolingTime /= combinedAmperage;
+    _coolingTime /= combinedAmperage;
+
+    if (kDebugMode) {
+      print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
+    }
+
+    return _coolingTime;
   }
 
+  ///
+  /// Calculate and get total cooling time.
+  ///
   double calculate() {
     _coolingTime = initialTemp - targetTemp;
+
+    if (kDebugMode) {
+      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+    }
 
     //
     // No point in going any further when the result will always be the same
     // and equal to 0.
     //
     if (_coolingTime <= 0) {
-      return _coolingTime = 0.0;
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+      }
+
+      return _coolingTime;
     }
 
-    if (kWatts < _settings.coolingCoefficientLowerLimit || kWatts > _settings.coolingCoefficientUpperLimit) {
-      kWatts = _settings.coolingCoefficientLowerLimit;
+    if (coefficient < _settings.coolingCoefficientLowerLimit || coefficient > _settings.coolingCoefficientUpperLimit) {
+      coefficient = _settings.coolingCoefficientLowerLimit;
     }
 
-    _coolingTime = kWatts * _coolingTime;
+    _coolingTime = coefficient * _coolingTime;
+
+    if (kDebugMode) {
+      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+    }
+
     _coolingTime = volume * _coolingTime;
+
+    if (kDebugMode) {
+      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+    }
 
     //
     // Division by zero is undefined.
@@ -130,11 +206,21 @@ abstract class Calculator {
 
     _coolingTime /= voltage;
 
+    if (kDebugMode) {
+      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+    }
+
     //
     // The exact same thing can happen here.
     //
     if (ampsFirstWire <= 0 || ampsFirstWire > _ampsLimits) {
-      return _coolingTime = 0.0;
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+      }
+
+      return _coolingTime;
     }
 
     //

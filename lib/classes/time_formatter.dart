@@ -38,7 +38,7 @@ class TimeFormatter extends Calculator {
     required super.ampsFirstWire,
     required super.ampsSecondWire,
     required super.ampsThirdWire,
-    super.kWatts = 0.350,
+    super.coefficient = 0.350,
   });
 
   int getFraction(String value) {
