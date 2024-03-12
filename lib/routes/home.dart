@@ -238,12 +238,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       onChanged: (value) {
         onFirstAmperageFieldChange(value);
 
-        ampsFirstWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsFirstWireCtrl.text.length,
-          ),
-        );
-
         return;
       },
     );
@@ -397,12 +391,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       onChanged: (value) {
         onInitTempFieldChange(value);
 
-        initTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: initTempCtrl.text.length,
-          ),
-        );
-
         return;
       },
     );
@@ -524,12 +512,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       onChanged: (value) {
         onSecondAmperageFieldChange(value);
 
-        ampsSecondWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsSecondWireCtrl.text.length,
-          ),
-        );
-
         return;
       },
       enabled: true,
@@ -584,12 +566,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       onChanged: (value) {
         onTargetTempFieldChange(value);
 
-        targetTempCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: targetTempCtrl.text.length,
-          ),
-        );
-
         return;
       },
     );
@@ -620,12 +596,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       hintText: '0.0',
       onChanged: (value) {
         onThirdAmperageFieldChange(value);
-
-        ampsThirdWireCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: ampsThirdWireCtrl.text.length,
-          ),
-        );
 
         return;
       },
@@ -727,12 +697,6 @@ class _HomeRouteState extends HomeRouteStateManager {
       hintText: '0.0',
       onChanged: (value) {
         onVolumeFieldChange(value);
-
-        volumeCtrl.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: volumeCtrl.text.length,
-          ),
-        );
 
         return;
       },
