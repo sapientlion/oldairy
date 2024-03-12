@@ -236,7 +236,7 @@ class _HomeRouteState extends HomeRouteStateManager {
       controller: ampsFirstWireCtrl,
       hintText: '0.0',
       onChanged: (value) {
-        onFirstAmperageFieldChange(value);
+        onAmperageChange(1, value);
 
         return;
       },
@@ -283,7 +283,7 @@ class _HomeRouteState extends HomeRouteStateManager {
                 onPressed: () {
                   ampsFirstWireCtrl.text = '';
 
-                  onFirstAmperageFieldChange(ampsFirstWireCtrl.text);
+                  onAmperageChange(1, ampsFirstWireCtrl.text);
 
                   return;
                 },
@@ -300,7 +300,8 @@ class _HomeRouteState extends HomeRouteStateManager {
                 onPressed: () {
                   ampsSecondWireCtrl.text = '';
 
-                  onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
+                  onAmperageChange(2, ampsSecondWireCtrl.text);
+                  //onSecondAmperageFieldChange(ampsSecondWireCtrl.text);
 
                   return;
                 },
@@ -318,7 +319,7 @@ class _HomeRouteState extends HomeRouteStateManager {
                 onPressed: () {
                   ampsThirdWireCtrl.text = '';
 
-                  onThirdAmperageFieldChange(ampsThirdWireCtrl.text);
+                  onAmperageChange(3, ampsThirdWireCtrl.text);
 
                   return;
                 },
@@ -510,7 +511,8 @@ class _HomeRouteState extends HomeRouteStateManager {
       controller: ampsSecondWireCtrl,
       hintText: '0.0',
       onChanged: (value) {
-        onSecondAmperageFieldChange(value);
+        onAmperageChange(2, value);
+        //onSecondAmperageFieldChange(value);
 
         return;
       },
@@ -595,7 +597,8 @@ class _HomeRouteState extends HomeRouteStateManager {
       controller: ampsThirdWireCtrl,
       hintText: '0.0',
       onChanged: (value) {
-        onThirdAmperageFieldChange(value);
+        onAmperageChange(3, value);
+        //onThirdAmperageFieldChange(value);
 
         return;
       },

@@ -34,7 +34,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   final int _initTempLimit = 50;
   final int _volumeLimit = 30000;
   final int _ampsLimit = 125;
-  //final double initValue = 0.0;
   final double _targetTempLimit = -273.15;
   final double _absoluteZero = -273.15;
 
@@ -109,42 +108,79 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     return true;
   }
 
-  void onFirstAmperageFieldChange(String value) {
+  ///
+  /// Do a series of actions on amperage value change.
+  ///
+  /// [wire] - phase wire to use;
+  /// [value] - value to process.
+  ///
+  String onAmperageChange(int wire, String value) {
+    double wireValue = initialValue;
+
+    //
+    // Parse given value as a decimal number (double).
+    //
+    if (double.tryParse(value) == null) {
+      wireValue = initialValue;
+      value = '';
+    } else {
+      wireValue = double.parse(value);
+    }
+
+    //
+    // Amperage can't be less than zero.
+    //
+    if (wireValue < initialValue) {
+      wireValue = initialValue;
+      value = wireValue.toString();
+    }
+
+    //
+    // All variables have an upper limit.
+    //
+    if (wireValue > _ampsLimit) {
+      wireValue = _ampsLimit.toDouble();
+      value = wireValue.toString();
+    }
+
     setState(
       () {
-        //
-        // Input field can't be empty. Prevent that by doing the following.
-        //
-        if (double.tryParse(value) == null) {
-          timeFormatter.calculator.ampsFirstWire = initialValue;
-        } else {
-          timeFormatter.calculator.ampsFirstWire = double.parse(value);
-        }
+        switch (wire) {
+          case 3:
+            {
+              timeFormatter.calculator.ampsThirdWire = wireValue;
+              ampsThirdWireCtrl.text = value;
 
-        if (timeFormatter.calculator.ampsFirstWire < 0) {
-          timeFormatter.calculator.ampsFirstWire = initialValue;
-          ampsFirstWireCtrl.text = '';
-        }
+              break;
+            }
+          case 2:
+            {
+              timeFormatter.calculator.ampsSecondWire = wireValue;
+              ampsSecondWireCtrl.text = value;
 
-        if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
-          //
-          // Set member value to pre-defined amperage limit.
-          //
-          timeFormatter.calculator.ampsFirstWire = _ampsLimit.toDouble();
-          //
-          // Assign a new value to the input field.
-          //
-          ampsFirstWireCtrl.text = timeFormatter.calculator.ampsFirstWire.toString();
+              break;
+            }
+          case 1:
+            {
+              timeFormatter.calculator.ampsFirstWire = wireValue;
+              ampsFirstWireCtrl.text = value;
+
+              break;
+            }
+          default:
+            {
+              return;
+            }
         }
 
         timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
 
+        timeFormatter.calculator.calculate();
         set();
       },
     );
 
-    return;
+    return ampsFirstWireCtrl.text;
   }
 
   void onInitTempFieldChange(String value) {
@@ -159,35 +195,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
         if (timeFormatter.calculator.initialTemp > _initTempLimit || timeFormatter.calculator.initialTemp < 0) {
           timeFormatter.calculator.initialTemp = _initTempLimit.toDouble();
           initTempCtrl.text = timeFormatter.calculator.initialTemp.toString();
-        }
-
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
-
-        set();
-      },
-    );
-
-    return;
-  }
-
-  void onSecondAmperageFieldChange(String value) {
-    setState(
-      () {
-        if (double.tryParse(value) == null) {
-          timeFormatter.calculator.ampsSecondWire = initialValue;
-        } else {
-          timeFormatter.calculator.ampsSecondWire = double.parse(value);
-        }
-
-        if (timeFormatter.calculator.ampsSecondWire < 0) {
-          timeFormatter.calculator.ampsSecondWire = initialValue;
-          ampsSecondWireCtrl.text = '';
-        }
-
-        if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
-          timeFormatter.calculator.ampsSecondWire = _ampsLimit.toDouble();
-          ampsSecondWireCtrl.text = timeFormatter.calculator.ampsSecondWire.toString();
         }
 
         timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
@@ -246,42 +253,11 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     return;
   }
 
-  void onThirdAmperageFieldChange(String value) {
-    setState(
-      () {
-        if (double.tryParse(value) == null) {
-          timeFormatter.calculator.ampsThirdWire = initialValue;
-        } else {
-          timeFormatter.calculator.ampsThirdWire = double.parse(value);
-        }
-
-        if (timeFormatter.calculator.ampsThirdWire < 0) {
-          timeFormatter.calculator.ampsThirdWire = initialValue;
-          ampsThirdWireCtrl.text = '';
-        }
-
-        if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
-          timeFormatter.calculator.ampsThirdWire = _ampsLimit.toDouble();
-          ampsThirdWireCtrl.text = timeFormatter.calculator.ampsThirdWire.toString();
-        }
-
-        timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
-        timeFormatter.calculator.calculate();
-
-        set();
-      },
-    );
-
-    return;
-  }
-
   void onVoltageDropdownSelection(int? value) {
     setState(
       () {
         dropdownValue = value!.toInt();
         timeFormatter.calculator.voltage = dropdownValue.toDouble();
-        /*dropdownValue = value!;
-        timeFormatter.calculator.voltage = value.toDouble();*/
 
         if (timeFormatter.calculator.voltage >= 220 && timeFormatter.calculator.voltage <= 230) {
           phaseAvailabilityFlag = false;
@@ -305,13 +281,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           }
         }
 
-        /*timeFormatter.calculator.initialTemp = double.parse(initTempCtrl.text);
-        timeFormatter.calculator.setTemp = double.parse(targetTempCtrl.text);
-        timeFormatter.calculator.volume = double.parse(volumeCtrl.text);
-        timeFormatter.calculator.ampsFirstWire = double.parse(ampsFirstWireCtrl.text);
-        timeFormatter.calculator.ampsSecondWire = double.parse(ampsSecondWireCtrl.text);
-        timeFormatter.calculator.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);*/
-
         timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
         timeFormatter.calculator.calculate();
 
@@ -325,8 +294,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void onVolumeFieldChange(String value) {
     setState(
       () {
-        //volumeCtrl = reset(volumeCtrl);
-
         if (double.tryParse(value) == null) {
           timeFormatter.calculator.volume = initialValue;
         } else {
@@ -347,21 +314,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
     return;
   }
-
-  //
-  // Re-initialize `TextEditingController` if empty.
-  //
-  /*TextEditingController reset(TextEditingController controller) {
-    if (controller.value.text.isEmpty) {
-      controller.text = initValue.toString();
-      controller.selection = TextSelection(
-        baseOffset: 0,
-        extentOffset: controller.value.text.length,
-      );
-    }
-
-    return controller;
-  }*/
 
   ///
   /// Purge all fields from data and reset the calculator.
@@ -384,12 +336,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
 
     initTempCtrl.text = targetTempCtrl.text =
         volumeCtrl.text = ampsFirstWireCtrl.text = ampsSecondWireCtrl.text = ampsThirdWireCtrl.text = '';
-    /*initTempCtrl.text = initValue.toString();
-    targetTempCtrl.text = initValue.toString();
-    volumeCtrl.text = initValue.toString();
-    ampsFirstWireCtrl.text = initValue.toString();
-    ampsSecondWireCtrl.text = initValue.toString();
-    ampsThirdWireCtrl.text = initValue.toString();*/
 
     return calculator;
   }
