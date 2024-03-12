@@ -112,8 +112,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void onFirstAmperageFieldChange(String value) {
     setState(
       () {
-        //ampsFirstWireCtrl = reset(ampsFirstWireCtrl);
-
         //
         // Input field can't be empty. Prevent that by doing the following.
         //
@@ -121,6 +119,11 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           timeFormatter.calculator.ampsFirstWire = initialValue;
         } else {
           timeFormatter.calculator.ampsFirstWire = double.parse(value);
+        }
+
+        if (timeFormatter.calculator.ampsFirstWire < 0) {
+          timeFormatter.calculator.ampsFirstWire = initialValue;
+          ampsFirstWireCtrl.text = '';
         }
 
         if (timeFormatter.calculator.ampsFirstWire > _ampsLimit) {
@@ -147,8 +150,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void onInitTempFieldChange(String value) {
     setState(
       () {
-        //initTempCtrl = reset(initTempCtrl);
-
         if (double.tryParse(value) == null) {
           timeFormatter.calculator.initialTemp = initialValue;
         } else {
@@ -173,12 +174,15 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void onSecondAmperageFieldChange(String value) {
     setState(
       () {
-        //ampsSecondWireCtrl = reset(ampsSecondWireCtrl);
-
         if (double.tryParse(value) == null) {
           timeFormatter.calculator.ampsSecondWire = initialValue;
         } else {
           timeFormatter.calculator.ampsSecondWire = double.parse(value);
+        }
+
+        if (timeFormatter.calculator.ampsSecondWire < 0) {
+          timeFormatter.calculator.ampsSecondWire = initialValue;
+          ampsSecondWireCtrl.text = '';
         }
 
         if (timeFormatter.calculator.ampsSecondWire > _ampsLimit) {
@@ -211,14 +215,13 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
         // Check whether set temperature is equal to an absolute zero.
         //
         if (timeFormatter.calculator.targetTemp == _absoluteZero) {
-          if(timeFormatter.calculator.voltage == 380 || timeFormatter.calculator.voltage == 400)
-            {
-              setState(
-                    () {
-                  absoluteZeroFlag = true;
-                },
-              );
-            }
+          if (timeFormatter.calculator.voltage == 380 || timeFormatter.calculator.voltage == 400) {
+            setState(
+              () {
+                absoluteZeroFlag = true;
+              },
+            );
+          }
         } else {
           setState(
             () {
@@ -227,24 +230,11 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           );
         }
 
-        if (timeFormatter.calculator.targetTemp < _targetTempLimit || timeFormatter.calculator.targetTemp > timeFormatter.calculator.initialTemp) {
+        if (timeFormatter.calculator.targetTemp < _targetTempLimit ||
+            timeFormatter.calculator.targetTemp > timeFormatter.calculator.initialTemp) {
           timeFormatter.calculator.targetTemp = -50.0;
           targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
         }
-
-        /*if (timeFormatter.calculator.targetTemp < _targetTempLimit ||
-            timeFormatter.calculator.targetTemp > _initTempLimit) {
-          timeFormatter.calculator.targetTemp = _targetTempLimit;
-          targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
-        }*/
-
-        /*if (!absoluteZeroFlag) {
-          if (timeFormatter.calculator.targetTemp < _targetTempLimit ||
-              timeFormatter.calculator.targetTemp > _initTempLimit) {
-            timeFormatter.calculator.targetTemp = _targetTempLimit;
-            targetTempCtrl.text = timeFormatter.calculator.targetTemp.toString();
-          }
-        }*/
 
         timeFormatter.calculator.kWatts = settings.coolingCoefficientCurrent;
         timeFormatter.calculator.calculate();
@@ -259,12 +249,15 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void onThirdAmperageFieldChange(String value) {
     setState(
       () {
-        //ampsThirdWireCtrl = reset(ampsThirdWireCtrl);
-
         if (double.tryParse(value) == null) {
           timeFormatter.calculator.ampsThirdWire = initialValue;
         } else {
           timeFormatter.calculator.ampsThirdWire = double.parse(value);
+        }
+
+        if (timeFormatter.calculator.ampsThirdWire < 0) {
+          timeFormatter.calculator.ampsThirdWire = initialValue;
+          ampsThirdWireCtrl.text = '';
         }
 
         if (timeFormatter.calculator.ampsThirdWire > _ampsLimit) {
@@ -464,12 +457,11 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
       return;
     }
 
-    if(absoluteZeroFlag)
-      {
-        temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes \u{1f480}';
+    if (absoluteZeroFlag) {
+      temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes \u{1f480}';
 
-        return;
-      }
+      return;
+    }
 
     temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes';
 
