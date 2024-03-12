@@ -38,16 +38,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
   final double _edgeInsetsSize = 30.0;
   final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
   final TextEditingController _coefficientCtrl = TextEditingController();
-  final List<String> _locales = <String>[
-    'English (US)',
-    'Serbian (Cyrillic)',
-    'Serbian (Latin)',
-    'Swedish',
-  ];
 
   bool _coolingCoefficientLimitFlag = true; // Forbid user from applying the new settings on validation fail.
   bool _updateAvailabilityFlag = true;
-  String _dropdownValue = '';
   Settings _settings = Settings();
 
   bool newUpdate = false;
@@ -68,7 +61,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
           ),
         ),
       ),
-      getLanguageChanger(),
       getPrecisionCheckbox(),
       getRoundingCheckbox(),
       getStandardCheckbox(),
@@ -128,7 +120,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                   color: Color.fromARGB(0, 0, 0, 0),
                   height: 30.0,
                 ),
-            itemCount: 10),
+            itemCount: 9),
       ),
       bottomNavigationBar: getControlPanel(context),
     );
@@ -196,7 +188,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 setState(() {
                   _settings.reset();
 
-                  _settings.localeCurrent = _dropdownValue = _locales.first;
                   _coolingCoefficientLimitFlag = true;
                   _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
 
@@ -204,7 +195,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 });
               },
               icon: const Icon(Icons.restore),
-              label: _settings.locale.defaults.isEmpty ? const Text('Defaults') : Text(_settings.locale.defaults),
+              label: const Text('Defaults'),
             ),
           ),
           //
@@ -227,40 +218,11 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 return;
               },
               icon: const Icon(Icons.check_circle),
-              label: _settings.locale.apply.isEmpty ? const Text('Apply') : Text(_settings.locale.apply),
+              label: const Text('Apply'),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  ///
-  /// Get language switcher.
-  ///
-  DropdownButtonFormField<String> getLanguageChanger() {
-    return DropdownButtonFormField<String>(
-      key: _dropdownKey,
-      decoration: InputDecoration(
-        label: _settings.locale.language.isEmpty ? const Text('Language') : Text(_settings.locale.language),
-      ),
-      style: const TextStyle(
-        color: Colors.black,
-        //fontSize: 16,
-      ),
-      value: _dropdownValue,
-      items: _locales.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value.toString()),
-        );
-      }).toList(),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          _settings.localeCurrent = value!;
-        });
-      },
     );
   }
 
@@ -305,9 +267,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
-      title: _settings.locale.oldStandardSupport.isEmpty
-          ? const Text('Enable 220/380 Support')
-          : Text(_settings.locale.oldStandardSupport),
+      title: const Text('Enable 220/380 Support'),
       value: _settings.oldStandardFlag,
       onChanged: (bool? value) {
         setState(() {
@@ -439,36 +399,40 @@ class _SettingsRouteState extends State<SettingsRoute> {
       textAlign: TextAlign.center,
     );
   }
+
   @override
   void initState() {
     super.initState();
 
-    setState(() {
-      _settings = widget.settings;
-      _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
-      _dropdownValue = widget.settings.localeCurrent;
-    });
+    setState(
+      () {
+        _settings = widget.settings;
+        _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
+      },
+    );
   }
 
   void onWattsFieldChange(String value) {
-    setState(() {
-      if (double.tryParse(value) == null) {
-        _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
-      } else {
-        double temporaryValue = double.tryParse(value)!;
-
-        //
-        // Don't save current state of the settings on cooling coefficient validation error.
-        //
-        if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
-            temporaryValue > _settings.coolingCoefficientUpperLimit) {
-          _coolingCoefficientLimitFlag = false;
+    setState(
+      () {
+        if (double.tryParse(value) == null) {
+          _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
         } else {
-          _coolingCoefficientLimitFlag = true;
-          _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
+          double temporaryValue = double.tryParse(value)!;
+
+          //
+          // Don't save current state of the settings on cooling coefficient validation error.
+          //
+          if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
+              temporaryValue > _settings.coolingCoefficientUpperLimit) {
+            _coolingCoefficientLimitFlag = false;
+          } else {
+            _coolingCoefficientLimitFlag = true;
+            _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
+          }
         }
-      }
-    });
+      },
+    );
 
     return;
   }

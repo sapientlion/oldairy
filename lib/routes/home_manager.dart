@@ -21,10 +21,7 @@
 
 */
 
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:oldairy/classes/calculator.dart';
 import 'package:oldairy/classes/settings.dart';
 import 'package:oldairy/classes/tformatter.dart';
@@ -340,48 +337,6 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     return calculator;
   }
 
-  //
-  // Get specific locale by reading from a specific file.
-  //
-  Future<bool> readLocale(String name) async {
-    String response = '';
-
-    try {
-      response = await rootBundle.loadString('assets/locales/$name');
-    } catch (e) {
-      return false;
-    }
-
-    final data = await json.decode(response);
-    Map<String, dynamic> locale = data;
-
-    setState(
-      () {
-        settings.locale.hours = locale['hours'];
-        settings.locale.minutes = locale['minutes'];
-        settings.locale.initialTemp = locale['initialTemp'];
-        settings.locale.setTemp = locale['setTemp'];
-        settings.locale.volume = locale['volume'];
-        settings.locale.voltage = locale['voltage'];
-        settings.locale.ampsFirstWire = locale['ampFirst'];
-        settings.locale.ampsSecondWire = locale['ampSecond'];
-        settings.locale.ampsThirdWire = locale['ampThird'];
-        settings.locale.clearAll = locale['clearAll'];
-        settings.locale.settings = locale['settings'];
-        settings.locale.about = locale['about'];
-        settings.locale.help = locale['help'];
-        settings.locale.exit = locale['exit'];
-        settings.locale.general = locale['general'];
-        settings.locale.language = locale['language'];
-        settings.locale.oldStandardSupport = locale['oldStandard'];
-        settings.locale.defaults = locale['defaults'];
-        settings.locale.apply = locale['apply'];
-      },
-    );
-
-    return true;
-  }
-
   ///
   /// Set cooling time input field after all calculations.
   ///
@@ -412,50 +367,5 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
     temperatureOutputCtrl.text = '$coolingTimeHours : $coolingTimeMinutes';
 
     return;
-  }
-
-  //
-  // Switch GUI's language to something else.
-  //
-  //
-  // TODO find another way for storing locale names and locale file names.
-  //
-  String switchLocale(String locale) {
-    switch (locale) {
-      case 'Serbian (Cyrillic)':
-        {
-          settings.localeName = 'rs_cyrillic.json';
-
-          readLocale(settings.localeName);
-
-          break;
-        }
-      case 'Serbian (Latin)':
-        {
-          settings.localeName = 'rs_latin.json';
-
-          readLocale(settings.localeName);
-
-          break;
-        }
-      case 'Swedish':
-        {
-          settings.localeName = 'sv_se.json';
-
-          readLocale(settings.localeName);
-
-          break;
-        }
-      default:
-        {
-          settings.localeName = 'en_us.json';
-
-          readLocale(settings.localeName);
-
-          break;
-        }
-    }
-
-    return locale;
   }
 }

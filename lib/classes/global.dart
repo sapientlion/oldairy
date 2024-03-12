@@ -4,8 +4,6 @@ abstract class Global {
   static const String keyCoolingCoefficientLowerLimit = 'coolingCoefficientLowerLimit';
   static const String keyCoolingCoefficientUpperLimit = 'coolingCoefficientUpperLimit';
   static const String keyCoefficientValue = 'coefficientValue';
-  static const String keyLocaleCurrent = 'localeCurrent';
-  static const String keyLocaleFile = 'localeFile';
   static const String keyMinutesRounding = 'minutesRounding';
   static const String keyOldStandard = 'oldStandard';
   static const String keyPackageRelease = 'packageRelease';

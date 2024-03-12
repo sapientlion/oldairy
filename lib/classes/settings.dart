@@ -30,7 +30,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:oldairy/classes/locale.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'global.dart';
@@ -47,9 +46,6 @@ class Settings {
 
   String packageRelease = '';
   String packageVersion = '';
-  String localeCurrent = 'English (US)';
-  String localeName = '';
-  OldairyLocale locale = OldairyLocale();
 
   dynamic responseBody;
 
@@ -127,8 +123,6 @@ class Settings {
   ///
   Map<String, dynamic> toJson() => {
         Global.keyCoefficientValue: coolingCoefficientCurrent,
-        Global.keyLocaleCurrent: localeCurrent,
-        Global.keyLocaleFile: localeName,
         Global.keyMinutesRounding: minutesRoundingFlag,
         Global.keyOldStandard: oldStandardFlag,
         Global.keyTimeRounding: timeRoundingFlag,

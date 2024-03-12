@@ -95,6 +95,58 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
   }
 
+  @override
+  void dispose() {
+    temperatureOutputCtrl.dispose();
+    volumeCtrl.dispose();
+    ampsFirstWireCtrl.dispose();
+    ampsSecondWireCtrl.dispose();
+    ampsThirdWireCtrl.dispose();
+    initTempCtrl.dispose();
+    targetTempCtrl.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      dropdownValue = _voltages.first;
+
+      temperatureOutputCtrl.text = temperatureOutputInitValue;
+
+      //
+      // Don't forget to initialize the voltage located inside of the calculator object.
+      //
+      timeFormatter.calculator.voltage = _voltages.first.toDouble();
+    });
+
+    settings.read().then(
+      (value) {
+        setState(
+          () {
+            Map<String, dynamic> json = jsonDecode(value);
+
+            //
+            // Load app settings from map.
+            //
+            settings.oldStandardFlag = json[Global.keyOldStandard];
+            settings.timeRoundingFlag = json[Global.keyTimeRounding];
+            settings.coolingCoefficientCurrent = json[Global.keyCoefficientValue];
+            settings.minutesRoundingFlag = json[Global.keyTimeRounding];
+            settings.updateCheckFlag = json[Global.keyUpdateCheckOnStartup];
+
+            if (settings.updateCheckFlag) {
+              _checkUpdate();
+            }
+          },
+        );
+      },
+    );
+  }
+
   ///
   /// Check for any updates.
   ///
@@ -141,19 +193,6 @@ class _HomeRouteState extends HomeRouteStateManager {
     );
 
     return updateAvailabilityFlag;
-  }
-
-  @override
-  void dispose() {
-    temperatureOutputCtrl.dispose();
-    volumeCtrl.dispose();
-    ampsFirstWireCtrl.dispose();
-    ampsSecondWireCtrl.dispose();
-    ampsThirdWireCtrl.dispose();
-    initTempCtrl.dispose();
-    targetTempCtrl.dispose();
-
-    super.dispose();
   }
 
   ///
@@ -218,7 +257,7 @@ class _HomeRouteState extends HomeRouteStateManager {
   ElevatedButton _getClearAllButton() {
     return ElevatedButton.icon(
       icon: const Icon(Icons.brush),
-      label: settings.locale.clearAll.isEmpty ? const Text('Clear All') : Text(settings.locale.clearAll),
+      label: const Text('Clear All'),
       onPressed: () {
         temperatureOutputCtrl.text = temperatureOutputInitValue;
 
@@ -446,17 +485,17 @@ class _HomeRouteState extends HomeRouteStateManager {
     return PopupMenuButton(
       itemBuilder: (context) {
         return [
-          PopupMenuItem<int>(
+          const PopupMenuItem<int>(
             value: 1,
-            child: settings.locale.settings.isEmpty ? const Text('Settings') : Text(settings.locale.settings),
+            child: Text('Settings'),
           ),
-          PopupMenuItem<int>(
+          const PopupMenuItem<int>(
             value: 2,
-            child: settings.locale.about.isEmpty ? const Text('About') : Text(settings.locale.about),
+            child: Text('About'),
           ),
-          PopupMenuItem<int>(
+          const PopupMenuItem<int>(
             value: 3,
-            child: settings.locale.exit.isEmpty ? const Text('Exit') : Text(settings.locale.exit),
+            child: Text('Exit'),
           ),
         ];
       },
@@ -537,14 +576,11 @@ class _HomeRouteState extends HomeRouteStateManager {
     //
     // Transfer newly applied settings from settings route to home route.
     //
-    setState(() {
-      settings = result;
-    });
-
-    //
-    // Change UI language.
-    //
-    switchLocale(settings.localeCurrent);
+    setState(
+      () {
+        settings = result;
+      },
+    );
 
     //
     // Do calculate after applying the app settings.
@@ -702,61 +738,6 @@ class _HomeRouteState extends HomeRouteStateManager {
         onVolumeFieldChange(value);
 
         return;
-      },
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      dropdownValue = _voltages.first;
-
-      temperatureOutputCtrl.text = temperatureOutputInitValue;
-
-      //
-      // Don't forget to initialize the voltage located inside of the calculator object.
-      //
-      timeFormatter.calculator.voltage = _voltages.first.toDouble();
-    });
-
-    settings.read().then(
-      (value) {
-        setState(
-          () {
-            bool lFlag = true;
-            Map<String, dynamic> json = jsonDecode(value);
-
-            //
-            // Load app settings from map.
-            //
-            settings.oldStandardFlag = json[Global.keyOldStandard];
-            settings.timeRoundingFlag = json[Global.keyTimeRounding];
-            settings.coolingCoefficientCurrent = json[Global.keyCoefficientValue];
-            settings.localeCurrent = json[Global.keyLocaleCurrent];
-            settings.localeName = json[Global.keyLocaleFile];
-            settings.minutesRoundingFlag = json[Global.keyTimeRounding];
-            settings.updateCheckFlag = json[Global.keyUpdateCheckOnStartup];
-
-            readLocale(settings.localeName).then(
-              (value) {
-                lFlag = value;
-              },
-            );
-
-            //
-            // Requested locale may be absent from the disk.
-            //
-            if (!lFlag) {
-              readLocale('en_us.json');
-            }
-
-            if (settings.updateCheckFlag) {
-              _checkUpdate();
-            }
-          },
-        );
       },
     );
   }
