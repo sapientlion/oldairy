@@ -52,6 +52,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   @override
   Widget build(BuildContext context) {
     _settings = widget.settings;
+    _getForm();
 
     return Scaffold(
       appBar: AppBar(
@@ -88,8 +89,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
   @override
   void initState() {
     super.initState();
-
-    _getForm();
 
     setState(
       () {
