@@ -24,6 +24,8 @@
 import 'package:flutter/material.dart';
 import 'package:oldairy/classes/settings.dart';
 
+import '../classes/global.dart';
+
 class SettingsRoute extends StatefulWidget {
   final String title;
 
@@ -35,13 +37,14 @@ class SettingsRoute extends StatefulWidget {
 }
 
 class _SettingsRouteState extends State<SettingsRoute> {
-  final double _edgeInsetsSize = 30.0;
+  final double _runSpacing = 15.0;
   final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
   final TextEditingController _coefficientCtrl = TextEditingController();
 
   bool _coolingCoefficientLimitFlag = true; // Forbid user from applying the new settings on validation fail.
   bool _updateAvailabilityFlag = true;
   Settings _settings = Settings();
+  List<Widget> _widgets = [];
 
   bool newUpdate = false;
 
@@ -49,58 +52,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> listViewItems = [
-      const ListTile(
-        title: Center(
-          child: Text(
-            'General',
-            style: TextStyle(
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-      getConversionCheckbox(),
-      getStandardCheckbox(),
-      const ListTile(
-        title: Center(
-          child: Text(
-            'Updates',
-            style: TextStyle(
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-      CheckboxListTile(
-        title: const Text('Check for updates on app startup'),
-        controlAffinity: ListTileControlAffinity.leading,
-        value: _settings.updateCheckFlag,
-        onChanged: (bool? value) {
-          setState(
-            () {
-              _settings.updateCheckFlag = value!;
-            },
-          );
-        },
-      ),
-      getUpdateCheckButton(),
-      const ListTile(
-        title: Center(
-          child: Text(
-            'Experimental',
-            style: TextStyle(
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-      getWattsField(),
-    ];
-
     _settings = widget.settings;
 
     return Scaffold(
@@ -111,17 +62,21 @@ class _SettingsRouteState extends State<SettingsRoute> {
         thumbVisibility: true,
         thickness: 8.0,
         child: ListView.separated(
-            padding: EdgeInsets.all(_edgeInsetsSize),
-            itemBuilder: (BuildContext context, int index) {
-              return listViewItems.elementAt(index);
-            },
-            separatorBuilder: (BuildContext context, int index) => const Divider(
-                  color: Color.fromARGB(0, 0, 0, 0),
-                  height: 30.0,
-                ),
-            itemCount: 9),
+          itemCount: _widgets.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _widgets.elementAt(index);
+          },
+          padding: Global.defaultEdgeInsets,
+          separatorBuilder: (BuildContext context, int index) {
+            return const Divider(
+              color: Colors.black,
+              height: 110.0,
+            );
+          },
+          shrinkWrap: true,
+        ),
       ),
-      bottomNavigationBar: getControlPanel(context),
+      bottomNavigationBar: _getControlPanel(context),
     );
   }
 
@@ -131,13 +86,52 @@ class _SettingsRouteState extends State<SettingsRoute> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    _getForm();
+
+    setState(
+      () {
+        _settings = widget.settings;
+        _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
+      },
+    );
+  }
+
+  void onWattsFieldChange(String value) {
+    setState(
+      () {
+        if (double.tryParse(value) == null) {
+          _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
+        } else {
+          double temporaryValue = double.tryParse(value)!;
+
+          //
+          // Don't save current state of the settings on cooling coefficient validation error.
+          //
+          if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
+              temporaryValue > _settings.coolingCoefficientUpperLimit) {
+            _coolingCoefficientLimitFlag = false;
+          } else {
+            _coolingCoefficientLimitFlag = true;
+            _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
+          }
+        }
+      },
+    );
+
+    return;
+  }
+
   ///
   /// Summon AlertDialog on validation fail.
   ///
   //
   // TODO use this feature for other options as well.
   //
-  Future<void> getAlertBox() async {
+  Future<void> _getAlertBox() async {
     double coolingCoefficientLowerLimit = _settings.coolingCoefficientLowerLimit;
     double coolingCoefficientUpperLimit = _settings.coolingCoefficientUpperLimit;
 
@@ -173,7 +167,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ///
   /// Get a control panel that is responsible for managing the app settings.
   ///
-  BottomAppBar getControlPanel(BuildContext context) {
+  BottomAppBar _getControlPanel(BuildContext context) {
     return BottomAppBar(
       padding: const EdgeInsets.all(15.0),
       child: Row(
@@ -184,14 +178,18 @@ class _SettingsRouteState extends State<SettingsRoute> {
             child: FloatingActionButton.extended(
               heroTag: null,
               onPressed: () {
-                setState(() {
-                  _settings.reset();
+                setState(
+                  () {
+                    _settings.reset();
 
-                  _coolingCoefficientLimitFlag = true;
-                  _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
+                    _coolingCoefficientLimitFlag = true;
+                    _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
 
-                  _dropdownKey.currentState!.reset();
-                });
+                    _dropdownKey.currentState!.reset();
+
+                    return;
+                  },
+                );
               },
               icon: const Icon(Icons.restore),
               label: const Text('Defaults'),
@@ -206,7 +204,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
               heroTag: null,
               onPressed: () {
                 if (!_coolingCoefficientLimitFlag) {
-                  getAlertBox();
+                  _getAlertBox();
 
                   return;
                 }
@@ -228,33 +226,118 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ///
   /// Get time rounding checkbox.
   ///
-  CheckboxListTile getConversionCheckbox() {
+  CheckboxListTile _getConversionCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
       title: const Text('Time conversion'),
       value: _settings.timeConversionFlag,
       onChanged: (bool? value) {
-        setState(() {
-          _settings.timeConversionFlag = value!;
-        });
+        setState(
+          () {
+            _settings.timeConversionFlag = value!;
+
+            return;
+          },
+        );
       },
     );
+  }
+
+  List<Widget> _getForm() {
+    _widgets = [
+      Column(
+        children: [
+          const Center(
+            child: Text(
+              'General',
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(_runSpacing),
+          ),
+          _getConversionCheckbox(),
+          Padding(
+            padding: EdgeInsets.all(_runSpacing),
+          ),
+          _getStandardCheckbox(),
+        ],
+      ),
+      Column(
+        children: [
+          const Center(
+            child: Text(
+              'Updates',
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(_runSpacing),
+          ),
+          CheckboxListTile(
+            title: const Text('Check for updates on app startup'),
+            controlAffinity: ListTileControlAffinity.leading,
+            value: _settings.updateCheckFlag,
+            onChanged: (bool? value) {
+              setState(
+                () {
+                  _settings.updateCheckFlag = value!;
+                },
+              );
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.all(_runSpacing),
+          ),
+          _getUpdateCheckButton(),
+        ],
+      ),
+      Column(
+        children: [
+          const Center(
+            child: Text(
+              'Experimental',
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(_runSpacing),
+          ),
+          _getWattsField(),
+        ],
+      )
+    ];
+
+    return _widgets;
   }
 
   ///
   /// Get voltage standard checkbox.
   ///
-  CheckboxListTile getStandardCheckbox() {
+  CheckboxListTile _getStandardCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
       title: const Text('Enable 220/380 Support'),
       value: _settings.oldStandardFlag,
       onChanged: (bool? value) {
-        setState(() {
-          _settings.oldStandardFlag = value!;
-        });
+        setState(
+          () {
+            _settings.oldStandardFlag = value!;
+
+            return;
+          },
+        );
       },
     );
   }
@@ -264,7 +347,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ///
   /// [state] - using this flag determine whether a new update exists or not.
   ///
-  Future<void> getUpdateCheckAlertBox(bool state) async {
+  Future<void> _getUpdateCheckAlertBox(bool state) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -293,7 +376,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
     );
   }
 
-  FloatingActionButton getUpdateCheckButton() {
+  FloatingActionButton _getUpdateCheckButton() {
     return FloatingActionButton.extended(
       icon: _updateAvailabilityFlag
           ? const Icon(Icons.check_circle)
@@ -306,9 +389,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
         //
         // Show circular indicator while the app is checking for any new updates.
         //
-        setState(() {
-          _updateAvailabilityFlag = false;
-        });
+        setState(
+          () {
+            _updateAvailabilityFlag = false;
+
+            return;
+          },
+        );
 
         Iterable<Future<dynamic>> updateCheck = [_settings.checkUpdate()];
 
@@ -331,12 +418,12 @@ class _SettingsRouteState extends State<SettingsRoute> {
                 );
 
                 if (_settings.responseBody == '') {
-                  getUpdateCheckAlertBox(false);
+                  _getUpdateCheckAlertBox(false);
                 } else {
                   if (_settings.packageVersion != _settings.responseBody['tag_name']) {
-                    getUpdateCheckAlertBox(true);
+                    _getUpdateCheckAlertBox(true);
                   } else {
-                    getUpdateCheckAlertBox(false);
+                    _getUpdateCheckAlertBox(false);
                   }
                 }
               },
@@ -350,7 +437,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
   ///
   /// Get cooling coefficient field.
   ///
-  TextField getWattsField() {
+  TextField _getWattsField() {
     return TextField(
       autocorrect: false,
       controller: _coefficientCtrl,
@@ -377,45 +464,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
           baseOffset: 0,
           extentOffset: _coefficientCtrl.text.length,
         );
+
+        return;
       },
       textAlign: TextAlign.center,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    setState(
-      () {
-        _settings = widget.settings;
-        _coefficientCtrl.text = widget.settings.coolingCoefficientCurrent.toString();
-      },
-    );
-  }
-
-  void onWattsFieldChange(String value) {
-    setState(
-      () {
-        if (double.tryParse(value) == null) {
-          _settings.coolingCoefficientCurrent = _settings.coolingCoefficientLowerLimit;
-        } else {
-          double temporaryValue = double.tryParse(value)!;
-
-          //
-          // Don't save current state of the settings on cooling coefficient validation error.
-          //
-          if (temporaryValue < _settings.coolingCoefficientLowerLimit ||
-              temporaryValue > _settings.coolingCoefficientUpperLimit) {
-            _coolingCoefficientLimitFlag = false;
-          } else {
-            _coolingCoefficientLimitFlag = true;
-            _settings.coolingCoefficientCurrent = double.parse(_coefficientCtrl.text);
-          }
-        }
-      },
-    );
-
-    return;
   }
 }

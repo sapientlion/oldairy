@@ -133,9 +133,8 @@ class _HomeRouteState extends HomeRouteStateManager {
             // Load app settings from map.
             //
             settings.oldStandardFlag = json[Global.keyOldStandard];
-            settings.timeConversionFlag = json[Global.keyTimeRounding];
+            settings.timeConversionFlag = json[Global.keyTimeConversion];
             settings.coolingCoefficientCurrent = json[Global.keyCoefficientValue];
-            settings.minutesRoundingFlag = json[Global.keyTimeRounding];
             settings.updateCheckFlag = json[Global.keyUpdateCheckOnStartup];
 
             if (settings.updateCheckFlag) {
