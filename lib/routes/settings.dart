@@ -38,7 +38,6 @@ class SettingsRoute extends StatefulWidget {
 
 class _SettingsRouteState extends State<SettingsRoute> {
   final double _runSpacing = 15.0;
-  final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
   final TextEditingController _coefficientCtrl = TextEditingController();
 
   bool _coolingCoefficientLimitFlag = true; // Forbid user from applying the new settings on validation fail.
@@ -184,8 +183,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
                     _coolingCoefficientLimitFlag = true;
                     _coefficientCtrl.text = _settings.coolingCoefficientCurrent.toString();
-
-                    _dropdownKey.currentState!.reset();
 
                     return;
                   },
