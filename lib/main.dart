@@ -86,11 +86,16 @@ class Oldairy extends StatelessWidget {
           color: Colors.white,
         ),
         primarySwatch: Colors.green,
-        primaryColor: Colors.green,
+        primaryColor: const Color.fromRGBO(0, 128, 0, 1),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             foregroundColor: Colors.lightGreen,
           ),
+        ),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color.fromRGBO(0, 128, 0, 1),
+          selectionColor: Colors.lightGreen,
+          selectionHandleColor: Color.fromRGBO(0, 128, 0, 1),
         ),
       ),
       home: HomeRoute(
