@@ -21,6 +21,8 @@
 
 */
 
+import 'package:flutter/foundation.dart';
+
 import 'calculator.dart';
 
 class TimeFormatter extends Calculator {
@@ -34,4 +36,20 @@ class TimeFormatter extends Calculator {
     required super.ampsThirdWire,
     super.coefficient = 0.350,
   });
+
+  @override
+  String getMinutes() {
+    String minutesExtracted = extract();
+    String minutes = '';
+
+    for (int index = 0; index < 2; index++) {
+      minutes += minutesExtracted[index];
+    }
+
+    if (kDebugMode) {
+      print('[TimeFormatter::getMinutes::minutes] $minutes');
+    }
+
+    return minutes;
+  }
 }
