@@ -61,8 +61,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           ),
         ),
       ),
-      getPrecisionCheckbox(),
-      getRoundingCheckbox(),
+      getConversionCheckbox(),
       getStandardCheckbox(),
       const ListTile(
         title: Center(
@@ -227,34 +226,17 @@ class _SettingsRouteState extends State<SettingsRoute> {
   }
 
   ///
-  /// Get time precision checkbox.
-  ///
-  CheckboxListTile getPrecisionCheckbox() {
-    return CheckboxListTile(
-      controlAffinity: ListTileControlAffinity.leading,
-      tileColor: const Color.fromRGBO(211, 211, 211, 0),
-      title: const Text('Round minutes'),
-      value: _settings.minutesRoundingFlag,
-      onChanged: (bool? value) {
-        setState(() {
-          _settings.minutesRoundingFlag = value!;
-        });
-      },
-    );
-  }
-
-  ///
   /// Get time rounding checkbox.
   ///
-  CheckboxListTile getRoundingCheckbox() {
+  CheckboxListTile getConversionCheckbox() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       tileColor: const Color.fromRGBO(211, 211, 211, 0),
-      title: const Text('Time rounding'),
-      value: _settings.timeRoundingFlag,
+      title: const Text('Time conversion'),
+      value: _settings.timeConversionFlag,
       onChanged: (bool? value) {
         setState(() {
-          _settings.timeRoundingFlag = value!;
+          _settings.timeConversionFlag = value!;
         });
       },
     );

@@ -133,7 +133,7 @@ class _HomeRouteState extends HomeRouteStateManager {
             // Load app settings from map.
             //
             settings.oldStandardFlag = json[Global.keyOldStandard];
-            settings.timeRoundingFlag = json[Global.keyTimeRounding];
+            settings.timeConversionFlag = json[Global.keyTimeRounding];
             settings.coolingCoefficientCurrent = json[Global.keyCoefficientValue];
             settings.minutesRoundingFlag = json[Global.keyTimeRounding];
             settings.updateCheckFlag = json[Global.keyUpdateCheckOnStartup];
@@ -584,7 +584,9 @@ class _HomeRouteState extends HomeRouteStateManager {
     // Do calculate after applying the app settings.
     //
     timeFormatter.coefficient = settings.coolingCoefficientCurrent;
-    timeFormatter.calculate();
+    timeFormatter.calculate(
+      timeRoundingFlag: settings.timeConversionFlag,
+    );
 
     //
     // Show final results on screen.

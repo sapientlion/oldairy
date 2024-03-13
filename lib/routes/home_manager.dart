@@ -328,15 +328,12 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   void set() {
     timeFormatter.coefficient = settings.coolingCoefficientCurrent;
 
-    timeFormatter.calculate();
+    timeFormatter.calculate(
+      timeRoundingFlag: settings.timeConversionFlag,
+    );
 
     coolingTimeHours = timeFormatter.getHours().toString();
-    coolingTimeMinutes = timeFormatter
-        .getMinutes(
-          rFlag: settings.timeRoundingFlag,
-          pFlag: settings.minutesRoundingFlag,
-        )
-        .toString();
+    coolingTimeMinutes = timeFormatter.getMinutes().toString();
 
     //
     // No point in showing `empty` time.

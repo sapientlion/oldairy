@@ -37,7 +37,7 @@ import 'global.dart';
 class Settings {
   bool oldStandardFlag = false;
   bool minutesRoundingFlag = false;
-  bool timeRoundingFlag = false;
+  bool timeConversionFlag = false;
   bool updateCheckFlag = false;
 
   double coolingCoefficientLowerLimit = 0.0;
@@ -123,9 +123,8 @@ class Settings {
   ///
   Map<String, dynamic> toJson() => {
         Global.keyCoefficientValue: coolingCoefficientCurrent,
-        Global.keyMinutesRounding: minutesRoundingFlag,
         Global.keyOldStandard: oldStandardFlag,
-        Global.keyTimeRounding: timeRoundingFlag,
+        Global.keyTimeRounding: timeConversionFlag,
         Global.keyUpdateCheckOnStartup: updateCheckFlag,
       };
 
@@ -152,7 +151,6 @@ class Settings {
     final RegExp packageVersionRegEx = RegExp(r'^([0-99]\.[0-99]\.[0-99])$');
 
     bool? oldStandardFlagRaw = false;
-    bool? minutesRoundingFlagRaw = false;
     bool? timeRoundingFlagRaw = false;
     bool? updateCheckRaw = false;
     double? coolingCoefficientLowerLimitRaw = 0.0;
@@ -189,14 +187,6 @@ class Settings {
       coolingCoefficientUpperLimit = coolingCoefficientUpperLimitRaw;
     }
 
-    minutesRoundingFlagRaw = bool.tryParse(data[Global.keyMinutesRounding]);
-
-    if (minutesRoundingFlagRaw == null) {
-      minutesRoundingFlag = true;
-    } else {
-      minutesRoundingFlag = minutesRoundingFlagRaw;
-    }
-
     oldStandardFlagRaw = bool.tryParse(data[Global.keyOldStandard]);
 
     if (oldStandardFlagRaw == null) {
@@ -208,9 +198,9 @@ class Settings {
     timeRoundingFlagRaw = bool.tryParse(data[Global.keyTimeRounding]);
 
     if (timeRoundingFlagRaw == null) {
-      timeRoundingFlag = true;
+      timeConversionFlag = true;
     } else {
-      timeRoundingFlag = timeRoundingFlagRaw;
+      timeConversionFlag = timeRoundingFlagRaw;
     }
 
     updateCheckRaw = bool.tryParse(data[Global.keyUpdateCheckOnStartup]);

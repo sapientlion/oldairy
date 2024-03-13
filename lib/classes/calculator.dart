@@ -66,105 +66,13 @@ abstract class Calculator {
   });
 
   ///
-  /// Get total cooling time.
-  ///
-  double get() {
-    return _coolingTime;
-  }
-
-  ///
-  /// Calculate normally.
-  ///
-  double calculateLow() {
-    if (voltage < 220 || voltage > 230) {
-      _coolingTime = 0.0;
-
-      if (kDebugMode) {
-        print('[Calculator::calculateLow::_coolingTime : ] $_coolingTime');
-      }
-
-      return _coolingTime;
-    }
-
-    _coolingTime /= ampsFirstWire;
-
-    if (kDebugMode) {
-      print('[Calculator::calculateLow::_coolingTime : ] $_coolingTime');
-    }
-
-    return _coolingTime;
-  }
-
-  ///
-  /// Calculate using three-phase electricity system.
-  ///
-  double calculateHigh() {
-    if (voltage < 380 || voltage > 400) {
-      _coolingTime = 0.0;
-
-      if (kDebugMode) {
-        print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
-      }
-
-      return _coolingTime;
-    }
-
-    if (ampsSecondWire > _ampsLimits) {
-      _coolingTime = 0.0;
-
-      if (kDebugMode) {
-        print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
-      }
-
-      return _coolingTime;
-    }
-
-    if (ampsThirdWire > _ampsLimits) {
-      _coolingTime = 0.0;
-
-      if (kDebugMode) {
-        print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
-      }
-
-      return _coolingTime;
-    }
-
-    //
-    // Switch to three-phase electric power in case of higher voltages.
-    //
-    double combinedAmperage = ampsFirstWire + ampsSecondWire + ampsThirdWire;
-
-    if (kDebugMode) {
-      print('[Calculator::calculateHigh::combinedAmperage : ] $combinedAmperage');
-    }
-
-    combinedAmperage = combinedAmperage / sqrt(3);
-
-    if (kDebugMode) {
-      print('[Calculator::calculateHigh::combinedAmperage : ] $combinedAmperage');
-    }
-
-    if (combinedAmperage <= 0) {
-      return _coolingTime = 0.0;
-    }
-
-    _coolingTime /= combinedAmperage;
-
-    if (kDebugMode) {
-      print('[Calculator::calculateHigh::_coolingTime : ] $_coolingTime');
-    }
-
-    return _coolingTime;
-  }
-
-  ///
   /// Calculate and get total cooling time.
   ///
-  double calculate() {
+  double calculate({bool timeRoundingFlag = true}) {
     _coolingTime = initialTemp - targetTemp;
 
     if (kDebugMode) {
-      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+      print('[Calculator::calculate::_coolingTime] $_coolingTime');
     }
 
     //
@@ -175,7 +83,7 @@ abstract class Calculator {
       _coolingTime = 0.0;
 
       if (kDebugMode) {
-        print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+        print('[Calculator::calculate::_coolingTime] $_coolingTime');
       }
 
       return _coolingTime;
@@ -188,13 +96,13 @@ abstract class Calculator {
     _coolingTime = coefficient * _coolingTime;
 
     if (kDebugMode) {
-      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+      print('[Calculator::calculate::_coolingTime] $_coolingTime');
     }
 
     _coolingTime = volume * _coolingTime;
 
     if (kDebugMode) {
-      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+      print('[Calculator::calculate::_coolingTime] $_coolingTime');
     }
 
     //
@@ -207,7 +115,7 @@ abstract class Calculator {
     _coolingTime /= voltage;
 
     if (kDebugMode) {
-      print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+      print('[Calculator::calculate::_coolingTime] $_coolingTime');
     }
 
     //
@@ -217,7 +125,7 @@ abstract class Calculator {
       _coolingTime = 0.0;
 
       if (kDebugMode) {
-        print('[Calculator::calculate::_coolingTime : ] $_coolingTime');
+        print('[Calculator::calculate::_coolingTime] $_coolingTime');
       }
 
       return _coolingTime;
@@ -227,7 +135,7 @@ abstract class Calculator {
     // In case of lower voltages.
     //
     if (voltage >= 220 && voltage <= 230) {
-      return calculateLow();
+      return calculateLow(timeRoundingFlag);
     }
 
     //
@@ -238,5 +146,189 @@ abstract class Calculator {
     }
 
     return _coolingTime = 0.0;
+  }
+
+  ///
+  /// Calculate using three-phase electricity system.
+  ///
+  double calculateHigh() {
+    if (voltage < 380 || voltage > 400) {
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateHigh::_coolingTime] $_coolingTime');
+      }
+
+      return _coolingTime;
+    }
+
+    if (ampsSecondWire > _ampsLimits) {
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateHigh::_coolingTime] $_coolingTime');
+      }
+
+      return _coolingTime;
+    }
+
+    if (ampsThirdWire > _ampsLimits) {
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateHigh::_coolingTime] $_coolingTime');
+      }
+
+      return _coolingTime;
+    }
+
+    //
+    // Switch to three-phase electric power in case of higher voltages.
+    //
+    double combinedAmperage = ampsFirstWire + ampsSecondWire + ampsThirdWire;
+
+    if (kDebugMode) {
+      print('[Calculator::calculateHigh::combinedAmperage] $combinedAmperage');
+    }
+
+    combinedAmperage = combinedAmperage / sqrt(3);
+
+    if (kDebugMode) {
+      print('[Calculator::calculateHigh::combinedAmperage] $combinedAmperage');
+    }
+
+    if (combinedAmperage <= 0) {
+      return _coolingTime = 0.0;
+    }
+
+    _coolingTime /= combinedAmperage;
+
+    if (kDebugMode) {
+      print('[Calculator::calculateHigh::_coolingTime] $_coolingTime');
+    }
+
+    return _coolingTime;
+  }
+
+  ///
+  /// Calculate normally.
+  ///
+  double calculateLow(bool timeRoundingFlag) {
+    if (voltage < 220 || voltage > 230) {
+      _coolingTime = 0.0;
+
+      if (kDebugMode) {
+        print('[Calculator::calculateLow::_coolingTime] $_coolingTime');
+      }
+
+      return _coolingTime;
+    }
+
+    _coolingTime /= ampsFirstWire;
+
+    if (kDebugMode) {
+      print('[Calculator::calculateLow::_coolingTime] $_coolingTime');
+    }
+
+    if (timeRoundingFlag) {
+      convert();
+    }
+
+    return _coolingTime;
+  }
+
+  ///
+  /// Extract minutes from given cooling time.
+  ///
+  String extract() {
+    bool decimalPointFlag = false;
+    double minutesRaw = _coolingTime - _coolingTime.toInt();
+
+    if (kDebugMode) {
+      print('[Calculator::extract::minutesRaw] $minutesRaw');
+    }
+
+    String minutesAsString = '';
+    String temp = minutesRaw.toString();
+
+    //
+    // Begin extraction process.
+    //
+    for (int index = 0; index < temp.length; index++) {
+      //
+      // Start extraction process until after reaching the decimal point.
+      //
+      if (decimalPointFlag) {
+        minutesAsString += temp[index];
+      }
+
+      //
+      // Detect decimal point first.
+      //
+      if (temp[index] == '.') {
+        decimalPointFlag = true;
+      }
+    }
+
+    if (kDebugMode) {
+      print('[Calculator::extract::minutesAsString] $minutesAsString');
+    }
+
+    return minutesAsString;
+  }
+
+  ///
+  /// Get total cooling time.
+  ///
+  double get() {
+    return _coolingTime;
+  }
+
+  ///
+  /// Get cooling time hours.
+  ///
+  int getHours() {
+    int hours = _coolingTime.toInt();
+
+    return hours;
+  }
+
+  ///
+  /// Get cooling time minutes.
+  ///
+  String getMinutes() {
+    // Fuck this segment of the code. Lost 2 hours of my life searching for the culprit.
+    return extract();
+  }
+
+  ///
+  /// Convert cooling time value so it has accurate representation of hours and minutes.
+  ///
+  double convert() {
+    double minutes = _coolingTime - _coolingTime.toInt();
+
+    if (minutes <= 0.5) {
+      return _coolingTime;
+    }
+
+    //
+    // Convert minutes.
+    //
+    minutes = minutes * 0.6;
+
+    if (kDebugMode) {
+      print('[Calculator::round::minutes] $minutes');
+    }
+
+    //
+    // Combine all preceding results into one.
+    //
+    _coolingTime = _coolingTime.toInt() + minutes;
+
+    if (kDebugMode) {
+      print('[Calculator::round::_coolingTime] $_coolingTime');
+    }
+
+    return _coolingTime;
   }
 }
