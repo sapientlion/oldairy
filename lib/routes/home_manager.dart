@@ -288,8 +288,14 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
       () {
         if (double.tryParse(value) == null) {
           timeFormatter.volume = initialValue;
+          volumeCtrl.text = '';
         } else {
           timeFormatter.volume = double.parse(value);
+        }
+
+        if (timeFormatter.volume < initialValue) {
+          timeFormatter.volume = initialValue;
+          volumeCtrl.text = '';
         }
 
         if (timeFormatter.volume > _volumeLimit) {
