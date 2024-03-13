@@ -167,13 +167,10 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
               return;
             }
         }
-
-        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
-
-        timeFormatter.calculate();
-        set();
       },
     );
+
+    set();
 
     return ampsFirstWireCtrl.text;
   }
@@ -191,13 +188,10 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           timeFormatter.initialTemp = _initTempLimit.toDouble();
           initTempCtrl.text = timeFormatter.initialTemp.toString();
         }
-
-        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
-        timeFormatter.calculate();
-
-        set();
       },
     );
+
+    set();
 
     return;
   }
@@ -234,13 +228,10 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           timeFormatter.targetTemp = -50.0;
           targetTempCtrl.text = timeFormatter.targetTemp.toString();
         }
-
-        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
-        timeFormatter.calculate();
-
-        set();
       },
     );
+
+    set();
 
     return;
   }
@@ -272,13 +263,10 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
             timeFormatter.ampsThirdWire = double.parse(ampsThirdWireCtrl.text);
           }
         }
-
-        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
-        timeFormatter.calculate();
-
-        set();
       },
     );
+
+    set();
 
     return;
   }
@@ -302,13 +290,10 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
           timeFormatter.volume = _volumeLimit.toDouble();
           volumeCtrl.text = timeFormatter.volume.toString();
         }
-
-        timeFormatter.coefficient = settings.coolingCoefficientCurrent;
-        timeFormatter.calculate();
-
-        set();
       },
     );
+
+    set();
 
     return;
   }
@@ -338,9 +323,13 @@ abstract class HomeRouteStateManager extends State<HomeRoute> {
   }
 
   ///
-  /// Set cooling time input field after all calculations.
+  /// Show cooling time after doing required calculations.
   ///
   void set() {
+    timeFormatter.coefficient = settings.coolingCoefficientCurrent;
+
+    timeFormatter.calculate();
+
     coolingTimeHours = timeFormatter.getHours().toString();
     coolingTimeMinutes = timeFormatter
         .getMinutes(
